@@ -12,6 +12,7 @@ import './models/User.js';
 import lessonRoutes from './routes/lessonRoutes.js';
 import resourceRoutes from './routes/resourceRoutes.js';
 import dashboardRoutes from './routes/dashboardRoutes.js';
+import timetableRoutes from './routes/timetableRoutes.js';
 
 const app = express();
 const PORT = process.env.PORT || 5000;
@@ -65,6 +66,7 @@ app.get('/api/health', (req, res) => {
 app.use('/api/lessons', lessonRoutes);
 app.use('/api/resources', resourceRoutes);
 app.use('/api/dashboard', dashboardRoutes);
+app.use('/api/timetable', timetableRoutes);
 
 // Global Error Handler
 app.use((err: any, req: express.Request, res: express.Response, next: express.NextFunction) => {

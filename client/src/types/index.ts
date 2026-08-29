@@ -56,3 +56,18 @@ export interface DashboardStats {
   completedCount: number;
   myResourcesCount: number;
 }
+
+export interface TimetableSlot {
+  _id?: string;
+  day: 'Monday' | 'Tuesday' | 'Wednesday' | 'Thursday' | 'Friday';
+  period: string;
+  className: string;
+  subject?: string;
+  room?: string;
+}
+
+export interface Timetable {
+  _id?: string;
+  teacherId: string;
+  slots: TimetableSlot[];
+}

@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext.js';
+import { useTheme } from '../context/ThemeContext.js';
 import {
   BookOpen,
   FolderKanban,
@@ -12,10 +13,13 @@ import {
   X,
   GraduationCap,
   Calendar,
+  Sun,
+  Moon,
 } from 'lucide-react';
 
 export const Navbar: React.FC = () => {
   const { user, logout } = useAuth();
+  const { theme, toggleTheme } = useTheme();
   const navigate = useNavigate();
   const location = useLocation();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
@@ -28,7 +32,7 @@ export const Navbar: React.FC = () => {
   const isActive = (path: string) => location.pathname === path;
 
   return (
-    <header className="sticky top-0 z-50 glass-panel border-b border-slate-800">
+    <header className="sticky top-0 z-50 glass-panel border-b border-slate-800 transition-colors duration-300">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-16">
           {/* Brand Logo */}
@@ -44,9 +48,10 @@ export const Navbar: React.FC = () => {
             </div>
           </Link>
 
-          {/* Desktop Navigation Links */}
-          {user ? (
-            <>
+          {/* Theme Toggle & Links */}
+          <div className="flex items-center gap-4">
+            {/* Desktop Navigation Links */}
+            {user && (
               <nav className="hidden md:flex items-center gap-1">
                 <Link
                   to="/dashboard"
@@ -93,65 +98,78 @@ export const Navbar: React.FC = () => {
                   Resource Hub
                 </Link>
               </nav>
+            )}
 
-              {/* Action Buttons & User Profile */}
-              <div className="hidden md:flex items-center gap-3">
-                <Link
-                  to="/lessons/create"
-                  className="px-3.5 py-2 rounded-lg text-sm font-semibold text-white gradient-bg-primary hover:opacity-95 shadow-md shadow-indigo-600/20 transition-all flex items-center gap-2"
-                >
-                  <PlusCircle className="w-4 h-4" />
-                  New Lesson
-                </Link>
+            {/* Action Buttons & Profile */}
+            <div className="flex items-center gap-2 sm:gap-3">
+              {/* Theme Toggle Button */}
+              <button
+                onClick={toggleTheme}
+                title={`Switch to ${theme === 'dark' ? 'Light' : 'Dark'} Mode`}
+                className="p-2.5 rounded-xl bg-slate-800/60 hover:bg-slate-700/80 text-amber-400 hover:text-amber-300 border border-slate-700/60 transition-all flex items-center justify-center shadow-sm"
+              >
+                {theme === 'dark' ? <Sun className="w-4 h-4 text-amber-400" /> : <Moon className="w-4 h-4 text-indigo-500" />}
+              </button>
 
-                <div className="h-6 w-[1px] bg-slate-800" />
-
-                <div className="flex items-center gap-3 bg-slate-800/50 border border-slate-700/50 rounded-xl px-3 py-1.5">
-                  <div className="w-8 h-8 rounded-lg bg-indigo-500/20 text-indigo-400 flex items-center justify-center font-bold text-xs border border-indigo-500/30">
-                    {user.name.charAt(0).toUpperCase()}
-                  </div>
-                  <div className="text-left">
-                    <div className="text-xs font-semibold text-slate-200">{user.name}</div>
-                    <div className="text-[10px] text-slate-400 truncate max-w-[120px]">
-                      {user.subject || 'Teacher'}
-                    </div>
-                  </div>
-                  <button
-                    onClick={handleLogout}
-                    title="Sign Out"
-                    className="p-1.5 rounded-lg text-slate-400 hover:text-rose-400 hover:bg-rose-500/10 transition-colors ml-1"
+              {user ? (
+                <div className="hidden md:flex items-center gap-3">
+                  <Link
+                    to="/lessons/create"
+                    className="px-3.5 py-2 rounded-lg text-sm font-semibold text-white gradient-bg-primary hover:opacity-95 shadow-md shadow-indigo-600/20 transition-all flex items-center gap-2"
                   >
-                    <LogOut className="w-4 h-4" />
-                  </button>
-                </div>
-              </div>
-            </>
-          ) : (
-            <div className="flex items-center gap-3">
-              <Link
-                to="/login"
-                className="px-4 py-2 rounded-lg text-sm font-medium text-slate-300 hover:text-white hover:bg-slate-800/60 transition-colors"
-              >
-                Sign In
-              </Link>
-              <Link
-                to="/register"
-                className="px-4 py-2 rounded-lg text-sm font-semibold text-white gradient-bg-primary hover:opacity-95 shadow-md shadow-indigo-600/20 transition-all"
-              >
-                Get Started
-              </Link>
-            </div>
-          )}
+                    <PlusCircle className="w-4 h-4" />
+                    New Lesson
+                  </Link>
 
-          {/* Mobile Menu Toggle */}
-          {user && (
-            <button
-              onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-              className="md:hidden p-2 text-slate-400 hover:text-white focus:outline-none"
-            >
-              {mobileMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
-            </button>
-          )}
+                  <div className="h-6 w-[1px] bg-slate-800" />
+
+                  <div className="flex items-center gap-3 bg-slate-800/50 border border-slate-700/50 rounded-xl px-3 py-1.5">
+                    <div className="w-8 h-8 rounded-lg bg-indigo-500/20 text-indigo-400 flex items-center justify-center font-bold text-xs border border-indigo-500/30">
+                      {user.name.charAt(0).toUpperCase()}
+                    </div>
+                    <div className="text-left">
+                      <div className="text-xs font-semibold text-slate-200">{user.name}</div>
+                      <div className="text-[10px] text-slate-400 truncate max-w-[120px]">
+                        {user.subject || 'Teacher'}
+                      </div>
+                    </div>
+                    <button
+                      onClick={handleLogout}
+                      title="Sign Out"
+                      className="p-1.5 rounded-lg text-slate-400 hover:text-rose-400 hover:bg-rose-500/10 transition-colors ml-1"
+                    >
+                      <LogOut className="w-4 h-4" />
+                    </button>
+                  </div>
+                </div>
+              ) : (
+                <div className="flex items-center gap-3">
+                  <Link
+                    to="/login"
+                    className="px-4 py-2 rounded-lg text-sm font-medium text-slate-300 hover:text-white hover:bg-slate-800/60 transition-colors"
+                  >
+                    Sign In
+                  </Link>
+                  <Link
+                    to="/register"
+                    className="px-4 py-2 rounded-lg text-sm font-semibold text-white gradient-bg-primary hover:opacity-95 shadow-md shadow-indigo-600/20 transition-all"
+                  >
+                    Get Started
+                  </Link>
+                </div>
+              )}
+            </div>
+
+            {/* Mobile Menu Toggle */}
+            {user && (
+              <button
+                onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+                className="md:hidden p-2 text-slate-400 hover:text-white focus:outline-none"
+              >
+                {mobileMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
+              </button>
+            )}
+          </div>
         </div>
       </div>
 
@@ -164,6 +182,13 @@ export const Navbar: React.FC = () => {
             className="block px-3 py-2 rounded-lg text-base font-medium text-slate-300 hover:bg-slate-800 hover:text-white"
           >
             Dashboard
+          </Link>
+          <Link
+            to="/calendar"
+            onClick={() => setMobileMenuOpen(false)}
+            className="block px-3 py-2 rounded-lg text-base font-medium text-slate-300 hover:bg-slate-800 hover:text-white"
+          >
+            Weekly Timetable
           </Link>
           <Link
             to="/lessons"
