@@ -29,10 +29,28 @@ app.use(
 // Better Auth endpoint handler (Must be placed before express.json() if handling raw requests)
 app.all('/api/auth/*path', toNodeHandler(auth));
 
-// Body Parsers & Static Files
+// Body Parsers
 app.use(express.json({ limit: '10mb' }));
 app.use(express.urlencoded({ extended: true, limit: '10mb' }));
-app.use('/uploads', express.static(path.join(process.cwd(), 'uploads')));
+
+// Serve Local Uploads with CORS & Inline View Headers
+app.use(
+  '/uploads',
+  (req, res, next) => {
+    res.header('Access-Control-Allow-Origin', '*');
+    res.header('Access-Control-Allow-Methods', 'GET, HEAD, OPTIONS');
+    res.header('Cross-Origin-Resource-Policy', 'cross-origin');
+    next();
+  },
+  express.static(path.join(process.cwd(), 'uploads'), {
+    setHeaders: (res, filePath) => {
+      if (filePath.endsWith('.pdf')) {
+        res.setHeader('Content-Type', 'application/pdf');
+        res.setHeader('Content-Disposition', 'inline');
+      }
+    },
+  })
+);
 
 // Health Check
 app.get('/api/health', (req, res) => {

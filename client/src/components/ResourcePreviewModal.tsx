@@ -1,6 +1,6 @@
-import React from 'react';
+import React, { useState } from 'react';
 import type { Resource } from '../types/index.js';
-import { X, Download, ExternalLink, FileText, User, Calendar, Globe, Lock } from 'lucide-react';
+import { X, Download, ExternalLink, FileText, User, Calendar, Globe, Lock, AlertTriangle, Eye } from 'lucide-react';
 
 interface ResourcePreviewModalProps {
   resource: Resource | null;
@@ -13,6 +13,9 @@ export const ResourcePreviewModal: React.FC<ResourcePreviewModalProps> = ({
   onClose,
   onDownload,
 }) => {
+  const [loadError, setLoadError] = useState(false);
+  const [useGoogleViewer, setUseGoogleViewer] = useState(false);
+
   if (!resource) return null;
 
   const fileUrl = resource.fileUrl;
@@ -41,8 +44,7 @@ export const ResourcePreviewModal: React.FC<ResourcePreviewModalProps> = ({
 
   // Determine viewer embed URL
   let embedUrl = fileUrl;
-  if (!isImage && !isPdf && !isLocalHost && fileUrl.startsWith('http')) {
-    // Office documents (DOCX, PPTX, etc) rendered via Google Docs Viewer
+  if (useGoogleViewer || (!isImage && !isPdf && !isLocalHost && fileUrl.startsWith('http'))) {
     embedUrl = `https://docs.google.com/viewer?url=${encodeURIComponent(fileUrl)}&embedded=true`;
   }
 
@@ -97,27 +99,63 @@ export const ResourcePreviewModal: React.FC<ResourcePreviewModalProps> = ({
 
         {/* Content Viewer Body */}
         <div className="flex-1 overflow-y-auto p-4 sm:p-6 bg-slate-950 flex flex-col justify-center items-center relative min-h-[500px]">
-          {isImage ? (
+          {loadError ? (
+            <div className="text-center p-8 max-w-md bg-slate-900/80 border border-slate-800 rounded-3xl space-y-4">
+              <div className="w-12 h-12 rounded-2xl bg-amber-500/10 text-amber-400 border border-amber-500/20 flex items-center justify-center mx-auto">
+                <AlertTriangle className="w-6 h-6" />
+              </div>
+              <h3 className="text-base font-bold text-white">Direct Preview Unavailable</h3>
+              <p className="text-xs text-slate-400">
+                This document cannot be rendered inline by the browser. You can open it directly or download it.
+              </p>
+              <div className="flex items-center justify-center gap-3 pt-2">
+                <a
+                  href={fileUrl}
+                  target="_blank"
+                  rel="noreferrer"
+                  className="px-4 py-2 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white text-xs font-semibold flex items-center gap-1.5 shadow-md shadow-indigo-600/20"
+                >
+                  <ExternalLink className="w-3.5 h-3.5" />
+                  <span>Open in New Tab</span>
+                </a>
+                <button
+                  onClick={() => onDownload(resource)}
+                  className="px-4 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs font-semibold flex items-center gap-1.5"
+                >
+                  <Download className="w-3.5 h-3.5" />
+                  <span>Download File</span>
+                </button>
+              </div>
+            </div>
+          ) : isImage ? (
             <div className="w-full flex items-center justify-center">
               <img
                 src={fileUrl}
                 alt={resource.title}
+                onError={() => setLoadError(true)}
                 className="max-h-[68vh] max-w-full rounded-2xl object-contain shadow-xl border border-slate-800"
               />
             </div>
           ) : (
-            <div className="w-full h-full min-h-[65vh] relative rounded-2xl overflow-hidden border border-slate-800 bg-slate-900/50">
-              <object
-                data={fileUrl}
-                type={resource.fileType || 'application/pdf'}
-                className="w-full h-full min-h-[65vh] rounded-2xl"
-              >
-                <iframe
-                  src={embedUrl}
-                  title={resource.title}
-                  className="w-full h-full min-h-[65vh] border-0 rounded-2xl"
-                />
-              </object>
+            <div className="w-full h-full min-h-[65vh] relative rounded-2xl overflow-hidden border border-slate-800 bg-slate-900/50 flex flex-col">
+              {!isLocalHost && !useGoogleViewer && (
+                <div className="bg-slate-900 px-4 py-2 border-b border-slate-800 flex items-center justify-between text-xs text-slate-400 shrink-0">
+                  <span>Standard Document View</span>
+                  <button
+                    onClick={() => setUseGoogleViewer(true)}
+                    className="text-indigo-400 hover:text-indigo-300 font-semibold flex items-center gap-1"
+                  >
+                    <Eye className="w-3.5 h-3.5" />
+                    <span>Try Google Docs Viewer</span>
+                  </button>
+                </div>
+              )}
+              <iframe
+                src={embedUrl}
+                title={resource.title}
+                onError={() => setLoadError(true)}
+                className="w-full flex-1 min-h-[60vh] border-0 rounded-b-2xl bg-slate-950"
+              />
             </div>
           )}
         </div>
