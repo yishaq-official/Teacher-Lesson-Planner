@@ -1,13 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import api from '../lib/api.js';
-import { Resource } from '../types/index.js';
+import type { Resource } from '../types/index.js';
 import { ResourceCard } from '../components/ResourceCard.js';
 import {
-  FileSearch,
   Upload,
   Search,
-  Filter,
   UserCheck,
   FolderOpen,
   Loader2,
@@ -19,13 +17,12 @@ export const ResourceHubPage: React.FC = () => {
   const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState('');
   const [subject, setSubject] = useState('');
-  const [grade, setGrade] = useState('');
   const [type, setType] = useState('');
   const [myResources, setMyResources] = useState(false);
 
   useEffect(() => {
     fetchResources();
-  }, [search, subject, grade, type, myResources]);
+  }, [search, subject, type, myResources]);
 
   const fetchResources = async () => {
     try {
@@ -33,7 +30,6 @@ export const ResourceHubPage: React.FC = () => {
       const params: any = {};
       if (search) params.q = search;
       if (subject) params.subject = subject;
-      if (grade) params.grade = grade;
       if (type) params.type = type;
       if (myResources) params.myResources = 'true';
 

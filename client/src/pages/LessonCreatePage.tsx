@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate, useParams, Link } from 'react-router-dom';
 import api from '../lib/api.js';
-import { Resource } from '../types/index.js';
+import type { Resource } from '../types/index.js';
 import { AttachResourceModal } from '../components/AttachResourceModal.js';
 import {
   BookOpen,
@@ -10,11 +10,9 @@ import {
   Plus,
   Trash2,
   Paperclip,
-  Calendar,
   Clock,
   Sparkles,
   Loader2,
-  Check,
 } from 'lucide-react';
 
 export const LessonCreatePage: React.FC = () => {

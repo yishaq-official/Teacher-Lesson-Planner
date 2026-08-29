@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import api from '../lib/api.js';
-import { ArrowLeft, Upload, FileUp, Sparkles, CheckCircle2, AlertCircle } from 'lucide-react';
+import { ArrowLeft, Upload, FileUp, CheckCircle2, AlertCircle } from 'lucide-react';
 
 export const ResourceUploadPage: React.FC = () => {
   const navigate = useNavigate();

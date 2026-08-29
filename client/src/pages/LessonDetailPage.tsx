@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, Link, useNavigate } from 'react-router-dom';
 import api from '../lib/api.js';
-import { LessonPlan } from '../types/index.js';
+import type { LessonPlan } from '../types/index.js';
 import {
   ArrowLeft,
   Calendar,
