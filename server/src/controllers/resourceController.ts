@@ -2,6 +2,7 @@ import { Response } from 'express';
 import { AuthenticatedRequest } from '../middleware/auth.js';
 import { Resource } from '../models/Resource.js';
 import { LessonPlan } from '../models/LessonPlan.js';
+import { User } from '../models/User.js';
 import { uploadToCloudinary, deleteFromCloudinary } from '../config/cloudinary.js';
 import mongoose from 'mongoose';
 

@@ -1,6 +1,7 @@
 import { Response } from 'express';
 import { AuthenticatedRequest } from '../middleware/auth.js';
 import { LessonPlan } from '../models/LessonPlan.js';
+import { User } from '../models/User.js';
 import mongoose from 'mongoose';
 
 // GET /api/lessons - Get all lessons for authenticated teacher

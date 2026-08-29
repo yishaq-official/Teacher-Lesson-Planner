@@ -1,7 +1,7 @@
 import mongoose, { Schema, Document } from 'mongoose';
 
 export interface IResource extends Document {
-  teacherId: mongoose.Types.ObjectId;
+  teacherId: string;
   title: string;
   description: string;
   subject: string;
@@ -20,7 +20,7 @@ export interface IResource extends Document {
 
 const ResourceSchema: Schema = new Schema(
   {
-    teacherId: { type: Schema.Types.ObjectId, ref: 'User', required: true, index: true },
+    teacherId: { type: String, ref: 'User', required: true, index: true },
     title: { type: String, required: true, trim: true },
     description: { type: String, default: '', trim: true },
     subject: { type: String, required: true, index: true },

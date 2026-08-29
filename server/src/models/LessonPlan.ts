@@ -1,7 +1,7 @@
 import mongoose, { Schema, Document } from 'mongoose';
 
 export interface ILessonPlan extends Document {
-  teacherId: mongoose.Types.ObjectId;
+  teacherId: string;
   title: string;
   subject: string;
   grade: string;
@@ -23,7 +23,7 @@ export interface ILessonPlan extends Document {
 
 const LessonPlanSchema: Schema = new Schema(
   {
-    teacherId: { type: Schema.Types.ObjectId, ref: 'User', required: true, index: true },
+    teacherId: { type: String, ref: 'User', required: true, index: true },
     title: { type: String, required: true, trim: true },
     subject: { type: String, required: true, index: true },
     grade: { type: String, required: true, index: true },

@@ -2,6 +2,7 @@ import { Response } from 'express';
 import { AuthenticatedRequest } from '../middleware/auth.js';
 import { LessonPlan } from '../models/LessonPlan.js';
 import { Resource } from '../models/Resource.js';
+import { User } from '../models/User.js';
 
 // GET /api/dashboard/stats
 export const getDashboardSummary = async (
