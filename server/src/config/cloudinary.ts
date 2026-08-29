@@ -56,21 +56,17 @@ export const uploadToCloudinary = (
 
     console.log(`[Cloudinary Uploading]: File '${filename}' (${fileBuffer.length} bytes) to Cloud '${cloudName}'`);
 
-    const ext = path.extname(filename).toLowerCase();
-    const isImageOrMedia = ['.jpg', '.jpeg', '.png', '.gif', '.webp', '.svg', '.mp4', '.mp3'].includes(ext);
-    const resourceType = isImageOrMedia ? 'auto' : 'raw';
-
-    // Cloudinary real upload stream
+    // Cloudinary upload stream with auto resource_type for inline PDF/Image support
     const uploadStream = cloudinary.uploader.upload_stream(
       {
         folder,
-        resource_type: resourceType,
+        resource_type: 'auto',
         public_id: `${Date.now()}-${filename.replace(/[^a-zA-Z0-9.-]/g, '_')}`,
       },
       (error, result) => {
         if (error || !result) {
           console.error('[Cloudinary Stream Error]:', error);
-          
+
           // Fallback to local storage if Cloudinary upload fails
           try {
             console.log('[Cloudinary Fallback]: Saving file locally in server/uploads...');
@@ -142,8 +138,7 @@ export const deleteFromCloudinary = async (publicId: string): Promise<void> => {
       api_secret: apiSecret,
     });
 
-    const isRaw = publicId.includes('/') ? false : true;
-    await cloudinary.uploader.destroy(publicId, { resource_type: isRaw ? 'raw' : 'image' });
+    await cloudinary.uploader.destroy(publicId, { resource_type: 'auto' });
     console.log(`[Cloudinary Deleted]: ${publicId}`);
   } catch (err) {
     console.warn(`[Cloudinary] Failed to delete asset ${publicId}:`, err);

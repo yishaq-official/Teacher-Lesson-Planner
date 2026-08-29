@@ -37,9 +37,11 @@ export const ResourcePreviewModal: React.FC<ResourcePreviewModalProps> = ({
     }
   };
 
+  const isLocalHost = fileUrl.includes('localhost') || fileUrl.includes('127.0.0.1');
+
   // Determine viewer embed URL
   let embedUrl = fileUrl;
-  if (!isImage && !isPdf && fileUrl.startsWith('http')) {
+  if (!isImage && !isPdf && !isLocalHost && fileUrl.startsWith('http')) {
     // Office documents (DOCX, PPTX, etc) rendered via Google Docs Viewer
     embedUrl = `https://docs.google.com/viewer?url=${encodeURIComponent(fileUrl)}&embedded=true`;
   }
@@ -105,11 +107,17 @@ export const ResourcePreviewModal: React.FC<ResourcePreviewModalProps> = ({
             </div>
           ) : (
             <div className="w-full h-full min-h-[65vh] relative rounded-2xl overflow-hidden border border-slate-800 bg-slate-900/50">
-              <iframe
-                src={embedUrl}
-                title={resource.title}
-                className="w-full h-full min-h-[65vh] border-0 rounded-2xl"
-              />
+              <object
+                data={fileUrl}
+                type={resource.fileType || 'application/pdf'}
+                className="w-full h-full min-h-[65vh] rounded-2xl"
+              >
+                <iframe
+                  src={embedUrl}
+                  title={resource.title}
+                  className="w-full h-full min-h-[65vh] border-0 rounded-2xl"
+                />
+              </object>
             </div>
           )}
         </div>
