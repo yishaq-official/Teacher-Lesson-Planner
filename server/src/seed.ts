@@ -5,20 +5,39 @@ import mongoose from 'mongoose';
 import { connectDB } from './config/db.js';
 import { LessonPlan } from './models/LessonPlan.js';
 import { Resource } from './models/Resource.js';
+import { auth, mongoClient } from './config/auth.js';
 
 const seed = async () => {
   try {
     await connectDB();
     console.log('Seeding initial teacher lesson planner database...');
 
-    // Clear previous demo records if any
+    const db = mongoClient.db();
+
+    // Clear previous collections
     await LessonPlan.deleteMany({});
     await Resource.deleteMany({});
+    await db.collection('user').deleteMany({});
+    await db.collection('account').deleteMany({});
+    await db.collection('session').deleteMany({});
 
-    // Valid 24-char ObjectId for demo teacher
-    const demoTeacherId = new mongoose.Types.ObjectId('650000000000000000000001');
+    console.log('Cleared existing data.');
 
-    // 1. Create Shared Teaching Resources
+    // 1. Create Demo Teacher Account using Better Auth API
+    const authUser = await auth.api.signUpEmail({
+      body: {
+        email: 'hana.teacher@edunexus.org',
+        password: 'TeacherPass123!',
+        name: 'Hana Tesfaye',
+        subject: 'Biology',
+        institution: 'Nexus Science Academy',
+      },
+    });
+
+    const teacherId = authUser.user.id;
+    console.log(`Demo Teacher Account created! User ID: ${teacherId}`);
+
+    // 2. Create Shared Teaching Resources
     const res1 = await Resource.create({
       title: 'Photosynthesis & Chloroplast Structure Diagram Worksheet',
       description: 'Comprehensive 2-page student worksheet covering light-dependent reactions, Calvin cycle, and chloroplast anatomy with answer key.',
@@ -30,7 +49,7 @@ const seed = async () => {
       grade: 'Grade 9',
       topic: 'Photosynthesis & Cellular Energy',
       type: 'worksheet',
-      teacherId: demoTeacherId,
+      teacherId: teacherId,
       downloadsCount: 42,
       tags: ['biology', 'photosynthesis', 'worksheet', 'cell-biology'],
     });
@@ -46,7 +65,7 @@ const seed = async () => {
       grade: 'Grade 10',
       topic: 'Quadratic Functions & Algebra',
       type: 'presentation',
-      teacherId: demoTeacherId,
+      teacherId: teacherId,
       downloadsCount: 18,
       tags: ['math', 'algebra', 'slides', 'quadratics'],
     });
@@ -62,14 +81,14 @@ const seed = async () => {
       grade: 'Grade 11',
       topic: 'Chemical Bonding & Periodic Trends',
       type: 'exam',
-      teacherId: demoTeacherId,
+      teacherId: teacherId,
       downloadsCount: 29,
       tags: ['chemistry', 'exam', 'periodic-table', 'bonding'],
     });
 
     console.log('Sample teaching resources created!');
 
-    // 2. Create Sample Lesson Plans
+    // 3. Create Sample Lesson Plans
     await LessonPlan.create({
       title: 'Cellular Respiration & ATP Production',
       subject: 'Biology',
@@ -87,9 +106,9 @@ const seed = async () => {
       practiceActivity: 'Group activity: Map out inputs and outputs of Krebs cycle using diagram cards.',
       conclusion: '5-minute exit ticket checking understanding of aerobic vs anaerobic respiration.',
       homework: 'Complete textbook page 112 exercises 1-8.',
-      teacherNotes: 'Bring mitochondrion model model from lab prep room before Period 2.',
+      teacherNotes: 'Bring mitochondrion model from lab prep room before Period 2.',
       status: 'upcoming',
-      teacherId: demoTeacherId,
+      teacherId: teacherId,
       resources: [res1._id],
     });
 
@@ -112,7 +131,7 @@ const seed = async () => {
       homework: 'Worksheet 4.2 problems 1-10.',
       teacherNotes: 'Check in with Sarah and Marcus on isolating terms with negative coefficients.',
       status: 'upcoming',
-      teacherId: demoTeacherId,
+      teacherId: teacherId,
       resources: [res2._id],
     });
 
@@ -134,7 +153,7 @@ const seed = async () => {
       homework: 'Read Chapter 5.1 and complete problem set.',
       teacherNotes: 'Lab demo went great! High student participation during whiteboard section.',
       status: 'completed',
-      teacherId: demoTeacherId,
+      teacherId: teacherId,
       resources: [res3._id],
     });
 
