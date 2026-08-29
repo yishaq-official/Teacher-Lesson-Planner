@@ -1,4 +1,5 @@
 import mongoose, { Schema, Document } from 'mongoose';
+import './User.js';
 
 export interface IResource extends Document {
   teacherId: string;

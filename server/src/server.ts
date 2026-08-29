@@ -6,6 +6,7 @@ import cors from 'cors';
 import { toNodeHandler } from 'better-auth/node';
 import { connectDB } from './config/db.js';
 import { auth } from './config/auth.js';
+import './models/User.js';
 
 import lessonRoutes from './routes/lessonRoutes.js';
 import resourceRoutes from './routes/resourceRoutes.js';
