@@ -12,19 +12,13 @@ export const uploadToCloudinary = (
     const apiKey = process.env.CLOUDINARY_API_KEY;
     const apiSecret = process.env.CLOUDINARY_API_SECRET;
 
-    // Check if real Cloudinary keys are configured
-    const hasValidCloudinary =
-      cloudName &&
-      cloudName !== 'demo' &&
-      apiKey &&
-      apiKey !== '1234567890' &&
-      apiSecret &&
-      apiSecret !== 'abcdefghijklmnopqrstuvwxyz';
+    const ext = path.extname(filename).toLowerCase();
+    const isPdf = ext === '.pdf';
 
-    // If Cloudinary credentials are missing or default, save file locally into uploads/ directory
-    if (!hasValidCloudinary) {
+    // Helper to save locally in server/uploads/
+    const saveLocally = () => {
       try {
-        console.log(`[Local Upload Fallback]: Saving '${filename}' to server/uploads directory.`);
+        console.log(`[Local Upload]: Saving '${filename}' to server/uploads directory.`);
         const uploadsDir = path.join(process.cwd(), 'uploads');
         if (!fs.existsSync(uploadsDir)) {
           fs.mkdirSync(uploadsDir, { recursive: true });
@@ -45,6 +39,26 @@ export const uploadToCloudinary = (
       } catch (err) {
         return reject(err || new Error('Failed to save file locally'));
       }
+    };
+
+    // Note: Cloudinary free/new accounts restrict PDF delivery (401 x-cld-error: deny or ACL failure).
+    // PDFs are served directly & reliably via local storage with inline PDF headers.
+    if (isPdf) {
+      console.log(`[PDF Handler]: Serving PDF '${filename}' locally for reliable inline browser viewing.`);
+      return saveLocally();
+    }
+
+    // Check if real Cloudinary keys are configured
+    const hasValidCloudinary =
+      cloudName &&
+      cloudName !== 'demo' &&
+      apiKey &&
+      apiKey !== '1234567890' &&
+      apiSecret &&
+      apiSecret !== 'abcdefghijklmnopqrstuvwxyz';
+
+    if (!hasValidCloudinary) {
+      return saveLocally();
     }
 
     // Configure Cloudinary with active environment credentials
@@ -56,7 +70,6 @@ export const uploadToCloudinary = (
 
     console.log(`[Cloudinary Uploading]: File '${filename}' (${fileBuffer.length} bytes) to Cloud '${cloudName}'`);
 
-    // Cloudinary upload stream with auto resource_type for inline PDF/Image support
     const uploadStream = cloudinary.uploader.upload_stream(
       {
         folder,
@@ -66,30 +79,7 @@ export const uploadToCloudinary = (
       (error, result) => {
         if (error || !result) {
           console.error('[Cloudinary Stream Error]:', error);
-
-          // Fallback to local storage if Cloudinary upload fails
-          try {
-            console.log('[Cloudinary Fallback]: Saving file locally in server/uploads...');
-            const uploadsDir = path.join(process.cwd(), 'uploads');
-            if (!fs.existsSync(uploadsDir)) {
-              fs.mkdirSync(uploadsDir, { recursive: true });
-            }
-
-            const safeFilename = `${Date.now()}-${filename.replace(/[^a-zA-Z0-9.-]/g, '_')}`;
-            const filePath = path.join(uploadsDir, safeFilename);
-
-            fs.writeFileSync(filePath, fileBuffer);
-
-            const serverUrl = process.env.SERVER_URL || 'http://localhost:5000';
-            const localUrl = `${serverUrl}/uploads/${safeFilename}`;
-
-            return resolve({
-              url: localUrl,
-              publicId: `local/${safeFilename}`,
-            });
-          } catch (localErr) {
-            return reject(error || new Error('Cloudinary upload failed'));
-          }
+          return saveLocally();
         }
 
         console.log(`[Cloudinary Upload Success]: Saved to ${result.secure_url}`);
