@@ -2,21 +2,29 @@ import { v2 as cloudinary } from 'cloudinary';
 import fs from 'fs';
 import path from 'path';
 
-cloudinary.config({
-  cloud_name: process.env.CLOUDINARY_CLOUD_NAME || 'demo',
-  api_key: process.env.CLOUDINARY_API_KEY || '1234567890',
-  api_secret: process.env.CLOUDINARY_API_SECRET || 'abcdefghijklmnopqrstuvwxyz',
-});
-
 export const uploadToCloudinary = (
   fileBuffer: Buffer,
   filename: string,
   folder: string = 'teacher_resources'
 ): Promise<{ url: string; publicId: string }> => {
   return new Promise((resolve, reject) => {
-    // If Cloudinary credentials are default/demo, save file locally into uploads/ directory
-    if (!process.env.CLOUDINARY_CLOUD_NAME || process.env.CLOUDINARY_CLOUD_NAME === 'demo') {
+    const cloudName = process.env.CLOUDINARY_CLOUD_NAME;
+    const apiKey = process.env.CLOUDINARY_API_KEY;
+    const apiSecret = process.env.CLOUDINARY_API_SECRET;
+
+    // Check if real Cloudinary keys are configured
+    const hasValidCloudinary =
+      cloudName &&
+      cloudName !== 'demo' &&
+      apiKey &&
+      apiKey !== '1234567890' &&
+      apiSecret &&
+      apiSecret !== 'abcdefghijklmnopqrstuvwxyz';
+
+    // If Cloudinary credentials are missing or default, save file locally into uploads/ directory
+    if (!hasValidCloudinary) {
       try {
+        console.log(`[Local Upload Fallback]: Saving '${filename}' to server/uploads directory.`);
         const uploadsDir = path.join(process.cwd(), 'uploads');
         if (!fs.existsSync(uploadsDir)) {
           fs.mkdirSync(uploadsDir, { recursive: true });
@@ -39,17 +47,56 @@ export const uploadToCloudinary = (
       }
     }
 
+    // Configure Cloudinary with active environment credentials
+    cloudinary.config({
+      cloud_name: cloudName,
+      api_key: apiKey,
+      api_secret: apiSecret,
+    });
+
+    console.log(`[Cloudinary Uploading]: File '${filename}' (${fileBuffer.length} bytes) to Cloud '${cloudName}'`);
+
+    const ext = path.extname(filename).toLowerCase();
+    const isImageOrMedia = ['.jpg', '.jpeg', '.png', '.gif', '.webp', '.svg', '.mp4', '.mp3'].includes(ext);
+    const resourceType = isImageOrMedia ? 'auto' : 'raw';
+
     // Cloudinary real upload stream
     const uploadStream = cloudinary.uploader.upload_stream(
       {
         folder,
-        resource_type: 'auto',
-        public_id: `${Date.now()}-${filename.replace(/\.[^/.]+$/, '')}`,
+        resource_type: resourceType,
+        public_id: `${Date.now()}-${filename.replace(/[^a-zA-Z0-9.-]/g, '_')}`,
       },
       (error, result) => {
         if (error || !result) {
-          return reject(error || new Error('Cloudinary upload failed'));
+          console.error('[Cloudinary Stream Error]:', error);
+          
+          // Fallback to local storage if Cloudinary upload fails
+          try {
+            console.log('[Cloudinary Fallback]: Saving file locally in server/uploads...');
+            const uploadsDir = path.join(process.cwd(), 'uploads');
+            if (!fs.existsSync(uploadsDir)) {
+              fs.mkdirSync(uploadsDir, { recursive: true });
+            }
+
+            const safeFilename = `${Date.now()}-${filename.replace(/[^a-zA-Z0-9.-]/g, '_')}`;
+            const filePath = path.join(uploadsDir, safeFilename);
+
+            fs.writeFileSync(filePath, fileBuffer);
+
+            const serverUrl = process.env.SERVER_URL || 'http://localhost:5000';
+            const localUrl = `${serverUrl}/uploads/${safeFilename}`;
+
+            return resolve({
+              url: localUrl,
+              publicId: `local/${safeFilename}`,
+            });
+          } catch (localErr) {
+            return reject(error || new Error('Cloudinary upload failed'));
+          }
         }
+
+        console.log(`[Cloudinary Upload Success]: Saved to ${result.secure_url}`);
         resolve({
           url: result.secure_url,
           publicId: result.public_id,
@@ -62,7 +109,18 @@ export const uploadToCloudinary = (
 };
 
 export const deleteFromCloudinary = async (publicId: string): Promise<void> => {
-  if (!process.env.CLOUDINARY_CLOUD_NAME || process.env.CLOUDINARY_CLOUD_NAME === 'demo') {
+  const cloudName = process.env.CLOUDINARY_CLOUD_NAME;
+  const apiKey = process.env.CLOUDINARY_API_KEY;
+  const apiSecret = process.env.CLOUDINARY_API_SECRET;
+
+  const hasValidCloudinary =
+    cloudName &&
+    cloudName !== 'demo' &&
+    apiKey &&
+    apiKey !== '1234567890' &&
+    apiSecret;
+
+  if (!hasValidCloudinary || publicId.startsWith('local/')) {
     if (publicId.startsWith('local/')) {
       const filename = publicId.replace('local/', '');
       const filePath = path.join(process.cwd(), 'uploads', filename);
@@ -78,7 +136,15 @@ export const deleteFromCloudinary = async (publicId: string): Promise<void> => {
   }
 
   try {
-    await cloudinary.uploader.destroy(publicId);
+    cloudinary.config({
+      cloud_name: cloudName,
+      api_key: apiKey,
+      api_secret: apiSecret,
+    });
+
+    const isRaw = publicId.includes('/') ? false : true;
+    await cloudinary.uploader.destroy(publicId, { resource_type: isRaw ? 'raw' : 'image' });
+    console.log(`[Cloudinary Deleted]: ${publicId}`);
   } catch (err) {
     console.warn(`[Cloudinary] Failed to delete asset ${publicId}:`, err);
   }

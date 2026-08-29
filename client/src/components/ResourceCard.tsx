@@ -11,6 +11,7 @@ import {
   Check,
   Globe,
   Lock,
+  Calendar,
 } from 'lucide-react';
 
 interface ResourceCardProps {
@@ -32,15 +33,12 @@ export const ResourceCard: React.FC<ResourceCardProps> = ({
   const [downloading, setDownloading] = useState(false);
   const [downloadsCount, setDownloadsCount] = useState(resource.downloadsCount || 0);
 
-  const teacherName =
-    typeof resource.teacherId === 'object' && resource.teacherId?.name
-      ? resource.teacherId.name
-      : 'Teacher User';
+  const teacherObj = typeof resource.teacherId === 'object' ? (resource.teacherId as any) : null;
+  const teacherName = teacherObj?.name || 'Teacher User';
+  const teacherIdStr = teacherObj ? (teacherObj._id || teacherObj.id) : String(resource.teacherId || '');
 
-  const isOwner =
-    user &&
-    ((typeof resource.teacherId === 'object' && resource.teacherId?.id === user.id) ||
-      (typeof resource.teacherId === 'string' && resource.teacherId === user.id));
+  const currentUserId = user?.id || (user as any)?._id;
+  const isOwner = Boolean(currentUserId && teacherIdStr && String(currentUserId) === String(teacherIdStr));
 
   const isPublic = resource.isPublic !== false;
 
@@ -83,8 +81,22 @@ export const ResourceCard: React.FC<ResourceCardProps> = ({
     return `${(bytes / (1024 * 1024)).toFixed(1)} MB`;
   };
 
+  const formatDate = (dateStr?: string) => {
+    if (!dateStr) return '';
+    try {
+      const d = new Date(dateStr);
+      return d.toLocaleDateString(undefined, {
+        month: 'short',
+        day: 'numeric',
+        year: 'numeric',
+      });
+    } catch {
+      return '';
+    }
+  };
+
   return (
-    <div className="glass-card rounded-2xl p-5 flex flex-col justify-between relative group">
+    <div className="glass-card rounded-2xl p-5 flex flex-col justify-between relative group border border-slate-800 hover:border-indigo-500/40 transition-all">
       <div>
         {/* Header Badges */}
         <div className="flex items-center justify-between gap-2 mb-3">
@@ -97,19 +109,17 @@ export const ResourceCard: React.FC<ResourceCardProps> = ({
               {resource.type}
             </span>
 
-            {/* Visibility Badge for Owner */}
-            {isOwner && (
-              <span
-                className={`text-[10px] font-semibold px-2 py-0.5 rounded-md border flex items-center gap-1 ${
-                  isPublic
-                    ? 'bg-emerald-500/10 text-emerald-300 border-emerald-500/30'
-                    : 'bg-amber-500/10 text-amber-300 border-amber-500/30'
-                }`}
-              >
-                {isPublic ? <Globe className="w-3 h-3 text-emerald-400" /> : <Lock className="w-3 h-3 text-amber-400" />}
-                {isPublic ? 'Public' : 'Private'}
-              </span>
-            )}
+            {/* Visibility Badge */}
+            <span
+              className={`text-[10px] font-semibold px-2 py-0.5 rounded-md border flex items-center gap-1 ${
+                isPublic
+                  ? 'bg-emerald-500/10 text-emerald-300 border-emerald-500/30'
+                  : 'bg-amber-500/10 text-amber-300 border-amber-500/30'
+              }`}
+            >
+              {isPublic ? <Globe className="w-3 h-3 text-emerald-400" /> : <Lock className="w-3 h-3 text-amber-400" />}
+              {isPublic ? 'Public' : 'Private'}
+            </span>
           </div>
 
           <div className="flex items-center gap-1 text-xs text-slate-400">
@@ -149,15 +159,31 @@ export const ResourceCard: React.FC<ResourceCardProps> = ({
       </div>
 
       <div>
-        {/* Author metadata & file size */}
-        <div className="pt-3 border-t border-slate-800/80 flex items-center justify-between text-xs text-slate-400 mb-4">
-          <div className="flex items-center gap-1.5 truncate">
-            <User className="w-3.5 h-3.5 text-indigo-400" />
-            <span className="truncate">{teacherName}</span>
+        {/* Author metadata, Post Date & file size */}
+        <div className="pt-3 border-t border-slate-800/80 space-y-1.5 mb-4">
+          <div className="flex items-center justify-between text-xs text-slate-300">
+            <div className="flex items-center gap-1.5 truncate">
+              <User className="w-3.5 h-3.5 text-indigo-400 shrink-0" />
+              <span className="font-semibold text-slate-200 truncate">
+                {teacherName} {isOwner && <span className="text-[10px] text-purple-400 font-mono">(You)</span>}
+              </span>
+            </div>
+            <span className="text-[11px] font-mono text-slate-400">
+              {formatFileSize(resource.fileSize)}
+            </span>
           </div>
-          <span className="text-[11px] font-mono text-slate-400">
-            {formatFileSize(resource.fileSize)}
-          </span>
+
+          <div className="flex items-center justify-between text-[11px] text-slate-400">
+            <div className="flex items-center gap-1">
+              <Calendar className="w-3 h-3 text-slate-500" />
+              <span>Posted: {formatDate(resource.createdAt) || 'Recently'}</span>
+            </div>
+            {resource.publicId && resource.publicId.startsWith('local/') ? (
+              <span className="text-[10px] text-slate-500 font-mono">Local File</span>
+            ) : (
+              <span className="text-[10px] text-emerald-400 font-mono">Cloudinary</span>
+            )}
+          </div>
         </div>
 
         {/* Action Controls */}
@@ -199,13 +225,14 @@ export const ResourceCard: React.FC<ResourceCardProps> = ({
             </button>
           )}
 
-          {isOwner && onDelete && (
+          {(isOwner || onDelete) && onDelete && (
             <button
               onClick={() => onDelete(resource._id)}
               title="Delete resource"
-              className="p-2 rounded-xl bg-rose-500/10 hover:bg-rose-500/20 text-rose-400 border border-rose-500/20 transition-colors"
+              className="py-2 px-3 rounded-xl bg-rose-500/10 hover:bg-rose-500/20 text-rose-400 border border-rose-500/20 text-xs font-semibold flex items-center gap-1 transition-colors"
             >
-              <Trash2 className="w-4 h-4" />
+              <Trash2 className="w-3.5 h-3.5" />
+              <span>Delete</span>
             </button>
           )}
         </div>
