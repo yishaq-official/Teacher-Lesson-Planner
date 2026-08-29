@@ -25,7 +25,7 @@ app.use(
 );
 
 // Better Auth endpoint handler (Must be placed before express.json() if handling raw requests)
-app.all('/api/auth/*', toNodeHandler(auth));
+app.all('/api/auth/*path', toNodeHandler(auth));
 
 // Body Parsers
 app.use(express.json({ limit: '10mb' }));
