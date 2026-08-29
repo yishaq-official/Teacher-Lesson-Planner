@@ -11,6 +11,7 @@ import {
   Menu,
   X,
   GraduationCap,
+  Calendar,
 } from 'lucide-react';
 
 export const Navbar: React.FC = () => {
@@ -57,6 +58,17 @@ export const Navbar: React.FC = () => {
                 >
                   <FolderKanban className="w-4 h-4" />
                   Dashboard
+                </Link>
+                <Link
+                  to="/calendar"
+                  className={`px-3.5 py-2 rounded-lg text-sm font-medium transition-all flex items-center gap-2 ${
+                    isActive('/calendar')
+                      ? 'bg-indigo-600/20 text-indigo-300 border border-indigo-500/30'
+                      : 'text-slate-300 hover:text-white hover:bg-slate-800/60'
+                  }`}
+                >
+                  <Calendar className="w-4 h-4" />
+                  Weekly Timetable
                 </Link>
                 <Link
                   to="/lessons"

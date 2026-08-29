@@ -35,6 +35,7 @@ export interface LessonPlan {
   topic: string;
   date: string;
   duration: number;
+  period?: string;
   objectives: string[];
   introduction: string;
   mainActivity: string;

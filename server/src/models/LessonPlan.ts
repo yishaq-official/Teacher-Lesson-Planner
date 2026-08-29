@@ -9,6 +9,7 @@ export interface ILessonPlan extends Document {
   topic: string;
   date: Date;
   duration: number;
+  period?: string;
   objectives: string[];
   introduction: string;
   mainActivity: string;
@@ -31,6 +32,7 @@ const LessonPlanSchema: Schema = new Schema(
     topic: { type: String, required: true, trim: true },
     date: { type: Date, required: true, index: true },
     duration: { type: Number, default: 45 }, // in minutes
+    period: { type: String, default: 'Period 1' },
     objectives: [{ type: String, trim: true }],
     introduction: { type: String, default: '' },
     mainActivity: { type: String, default: '' },

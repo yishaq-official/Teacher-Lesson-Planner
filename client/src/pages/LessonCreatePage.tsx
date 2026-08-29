@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { useNavigate, useParams, Link } from 'react-router-dom';
+import { useNavigate, useParams, Link, useSearchParams } from 'react-router-dom';
 import api from '../lib/api.js';
 import type { Resource } from '../types/index.js';
 import { AttachResourceModal } from '../components/AttachResourceModal.js';
@@ -17,6 +17,7 @@ import {
 
 export const LessonCreatePage: React.FC = () => {
   const { id } = useParams<{ id: string }>();
+  const [searchParams] = useSearchParams();
   const isEditMode = Boolean(id);
   const navigate = useNavigate();
 
@@ -30,8 +31,9 @@ export const LessonCreatePage: React.FC = () => {
   const [subject, setSubject] = useState('Biology');
   const [grade, setGrade] = useState('Grade 9');
   const [topic, setTopic] = useState('');
-  const [date, setDate] = useState(new Date().toISOString().split('T')[0]);
+  const [date, setDate] = useState(() => searchParams.get('date') || new Date().toISOString().split('T')[0]);
   const [duration, setDuration] = useState(45);
+  const [period, setPeriod] = useState(() => searchParams.get('period') || 'Period 1 (08:30 - 09:15)');
   const [objectives, setObjectives] = useState<string[]>(['']);
   const [introduction, setIntroduction] = useState('');
   const [mainActivity, setMainActivity] = useState('');
@@ -59,6 +61,7 @@ export const LessonCreatePage: React.FC = () => {
         setTopic(l.topic);
         setDate(l.date ? new Date(l.date).toISOString().split('T')[0] : '');
         setDuration(l.duration || 45);
+        if (l.period) setPeriod(l.period);
         setObjectives(l.objectives && l.objectives.length > 0 ? l.objectives : ['']);
         setIntroduction(l.introduction || '');
         setMainActivity(l.mainActivity || '');
@@ -116,6 +119,7 @@ export const LessonCreatePage: React.FC = () => {
         topic,
         date,
         duration: Number(duration),
+        period,
         objectives: objectives.filter((o) => o.trim().length > 0),
         introduction,
         mainActivity,
@@ -249,7 +253,7 @@ export const LessonCreatePage: React.FC = () => {
             </div>
           </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
             <div>
               <label className="block text-xs font-semibold text-slate-300 mb-1">
                 Scheduled Date <span className="text-rose-400">*</span>
@@ -261,6 +265,24 @@ export const LessonCreatePage: React.FC = () => {
                 onChange={(e) => setDate(e.target.value)}
                 className="w-full bg-slate-900 border border-slate-700/80 rounded-xl px-3 py-2 text-xs text-slate-100 focus:outline-none focus:border-indigo-500"
               />
+            </div>
+
+            <div>
+              <label className="block text-xs font-semibold text-slate-300 mb-1">
+                Teaching Period / Slot
+              </label>
+              <select
+                value={period}
+                onChange={(e) => setPeriod(e.target.value)}
+                className="w-full bg-slate-900 border border-slate-700/80 rounded-xl px-3 py-2 text-xs text-slate-100 focus:outline-none focus:border-indigo-500"
+              >
+                <option value="Period 1 (08:30 - 09:15)">Period 1 (08:30 - 09:15)</option>
+                <option value="Period 2 (09:20 - 10:05)">Period 2 (09:20 - 10:05)</option>
+                <option value="Period 3 (10:15 - 11:00)">Period 3 (10:15 - 11:00)</option>
+                <option value="Period 4 (11:45 - 12:30)">Period 4 (11:45 - 12:30)</option>
+                <option value="Period 5 (12:35 - 13:20)">Period 5 (12:35 - 13:20)</option>
+                <option value="Period 6 (13:25 - 14:10)">Period 6 (13:25 - 14:10)</option>
+              </select>
             </div>
 
             <div>

@@ -94,8 +94,9 @@ const seed = async () => {
       subject: 'Biology',
       grade: 'Grade 9',
       topic: 'Glycolysis, Krebs Cycle & Electron Transport',
-      date: new Date(Date.now() + 86400000 * 2), // 2 days from today
+      date: new Date(Date.now() + 86400000 * 1), // Tomorrow
       duration: 50,
+      period: 'Period 1 (08:30 - 09:15)',
       objectives: [
         'Compare cellular respiration formula with photosynthesis formula',
         'Identify the three main stages of cellular respiration',
@@ -117,8 +118,9 @@ const seed = async () => {
       subject: 'Mathematics',
       grade: 'Grade 10',
       topic: 'Systems of Equations',
-      date: new Date(Date.now() + 86400000 * 4), // 4 days from today
+      date: new Date(Date.now() + 86400000 * 2), // 2 days from today
       duration: 45,
+      period: 'Period 2 (09:20 - 10:05)',
       objectives: [
         'Isolate one variable in a two-variable linear equation',
         'Substitute expressions to solve for unknown variables',
@@ -140,8 +142,9 @@ const seed = async () => {
       subject: 'Chemistry',
       grade: 'Grade 11',
       topic: 'Balancing Chemical Equations',
-      date: new Date(Date.now() - 86400000 * 3), // 3 days ago (completed)
+      date: new Date(Date.now()), // Today
       duration: 60,
+      period: 'Period 4 (11:15 - 12:00)',
       objectives: [
         'State the Law of Conservation of Mass',
         'Balance chemical equations using stoichiometric coefficients',
