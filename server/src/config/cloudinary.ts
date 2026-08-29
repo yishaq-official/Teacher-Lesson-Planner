@@ -1,4 +1,6 @@
 import { v2 as cloudinary } from 'cloudinary';
+import fs from 'fs';
+import path from 'path';
 
 cloudinary.config({
   cloud_name: process.env.CLOUDINARY_CLOUD_NAME || 'demo',
@@ -12,13 +14,32 @@ export const uploadToCloudinary = (
   folder: string = 'teacher_resources'
 ): Promise<{ url: string; publicId: string }> => {
   return new Promise((resolve, reject) => {
-    // If credentials are test/default, mock upload for smooth local development without requiring external credentials
+    // If Cloudinary credentials are default/demo, save file locally into uploads/ directory
     if (!process.env.CLOUDINARY_CLOUD_NAME || process.env.CLOUDINARY_CLOUD_NAME === 'demo') {
-      const mockUrl = `https://res.cloudinary.com/demo/image/upload/v1234567890/teacher_resources/${Date.now()}-${filename}`;
-      const mockPublicId = `teacher_resources/${Date.now()}-${filename}`;
-      return resolve({ url: mockUrl, publicId: mockPublicId });
+      try {
+        const uploadsDir = path.join(process.cwd(), 'uploads');
+        if (!fs.existsSync(uploadsDir)) {
+          fs.mkdirSync(uploadsDir, { recursive: true });
+        }
+
+        const safeFilename = `${Date.now()}-${filename.replace(/[^a-zA-Z0-9.-]/g, '_')}`;
+        const filePath = path.join(uploadsDir, safeFilename);
+
+        fs.writeFileSync(filePath, fileBuffer);
+
+        const serverUrl = process.env.SERVER_URL || 'http://localhost:5000';
+        const localUrl = `${serverUrl}/uploads/${safeFilename}`;
+
+        return resolve({
+          url: localUrl,
+          publicId: `local/${safeFilename}`,
+        });
+      } catch (err) {
+        return reject(err || new Error('Failed to save file locally'));
+      }
     }
 
+    // Cloudinary real upload stream
     const uploadStream = cloudinary.uploader.upload_stream(
       {
         folder,
@@ -42,8 +63,20 @@ export const uploadToCloudinary = (
 
 export const deleteFromCloudinary = async (publicId: string): Promise<void> => {
   if (!process.env.CLOUDINARY_CLOUD_NAME || process.env.CLOUDINARY_CLOUD_NAME === 'demo') {
+    if (publicId.startsWith('local/')) {
+      const filename = publicId.replace('local/', '');
+      const filePath = path.join(process.cwd(), 'uploads', filename);
+      if (fs.existsSync(filePath)) {
+        try {
+          fs.unlinkSync(filePath);
+        } catch (err) {
+          console.warn(`[Local Uploads] Failed to delete file ${filePath}:`, err);
+        }
+      }
+    }
     return;
   }
+
   try {
     await cloudinary.uploader.destroy(publicId);
   } catch (err) {

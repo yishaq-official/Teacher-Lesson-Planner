@@ -3,6 +3,7 @@ dotenv.config();
 
 import express from 'express';
 import cors from 'cors';
+import path from 'path';
 import { toNodeHandler } from 'better-auth/node';
 import { connectDB } from './config/db.js';
 import { auth } from './config/auth.js';
@@ -28,9 +29,10 @@ app.use(
 // Better Auth endpoint handler (Must be placed before express.json() if handling raw requests)
 app.all('/api/auth/*path', toNodeHandler(auth));
 
-// Body Parsers
+// Body Parsers & Static Files
 app.use(express.json({ limit: '10mb' }));
 app.use(express.urlencoded({ extended: true, limit: '10mb' }));
+app.use('/uploads', express.static(path.join(process.cwd(), 'uploads')));
 
 // Health Check
 app.get('/api/health', (req, res) => {
