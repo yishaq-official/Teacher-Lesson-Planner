@@ -54,6 +54,19 @@ export const ResourceHubPage: React.FC = () => {
     }
   };
 
+  const handleToggleVisibility = async (id: string, currentIsPublic: boolean) => {
+    try {
+      const res = await api.patch(`/resources/${id}/visibility`, { isPublic: !currentIsPublic });
+      if (res.data.success) {
+        setResources((prev) =>
+          prev.map((r) => (r._id === id ? { ...r, isPublic: !currentIsPublic } : r))
+        );
+      }
+    } catch (err) {
+      console.error('Failed to update visibility:', err);
+    }
+  };
+
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-8">
       {/* Page Banner Header */}
@@ -176,6 +189,7 @@ export const ResourceHubPage: React.FC = () => {
               key={item._id}
               resource={item}
               onDelete={handleDeleteResource}
+              onToggleVisibility={handleToggleVisibility}
             />
           ))}
         </div>

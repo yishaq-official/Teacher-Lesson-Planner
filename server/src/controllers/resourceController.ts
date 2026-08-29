@@ -15,7 +15,11 @@ export const getResources = async (req: AuthenticatedRequest, res: Response): Pr
 
     if (myResources === 'true') {
       filter.teacherId = req.user?.id;
+    } else {
+      // Community Hub: Show public resources, or private resources owned by the current user
+      filter.$or = [{ isPublic: true }, { isPublic: { $ne: false } }, { teacherId: req.user?.id }];
     }
+
     if (subject) {
       filter.subject = subject;
     }
@@ -67,7 +71,7 @@ export const getResourceById = async (req: AuthenticatedRequest, res: Response):
 export const uploadResource = async (req: AuthenticatedRequest, res: Response): Promise<void> => {
   try {
     const file = req.file;
-    const { title, description, subject, grade, topic, type, tags } = req.body;
+    const { title, description, subject, grade, topic, type, tags, isPublic } = req.body;
 
     if (!file) {
       res.status(400).json({ success: false, message: 'Please upload a resource file' });
@@ -86,6 +90,7 @@ export const uploadResource = async (req: AuthenticatedRequest, res: Response): 
     const uploadResult = await uploadToCloudinary(file.buffer, file.originalname);
 
     const parsedTags = typeof tags === 'string' ? tags.split(',').map((t) => t.trim()) : (Array.isArray(tags) ? tags : []);
+    const isPublicBool = isPublic === 'false' || isPublic === false ? false : true;
 
     const resource = await Resource.create({
       teacherId: req.user?.id,
@@ -100,6 +105,7 @@ export const uploadResource = async (req: AuthenticatedRequest, res: Response): 
       publicId: uploadResult.publicId,
       fileType: file.mimetype,
       fileSize: file.size,
+      isPublic: isPublicBool,
     });
 
     const populated = await resource.populate('teacherId', 'name institution email');
@@ -112,6 +118,38 @@ export const uploadResource = async (req: AuthenticatedRequest, res: Response): 
   } catch (error: any) {
     console.error('[uploadResource Error]:', error);
     res.status(500).json({ success: false, message: error.message || 'Failed to upload resource' });
+  }
+};
+
+// PATCH /api/resources/:id/visibility - Toggle public/private visibility (Owner only)
+export const toggleResourceVisibility = async (req: AuthenticatedRequest, res: Response): Promise<void> => {
+  try {
+    const id = req.params.id as string;
+    if (!mongoose.Types.ObjectId.isValid(id)) {
+      res.status(400).json({ success: false, message: 'Invalid resource ID' });
+      return;
+    }
+
+    const resource = await Resource.findOne({ _id: id, teacherId: req.user?.id });
+    if (!resource) {
+      res.status(404).json({ success: false, message: 'Resource not found or unauthorized' });
+      return;
+    }
+
+    const newIsPublic = req.body.isPublic !== undefined ? Boolean(req.body.isPublic) : !resource.isPublic;
+    resource.isPublic = newIsPublic;
+    await resource.save();
+
+    const populated = await resource.populate('teacherId', 'name institution email');
+
+    res.json({
+      success: true,
+      message: `Resource is now ${newIsPublic ? 'Public (Shared)' : 'Private (Only you)'}`,
+      resource: populated,
+    });
+  } catch (error) {
+    console.error('[toggleResourceVisibility Error]:', error);
+    res.status(500).json({ success: false, message: 'Failed to update resource visibility' });
   }
 };
 

@@ -15,6 +15,7 @@ export interface IResource extends Document {
   fileType: string;
   fileSize: number;
   downloadsCount: number;
+  isPublic: boolean;
   createdAt: Date;
   updatedAt: Date;
 }
@@ -39,6 +40,7 @@ const ResourceSchema: Schema = new Schema(
     fileType: { type: String, default: 'application/octet-stream' },
     fileSize: { type: Number, default: 0 },
     downloadsCount: { type: Number, default: 0 },
+    isPublic: { type: Boolean, default: true, index: true },
   },
   { timestamps: true }
 );

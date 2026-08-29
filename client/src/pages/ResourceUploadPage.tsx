@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import api from '../lib/api.js';
-import { ArrowLeft, Upload, FileUp, CheckCircle2, AlertCircle } from 'lucide-react';
+import { ArrowLeft, Upload, FileUp, CheckCircle2, AlertCircle, Globe, Lock } from 'lucide-react';
 
 export const ResourceUploadPage: React.FC = () => {
   const navigate = useNavigate();
@@ -13,6 +13,7 @@ export const ResourceUploadPage: React.FC = () => {
   const [topic, setTopic] = useState('');
   const [type, setType] = useState('worksheet');
   const [tags, setTags] = useState('');
+  const [isPublic, setIsPublic] = useState(true);
   const [uploading, setUploading] = useState(false);
   const [error, setError] = useState('');
 
@@ -53,6 +54,7 @@ export const ResourceUploadPage: React.FC = () => {
       formData.append('topic', topic);
       formData.append('type', type);
       formData.append('tags', tags);
+      formData.append('isPublic', String(isPublic));
 
       const res = await api.post('/resources', formData, {
         headers: {
@@ -242,6 +244,50 @@ export const ResourceUploadPage: React.FC = () => {
                 onChange={(e) => setTags(e.target.value)}
                 className="w-full bg-slate-900 border border-slate-700/80 rounded-xl px-3 py-2 text-xs text-slate-100 focus:outline-none focus:border-indigo-500"
               />
+            </div>
+          </div>
+
+          {/* Privacy & Sharing Selector */}
+          <div className="pt-4 border-t border-slate-800 space-y-2">
+            <label className="block text-xs font-semibold text-slate-300">
+              Privacy & Access Control
+            </label>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+              <button
+                type="button"
+                onClick={() => setIsPublic(true)}
+                className={`p-3.5 rounded-2xl border text-left flex items-start gap-3 transition-all ${
+                  isPublic
+                    ? 'bg-emerald-500/10 border-emerald-500/40 text-emerald-300 shadow-md shadow-emerald-500/10'
+                    : 'bg-slate-900/60 border-slate-800 text-slate-400 hover:border-slate-700'
+                }`}
+              >
+                <div className={`p-2 rounded-xl border shrink-0 ${isPublic ? 'bg-emerald-500/20 border-emerald-500/30 text-emerald-300' : 'bg-slate-800 border-slate-700 text-slate-400'}`}>
+                  <Globe className="w-5 h-5" />
+                </div>
+                <div>
+                  <div className="text-xs font-bold text-slate-200">Public (Community Hub)</div>
+                  <div className="text-[11px] text-slate-400 mt-0.5">Visible to all teachers across EduNexus to discover and download.</div>
+                </div>
+              </button>
+
+              <button
+                type="button"
+                onClick={() => setIsPublic(false)}
+                className={`p-3.5 rounded-2xl border text-left flex items-start gap-3 transition-all ${
+                  !isPublic
+                    ? 'bg-amber-500/10 border-amber-500/40 text-amber-300 shadow-md shadow-amber-500/10'
+                    : 'bg-slate-900/60 border-slate-800 text-slate-400 hover:border-slate-700'
+                }`}
+              >
+                <div className={`p-2 rounded-xl border shrink-0 ${!isPublic ? 'bg-amber-500/20 border-amber-500/30 text-amber-300' : 'bg-slate-800 border-slate-700 text-slate-400'}`}>
+                  <Lock className="w-5 h-5" />
+                </div>
+                <div>
+                  <div className="text-xs font-bold text-slate-200">Private (Only You)</div>
+                  <div className="text-[11px] text-slate-400 mt-0.5">Private resource saved strictly to your personal library.</div>
+                </div>
+              </button>
             </div>
           </div>
         </div>

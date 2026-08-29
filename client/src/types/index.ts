@@ -22,6 +22,7 @@ export interface Resource {
   fileType: string;
   fileSize: number;
   downloadsCount: number;
+  isPublic?: boolean;
   createdAt: string;
   updatedAt: string;
 }

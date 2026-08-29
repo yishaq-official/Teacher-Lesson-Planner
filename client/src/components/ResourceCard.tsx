@@ -9,11 +9,14 @@ import {
   User,
   Plus,
   Check,
+  Globe,
+  Lock,
 } from 'lucide-react';
 
 interface ResourceCardProps {
   resource: Resource;
   onDelete?: (id: string) => void;
+  onToggleVisibility?: (id: string, currentIsPublic: boolean) => void;
   onAttach?: (resource: Resource) => void;
   isAttached?: boolean;
 }
@@ -21,6 +24,7 @@ interface ResourceCardProps {
 export const ResourceCard: React.FC<ResourceCardProps> = ({
   resource,
   onDelete,
+  onToggleVisibility,
   onAttach,
   isAttached = false,
 }) => {
@@ -38,13 +42,14 @@ export const ResourceCard: React.FC<ResourceCardProps> = ({
     ((typeof resource.teacherId === 'object' && resource.teacherId?.id === user.id) ||
       (typeof resource.teacherId === 'string' && resource.teacherId === user.id));
 
+  const isPublic = resource.isPublic !== false;
+
   const handleDownload = async () => {
     try {
       setDownloading(true);
       const res = await api.post(`/resources/${resource._id}/download`);
       if (res.data.success) {
         setDownloadsCount(res.data.downloadsCount);
-        // Open file in new tab or trigger download
         window.open(res.data.fileUrl, '_blank');
       }
     } catch (err) {
@@ -83,14 +88,31 @@ export const ResourceCard: React.FC<ResourceCardProps> = ({
       <div>
         {/* Header Badges */}
         <div className="flex items-center justify-between gap-2 mb-3">
-          <span
-            className={`text-xs font-semibold px-2.5 py-1 rounded-lg border capitalize ${getTypeBadgeColor(
-              resource.type
-            )}`}
-          >
-            {resource.type}
-          </span>
-          <div className="flex items-center gap-2 text-xs text-slate-400">
+          <div className="flex items-center gap-1.5">
+            <span
+              className={`text-xs font-semibold px-2.5 py-1 rounded-lg border capitalize ${getTypeBadgeColor(
+                resource.type
+              )}`}
+            >
+              {resource.type}
+            </span>
+
+            {/* Visibility Badge for Owner */}
+            {isOwner && (
+              <span
+                className={`text-[10px] font-semibold px-2 py-0.5 rounded-md border flex items-center gap-1 ${
+                  isPublic
+                    ? 'bg-emerald-500/10 text-emerald-300 border-emerald-500/30'
+                    : 'bg-amber-500/10 text-amber-300 border-amber-500/30'
+                }`}
+              >
+                {isPublic ? <Globe className="w-3 h-3 text-emerald-400" /> : <Lock className="w-3 h-3 text-amber-400" />}
+                {isPublic ? 'Public' : 'Private'}
+              </span>
+            )}
+          </div>
+
+          <div className="flex items-center gap-1 text-xs text-slate-400">
             <span className="px-2 py-0.5 rounded bg-slate-800 border border-slate-700 text-slate-300 font-mono text-[11px]">
               {resource.subject}
             </span>
@@ -160,6 +182,20 @@ export const ResourceCard: React.FC<ResourceCardProps> = ({
             >
               {isAttached ? <Check className="w-3.5 h-3.5" /> : <Plus className="w-3.5 h-3.5" />}
               <span>{isAttached ? 'Attached' : 'Attach'}</span>
+            </button>
+          )}
+
+          {isOwner && onToggleVisibility && (
+            <button
+              onClick={() => onToggleVisibility(resource._id, isPublic)}
+              title={isPublic ? 'Click to make Private (Only visible to you)' : 'Click to make Public (Shared in Hub)'}
+              className={`p-2 rounded-xl border transition-colors flex items-center justify-center ${
+                isPublic
+                  ? 'bg-emerald-500/10 hover:bg-emerald-500/20 text-emerald-300 border-emerald-500/30'
+                  : 'bg-amber-500/10 hover:bg-amber-500/20 text-amber-300 border-amber-500/30'
+              }`}
+            >
+              {isPublic ? <Globe className="w-4 h-4" /> : <Lock className="w-4 h-4" />}
             </button>
           )}
 

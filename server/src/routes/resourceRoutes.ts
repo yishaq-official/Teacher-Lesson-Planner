@@ -7,6 +7,7 @@ import {
   uploadResource,
   deleteResource,
   downloadResource,
+  toggleResourceVisibility,
 } from '../controllers/resourceController.js';
 
 const router = Router();
@@ -16,6 +17,7 @@ router.use(requireAuth);
 router.get('/', getResources);
 router.post('/', uploadSingleFile, uploadResource);
 router.get('/:id', getResourceById);
+router.patch('/:id/visibility', toggleResourceVisibility);
 router.delete('/:id', deleteResource);
 router.post('/:id/download', downloadResource);
 
