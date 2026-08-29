@@ -8,7 +8,6 @@ import {
   ChevronRight,
   Plus,
   Clock,
-  BookOpen,
   CheckCircle2,
   X,
   ExternalLink,
@@ -257,7 +256,7 @@ export const CalendarPage: React.FC = () => {
                 </tr>
               </thead>
               <tbody>
-                {PERIODS.map((period, pIdx) => {
+                {PERIODS.map((period) => {
                   const isLunch = period.includes('Lunch');
 
                   if (isLunch) {
