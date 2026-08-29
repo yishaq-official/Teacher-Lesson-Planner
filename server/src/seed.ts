@@ -5,7 +5,6 @@ import mongoose from 'mongoose';
 import { connectDB } from './config/db.js';
 import { LessonPlan } from './models/LessonPlan.js';
 import { Resource } from './models/Resource.js';
-import { auth } from './config/auth.js';
 
 const seed = async () => {
   try {
@@ -16,15 +15,15 @@ const seed = async () => {
     await LessonPlan.deleteMany({});
     await Resource.deleteMany({});
 
-    // Create Demo Teacher Account via auth API or dummy ID
-    const demoTeacherId = 'demo-teacher-id-12345';
+    // Valid 24-char ObjectId for demo teacher
+    const demoTeacherId = new mongoose.Types.ObjectId('650000000000000000000001');
 
     // 1. Create Shared Teaching Resources
     const res1 = await Resource.create({
       title: 'Photosynthesis & Chloroplast Structure Diagram Worksheet',
       description: 'Comprehensive 2-page student worksheet covering light-dependent reactions, Calvin cycle, and chloroplast anatomy with answer key.',
       fileUrl: 'https://res.cloudinary.com/demo/image/upload/v1/samples/biodemo_photosynthesis.pdf',
-      filePublicId: 'biodemo_photosynthesis',
+      publicId: 'biodemo_photosynthesis',
       fileSize: 1048576,
       fileType: 'application/pdf',
       subject: 'Biology',
@@ -40,7 +39,7 @@ const seed = async () => {
       title: 'Quadratic Functions & Parabola Graphing Slide Deck',
       description: '30-slide presentation explaining vertex form, axis of symmetry, and real-world trajectory problem solving.',
       fileUrl: 'https://res.cloudinary.com/demo/image/upload/v1/samples/math_quadratics.pptx',
-      filePublicId: 'math_quadratics',
+      publicId: 'math_quadratics',
       fileSize: 3145728,
       fileType: 'application/vnd.openxmlformats-officedocument.presentationml.presentation',
       subject: 'Mathematics',
@@ -56,7 +55,7 @@ const seed = async () => {
       title: 'Periodic Table & Chemical Bonding Midterm Review Exam',
       description: 'Practice exam with multiple choice, short answer, and ionic vs covalent bonding diagrams.',
       fileUrl: 'https://res.cloudinary.com/demo/image/upload/v1/samples/chem_midterm_exam.pdf',
-      filePublicId: 'chem_midterm_exam',
+      publicId: 'chem_midterm_exam',
       fileSize: 2097152,
       fileType: 'application/pdf',
       subject: 'Chemistry',
