@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import api from '../lib/api.js';
 import type { Resource } from '../types/index.js';
 import { ResourceCard } from '../components/ResourceCard.js';
+import { ResourcePreviewModal } from '../components/ResourcePreviewModal.js';
 import {
   Upload,
   Search,
@@ -19,6 +20,7 @@ export const ResourceHubPage: React.FC = () => {
   const [subject, setSubject] = useState('');
   const [type, setType] = useState('');
   const [myResources, setMyResources] = useState(false);
+  const [previewResource, setPreviewResource] = useState<Resource | null>(null);
 
   useEffect(() => {
     fetchResources();
@@ -67,6 +69,22 @@ export const ResourceHubPage: React.FC = () => {
     }
   };
 
+  const handleDownloadResource = async (resource: Resource) => {
+    try {
+      const res = await api.post(`/resources/${resource._id}/download`);
+      if (res.data.success) {
+        setResources((prev) =>
+          prev.map((r) =>
+            r._id === resource._id ? { ...r, downloadsCount: res.data.downloadsCount } : r
+          )
+        );
+        window.open(res.data.fileUrl, '_blank');
+      }
+    } catch {
+      window.open(resource.fileUrl, '_blank');
+    }
+  };
+
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-8">
       {/* Page Banner Header */}
@@ -83,7 +101,7 @@ export const ResourceHubPage: React.FC = () => {
               Educational Resource Hub
             </h1>
             <p className="text-xs sm:text-sm text-slate-300 mt-2 max-w-2xl">
-              Discover worksheets, presentations, exams, and notes shared by teachers worldwide. Download freely or share your own materials.
+              Discover worksheets, presentations, exams, and notes shared by teachers worldwide. Preview documents directly, download freely, or share your own materials.
             </p>
           </div>
 
@@ -190,10 +208,18 @@ export const ResourceHubPage: React.FC = () => {
               resource={item}
               onDelete={handleDeleteResource}
               onToggleVisibility={handleToggleVisibility}
+              onPreview={(r) => setPreviewResource(r)}
             />
           ))}
         </div>
       )}
+
+      {/* Document Preview Modal */}
+      <ResourcePreviewModal
+        resource={previewResource}
+        onClose={() => setPreviewResource(null)}
+        onDownload={handleDownloadResource}
+      />
     </div>
   );
 };

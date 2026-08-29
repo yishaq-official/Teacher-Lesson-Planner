@@ -12,12 +12,14 @@ import {
   Globe,
   Lock,
   Calendar,
+  Eye,
 } from 'lucide-react';
 
 interface ResourceCardProps {
   resource: Resource;
   onDelete?: (id: string) => void;
   onToggleVisibility?: (id: string, currentIsPublic: boolean) => void;
+  onPreview?: (resource: Resource) => void;
   onAttach?: (resource: Resource) => void;
   isAttached?: boolean;
 }
@@ -26,6 +28,7 @@ export const ResourceCard: React.FC<ResourceCardProps> = ({
   resource,
   onDelete,
   onToggleVisibility,
+  onPreview,
   onAttach,
   isAttached = false,
 }) => {
@@ -42,7 +45,8 @@ export const ResourceCard: React.FC<ResourceCardProps> = ({
 
   const isPublic = resource.isPublic !== false;
 
-  const handleDownload = async () => {
+  const handleDownload = async (e?: React.MouseEvent) => {
+    if (e) e.stopPropagation();
     try {
       setDownloading(true);
       const res = await api.post(`/resources/${resource._id}/download`);
@@ -133,8 +137,11 @@ export const ResourceCard: React.FC<ResourceCardProps> = ({
         </div>
 
         {/* Resource Title */}
-        <h3 className="font-bold text-base text-slate-100 group-hover:text-indigo-400 transition-colors line-clamp-1 mb-1.5">
-          {resource.title}
+        <h3
+          onClick={() => onPreview && onPreview(resource)}
+          className="font-bold text-base text-slate-100 group-hover:text-indigo-400 transition-colors line-clamp-1 mb-1.5 cursor-pointer flex items-center gap-1.5"
+        >
+          <span>{resource.title}</span>
         </h3>
 
         {/* Topic & Description */}
@@ -188,6 +195,17 @@ export const ResourceCard: React.FC<ResourceCardProps> = ({
 
         {/* Action Controls */}
         <div className="flex items-center gap-2">
+          {onPreview && (
+            <button
+              onClick={() => onPreview(resource)}
+              className="py-2 px-3.5 rounded-xl bg-purple-600/20 hover:bg-purple-600/30 text-purple-300 border border-purple-500/30 text-xs font-semibold flex items-center justify-center gap-1.5 transition-all shrink-0"
+              title="View document preview without downloading"
+            >
+              <Eye className="w-3.5 h-3.5" />
+              <span>View</span>
+            </button>
+          )}
+
           <button
             onClick={handleDownload}
             disabled={downloading}
