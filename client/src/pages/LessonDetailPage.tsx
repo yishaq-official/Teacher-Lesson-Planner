@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, Link, useNavigate } from 'react-router-dom';
 import toast from 'react-hot-toast';
-import api from '../lib/api.js';
+import api, { getApiFileUrl } from '../lib/api.js';
 import type { LessonPlan } from '../types/index.js';
 import {
   ArrowLeft,
@@ -346,7 +346,7 @@ export const LessonDetailPage: React.FC = () => {
                   </div>
 
                   <a
-                    href={res.fileUrl}
+                    href={getApiFileUrl(res.fileUrl)}
                     target="_blank"
                     rel="noreferrer"
                     className="px-3 py-1.5 rounded-xl bg-orange-600/20 hover:bg-orange-600/30 text-orange-300 border border-orange-500/30 text-xs font-semibold flex items-center gap-1 transition-colors shrink-0"

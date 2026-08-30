@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import toast from 'react-hot-toast';
 import { useAuth } from '../context/AuthContext.js';
-import api from '../lib/api.js';
+import api, { getApiFileUrl } from '../lib/api.js';
 import type { Resource, LessonPlan } from '../types/index.js';
 import { ResourceCard } from '../components/ResourceCard.js';
 import { ResourcePreviewModal } from '../components/ResourcePreviewModal.js';
@@ -187,10 +187,10 @@ export const ProfilePage: React.FC = () => {
             r._id === resource._id ? { ...r, downloadsCount: res.data.downloadsCount } : r
           )
         );
-        window.open(res.data.fileUrl, '_blank');
+        window.open(getApiFileUrl(res.data.fileUrl), '_blank');
       }
     } catch {
-      window.open(resource.fileUrl, '_blank');
+      window.open(getApiFileUrl(resource.fileUrl), '_blank');
     }
   };
 

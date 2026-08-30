@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import toast from 'react-hot-toast';
 import type { Resource } from '../types/index.js';
 import { useAuth } from '../context/AuthContext.js';
-import api from '../lib/api.js';
+import api, { getApiFileUrl } from '../lib/api.js';
 import {
   Download,
   Trash2,
@@ -75,10 +75,16 @@ export const ResourceCard: React.FC<ResourceCardProps> = ({
 
   const teacherObj = typeof resource.teacherId === 'object' ? (resource.teacherId as any) : null;
   const teacherName = teacherObj?.name || 'Teacher User';
-  const teacherIdStr = teacherObj ? (teacherObj._id || teacherObj.id) : String(resource.teacherId || '');
+  const teacherEmail = teacherObj?.email || '';
+  const teacherIdStr = teacherObj ? String(teacherObj._id || teacherObj.id || '') : String(resource.teacherId || '');
 
-  const currentUserId = user?.id || (user as any)?._id;
-  const isOwner = Boolean(currentUserId && teacherIdStr && String(currentUserId) === String(teacherIdStr));
+  const currentUserId = String(user?.id || (user as any)?._id || '');
+  const currentUserEmail = String(user?.email || '').toLowerCase();
+
+  const isOwner = Boolean(
+    (currentUserId && teacherIdStr && currentUserId === teacherIdStr) ||
+    (currentUserEmail && teacherEmail && currentUserEmail === teacherEmail.toLowerCase())
+  );
 
   const isPublic = resource.isPublic !== false;
 
@@ -89,11 +95,11 @@ export const ResourceCard: React.FC<ResourceCardProps> = ({
       const res = await api.post(`/resources/${resource._id}/download`);
       if (res.data.success) {
         setDownloadsCount(res.data.downloadsCount);
-        window.open(res.data.fileUrl, '_blank');
+        window.open(getApiFileUrl(res.data.fileUrl), '_blank');
       }
     } catch (err) {
       console.error('Download error:', err);
-      window.open(resource.fileUrl, '_blank');
+      window.open(getApiFileUrl(resource.fileUrl), '_blank');
     } finally {
       setDownloading(false);
     }
@@ -102,17 +108,17 @@ export const ResourceCard: React.FC<ResourceCardProps> = ({
   const getTypeBadgeColor = (type: string) => {
     switch (type) {
       case 'worksheet':
-        return 'bg-emerald-500/10 text-emerald-400 border-emerald-500/30';
+        return 'bg-emerald-950/40 text-emerald-300 border-emerald-800/40';
       case 'presentation':
-        return 'bg-amber-500/10 text-amber-400 border-amber-500/30';
+        return 'bg-amber-950/40 text-amber-300 border-amber-800/40';
       case 'exercise':
-        return 'bg-blue-500/10 text-blue-400 border-blue-500/30';
+        return 'bg-blue-950/40 text-blue-300 border-blue-800/40';
       case 'exam':
-        return 'bg-rose-500/10 text-rose-400 border-rose-500/30';
+        return 'bg-rose-950/40 text-rose-300 border-rose-800/40';
       case 'notes':
-        return 'bg-orange-500/10 text-orange-400 border-orange-500/30';
+        return 'bg-orange-950/40 text-orange-300 border-orange-800/40';
       default:
-        return 'bg-slate-500/10 text-slate-400 border-slate-500/30';
+        return 'bg-slate-800 text-slate-300 border-slate-700';
     }
   };
 
@@ -137,13 +143,13 @@ export const ResourceCard: React.FC<ResourceCardProps> = ({
   };
 
   return (
-    <div className="glass-card rounded-2xl p-5 flex flex-col justify-between relative group border border-slate-800 hover:border-orange-500/40 transition-all">
+    <div className="bg-slate-900/80 backdrop-blur-md rounded-2xl p-5 flex flex-col justify-between relative group border border-slate-800/90 hover:border-slate-700 transition-all shadow-md">
       <div>
         {/* Header Badges */}
         <div className="flex items-center justify-between gap-2 mb-3">
           <div className="flex items-center gap-1.5">
             <span
-              className={`text-xs font-semibold px-2.5 py-1 rounded-lg border capitalize ${getTypeBadgeColor(
+              className={`text-[11px] font-semibold px-2.5 py-0.5 rounded-lg border capitalize ${getTypeBadgeColor(
                 resource.type
               )}`}
             >
@@ -152,10 +158,10 @@ export const ResourceCard: React.FC<ResourceCardProps> = ({
 
             {/* Visibility Badge */}
             <span
-              className={`text-[10px] font-semibold px-2 py-0.5 rounded-md border flex items-center gap-1 ${
+              className={`text-[10px] font-medium px-2 py-0.5 rounded-md border flex items-center gap-1 ${
                 isPublic
-                  ? 'bg-emerald-500/10 text-emerald-300 border-emerald-500/30'
-                  : 'bg-amber-500/10 text-amber-300 border-amber-500/30'
+                  ? 'bg-emerald-950/30 text-emerald-300 border-emerald-800/40'
+                  : 'bg-amber-950/30 text-amber-300 border-amber-800/40'
               }`}
             >
               {isPublic ? <Globe className="w-3 h-3 text-emerald-400" /> : <Lock className="w-3 h-3 text-amber-400" />}
@@ -164,10 +170,10 @@ export const ResourceCard: React.FC<ResourceCardProps> = ({
           </div>
 
           <div className="flex items-center gap-1.5 text-xs text-slate-400">
-            <span className="px-2 py-0.5 rounded bg-slate-800 border border-slate-700 text-slate-300 font-mono text-[11px]">
+            <span className="px-2 py-0.5 rounded bg-slate-800 border border-slate-700/70 text-slate-300 font-mono text-[11px]">
               {resource.subject}
             </span>
-            <span className="px-2 py-0.5 rounded bg-slate-800 border border-slate-700 text-slate-300 font-mono text-[11px]">
+            <span className="px-2 py-0.5 rounded bg-slate-800 border border-slate-700/70 text-slate-300 font-mono text-[11px]">
               {resource.grade}
             </span>
             <button
@@ -178,7 +184,7 @@ export const ResourceCard: React.FC<ResourceCardProps> = ({
               className={`p-1.5 rounded-lg border transition-all shrink-0 ${
                 bookmarked
                   ? 'bg-orange-500/20 text-orange-400 border-orange-500/40 shadow-sm shadow-orange-500/20'
-                  : 'bg-slate-900 text-slate-400 border-slate-700/80 hover:text-orange-400 hover:border-slate-600'
+                  : 'bg-slate-800/80 text-slate-400 border-slate-700/60 hover:text-orange-400 hover:border-slate-600'
               }`}
             >
               <Bookmark className={`w-3.5 h-3.5 ${bookmarked ? 'fill-orange-400 text-orange-400' : ''}`} />
@@ -189,13 +195,13 @@ export const ResourceCard: React.FC<ResourceCardProps> = ({
         {/* Resource Title */}
         <h3
           onClick={() => onPreview && onPreview(resource)}
-          className="font-extrabold text-base text-white group-hover:text-orange-400 transition-colors line-clamp-1 mb-1.5 cursor-pointer flex items-center gap-1.5"
+          className="font-bold text-base text-white hover:text-orange-400 transition-colors line-clamp-1 mb-1.5 cursor-pointer flex items-center gap-1.5"
         >
           <span>{resource.title}</span>
         </h3>
 
         {/* Topic & Description */}
-        <p className="text-xs font-semibold text-slate-300 mb-3 line-clamp-2 leading-relaxed">
+        <p className="text-xs text-slate-300 mb-3 line-clamp-2 leading-relaxed">
           {resource.description || `Educational ${resource.type} focusing on ${resource.topic}.`}
         </p>
 
@@ -210,7 +216,7 @@ export const ResourceCard: React.FC<ResourceCardProps> = ({
                   e.stopPropagation();
                   if (onSelectTag) onSelectTag(tag);
                 }}
-                className="text-[10px] font-bold text-slate-300 bg-slate-800/90 hover:bg-slate-700 hover:text-orange-300 px-2 py-0.5 rounded-md flex items-center gap-1 border border-slate-700/60 transition-all cursor-pointer"
+                className="text-[10px] font-medium text-slate-300 bg-slate-800/80 hover:bg-slate-700 hover:text-orange-300 px-2 py-0.5 rounded-md flex items-center gap-1 border border-slate-700/60 transition-all cursor-pointer"
                 title={`Filter by tag #${tag}`}
               >
                 <Tag className="w-2.5 h-2.5 text-orange-400" />
@@ -224,27 +230,27 @@ export const ResourceCard: React.FC<ResourceCardProps> = ({
       <div>
         {/* Author metadata, Post Date & file size */}
         <div className="pt-3 border-t border-slate-800/80 space-y-1.5 mb-4">
-          <div className="flex items-center justify-between text-xs text-slate-200">
+          <div className="flex items-center justify-between text-xs text-slate-300">
             <div className="flex items-center gap-1.5 truncate">
               <User className="w-3.5 h-3.5 text-orange-400 shrink-0" />
-              <span className="font-bold text-slate-100 truncate">
-                By <span className="text-orange-300">@{teacherName}</span> {isOwner && <span className="text-[10px] text-orange-400 font-mono font-bold">(You)</span>}
+              <span className="text-slate-200 truncate">
+                By <span className="text-slate-100 font-medium">@{teacherName}</span> {isOwner && <span className="text-[10px] text-orange-400 font-mono font-bold">(You)</span>}
               </span>
             </div>
-            <span className="text-[11px] font-mono text-slate-300 font-semibold">
+            <span className="text-[11px] font-mono text-slate-400 font-medium">
               {formatFileSize(resource.fileSize)}
             </span>
           </div>
 
-          <div className="flex items-center justify-between text-[11px] text-slate-300 font-medium">
+          <div className="flex items-center justify-between text-[11px] text-slate-400 font-medium">
             <div className="flex items-center gap-1">
-              <Calendar className="w-3 h-3 text-orange-400" />
+              <Calendar className="w-3 h-3 text-slate-500" />
               <span>Posted: {formatDate(resource.createdAt) || 'Recently'}</span>
             </div>
             {resource.publicId && resource.publicId.startsWith('local/') ? (
               <span className="text-[10px] text-slate-400 font-mono">Local File</span>
             ) : (
-              <span className="text-[10px] text-emerald-400 font-mono font-bold">Cloudinary</span>
+              <span className="text-[10px] text-emerald-400/90 font-mono font-medium">Cloudinary</span>
             )}
           </div>
         </div>
@@ -254,7 +260,7 @@ export const ResourceCard: React.FC<ResourceCardProps> = ({
           {onPreview && (
             <button
               onClick={() => onPreview(resource)}
-              className="py-2 px-3 rounded-xl bg-slate-800 hover:bg-slate-700 text-white font-bold border border-slate-700 text-xs flex items-center justify-center gap-1.5 transition-all shrink-0 shadow-sm"
+              className="py-2 px-3 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 font-semibold border border-slate-700/80 text-xs flex items-center justify-center gap-1.5 transition-all shrink-0"
               title="View document preview without downloading"
             >
               <Eye className="w-3.5 h-3.5 text-orange-400 shrink-0" />
@@ -265,22 +271,22 @@ export const ResourceCard: React.FC<ResourceCardProps> = ({
           <button
             onClick={handleDownload}
             disabled={downloading}
-            className="flex-1 py-2 px-3 rounded-xl gradient-bg-primary hover:opacity-95 text-white font-bold text-xs flex items-center justify-center gap-1.5 shadow-md shadow-orange-600/20 transition-all min-w-0"
+            className="flex-1 py-2 px-3 rounded-xl bg-slate-800 hover:bg-slate-700 text-orange-400 hover:text-orange-300 font-semibold border border-slate-700 hover:border-orange-500/40 text-xs flex items-center justify-center gap-1.5 transition-all min-w-0"
           >
-            <Download className="w-3.5 h-3.5 text-white shrink-0" />
+            <Download className="w-3.5 h-3.5 text-orange-400 shrink-0" />
             <span className="truncate">Download ({downloadsCount})</span>
           </button>
 
           {onAttach && (
             <button
               onClick={() => onAttach(resource)}
-              className={`py-2 px-3 rounded-xl text-xs font-bold flex items-center justify-center gap-1.5 transition-all shrink-0 ${
+              className={`py-2 px-3 rounded-xl text-xs font-semibold flex items-center justify-center gap-1.5 transition-all shrink-0 ${
                 isAttached
-                  ? 'bg-emerald-500/20 text-emerald-300 border border-emerald-500/40'
-                  : 'bg-slate-800 hover:bg-slate-700 text-white border border-slate-700'
+                  ? 'bg-emerald-950/40 text-emerald-300 border border-emerald-800/60'
+                  : 'bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700'
               }`}
             >
-              {isAttached ? <Check className="w-3.5 h-3.5 text-emerald-400" /> : <Plus className="w-3.5 h-3.5 text-slate-300" />}
+              {isAttached ? <Check className="w-3.5 h-3.5 text-emerald-400" /> : <Plus className="w-3.5 h-3.5 text-slate-400" />}
               <span>{isAttached ? 'Attached' : 'Attach'}</span>
             </button>
           )}
@@ -291,22 +297,25 @@ export const ResourceCard: React.FC<ResourceCardProps> = ({
               title={isPublic ? 'Click to make Private (Only visible to you)' : 'Click to make Public (Shared in Hub)'}
               className={`p-2 rounded-xl border transition-colors flex items-center justify-center shrink-0 ${
                 isPublic
-                  ? 'bg-emerald-500/10 hover:bg-emerald-500/20 text-emerald-300 border-emerald-500/30'
-                  : 'bg-amber-500/10 hover:bg-amber-500/20 text-amber-300 border-amber-500/30'
+                  ? 'bg-emerald-950/40 hover:bg-emerald-900/40 text-emerald-300 border-emerald-800/40'
+                  : 'bg-amber-950/40 hover:bg-amber-900/40 text-amber-300 border-amber-800/40'
               }`}
             >
               {isPublic ? <Globe className="w-4 h-4" /> : <Lock className="w-4 h-4" />}
             </button>
           )}
 
-          {isOwner && onDelete && (
+          {onDelete && (
             <button
-              onClick={() => onDelete(resource._id)}
+              onClick={(e) => {
+                e.stopPropagation();
+                onDelete(resource._id);
+              }}
               title="Delete resource"
-              className="py-2 px-3 rounded-xl bg-rose-500/10 hover:bg-rose-500/20 text-rose-400 border border-rose-500/20 text-xs font-bold flex items-center gap-1.5 transition-colors shrink-0"
+              className="py-2 px-3 rounded-xl bg-rose-950/40 hover:bg-rose-900/60 text-rose-300 border border-rose-800/50 text-xs font-semibold flex items-center gap-1.5 transition-colors shrink-0"
             >
               <Trash2 className="w-3.5 h-3.5 text-rose-400" />
-              <span className="hidden sm:inline">Delete</span>
+              <span>Delete</span>
             </button>
           )}
         </div>

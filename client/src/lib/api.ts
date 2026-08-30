@@ -11,4 +11,14 @@ export const api = axios.create({
   },
 });
 
+export const getApiFileUrl = (fileUrl?: string): string => {
+  if (!fileUrl) return '';
+  if (fileUrl.startsWith('http://') || fileUrl.startsWith('https://') || fileUrl.startsWith('blob:') || fileUrl.startsWith('data:')) {
+    return fileUrl;
+  }
+  const apiDomain = cleanBaseUrl.replace(/\/api$/, '');
+  const cleanPath = fileUrl.startsWith('/') ? fileUrl : `/${fileUrl}`;
+  return `${apiDomain}${cleanPath}`;
+};
+
 export default api;

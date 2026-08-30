@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import type { Resource } from '../types/index.js';
+import { getApiFileUrl } from '../lib/api.js';
 import { X, Download, ExternalLink, FileText, User, Calendar, Globe, Lock, AlertTriangle, Eye } from 'lucide-react';
 
 interface ResourcePreviewModalProps {
@@ -18,7 +19,7 @@ export const ResourcePreviewModal: React.FC<ResourcePreviewModalProps> = ({
 
   if (!resource) return null;
 
-  const fileUrl = resource.fileUrl;
+  const fileUrl = getApiFileUrl(resource.fileUrl);
   const isImage = resource.fileType?.startsWith('image/') || /\.(jpg|jpeg|png|webp|gif|svg)$/i.test(fileUrl);
   const isPdf = resource.fileType === 'application/pdf' || /\.pdf$/i.test(fileUrl);
 
