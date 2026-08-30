@@ -19,6 +19,7 @@ import {
 
 interface ResourceCardProps {
   resource: Resource;
+  variant?: 'default' | 'compact';
   onDelete?: (id: string) => void;
   onToggleVisibility?: (id: string, currentIsPublic: boolean) => void;
   onPreview?: (resource: Resource) => void;
@@ -31,6 +32,7 @@ interface ResourceCardProps {
 
 export const ResourceCard: React.FC<ResourceCardProps> = ({
   resource,
+  variant = 'default',
   onDelete,
   onToggleVisibility,
   onPreview,
@@ -145,6 +147,107 @@ export const ResourceCard: React.FC<ResourceCardProps> = ({
       return '';
     }
   };
+
+  if (variant === 'compact') {
+    return (
+      <div className="bg-slate-900/80 backdrop-blur-md rounded-2xl p-4 border border-slate-800/90 hover:border-slate-700 transition-all shadow-lg hover:shadow-xl overflow-hidden">
+        <div className="flex items-start justify-between gap-3">
+          <div className="min-w-0 flex-1 space-y-2">
+            <div className="flex items-center flex-wrap gap-1.5 min-w-0">
+              <span
+                className={`text-[10px] font-semibold px-2 py-0.5 rounded-lg border capitalize shrink-0 ${getTypeBadgeColor(
+                  resource.type
+                )}`}
+              >
+                {resource.type}
+              </span>
+
+              <span
+                className={`text-[10px] font-medium px-2 py-0.5 rounded-md border flex items-center gap-1 shrink-0 ${
+                  isPublic
+                    ? 'bg-emerald-950/40 text-emerald-300 border-emerald-800/50'
+                    : 'bg-amber-950/40 text-amber-300 border-amber-800/50'
+                }`}
+              >
+                {isPublic ? <Globe className="w-3 h-3 text-emerald-400" /> : <Lock className="w-3 h-3 text-amber-400" />}
+                {isPublic ? 'Public' : 'Private'}
+              </span>
+
+              <span className="px-2 py-0.5 rounded bg-slate-800/90 border border-slate-700/70 text-slate-300 font-mono text-[10px]">
+                {resource.subject}
+              </span>
+            </div>
+
+            <button
+              type="button"
+              onClick={() => onPreview && onPreview(resource)}
+              className="text-left w-full"
+            >
+              <h3 className="font-bold text-sm text-white hover:text-orange-400 transition-colors line-clamp-1 cursor-pointer">
+                {resource.title}
+              </h3>
+            </button>
+
+            <p className="text-[11px] text-slate-300 line-clamp-2 leading-relaxed">
+              {resource.description || `Educational ${resource.type} focusing on ${resource.topic}.`}
+            </p>
+          </div>
+
+          <button
+            type="button"
+            onClick={handleToggleBookmark}
+            disabled={bookmarking}
+            title={bookmarked ? 'Remove from Saved Items' : 'Save to Bookmarks'}
+            className={`p-1.5 rounded-lg border transition-all shrink-0 ${
+              bookmarked
+                ? 'bg-orange-500/20 text-orange-400 border-orange-500/40 shadow-sm shadow-orange-500/20'
+                : 'bg-slate-800/90 text-slate-400 border-slate-700/60 hover:text-orange-400 hover:border-slate-600'
+            }`}
+          >
+            <Bookmark className={`w-3.5 h-3.5 ${bookmarked ? 'fill-orange-400 text-orange-400' : ''}`} />
+          </button>
+        </div>
+
+        <div className="mt-3 pt-3 border-t border-slate-800/80 flex items-center justify-between gap-3">
+          <div className="min-w-0">
+            <div className="flex items-center gap-1.5 text-[11px] text-slate-300 truncate">
+              <User className="w-3.5 h-3.5 text-orange-400 shrink-0" />
+              <span className="truncate">
+                @{teacherName}
+                {isOwner && <span className="text-[10px] text-orange-400 font-mono font-bold"> (You)</span>}
+              </span>
+            </div>
+            <div className="flex items-center gap-2 text-[10px] text-slate-400 mt-1">
+              <span>{formatFileSize(resource.fileSize)}</span>
+              <span className="text-slate-600">•</span>
+              <span>{formatDate(resource.createdAt) || 'Recently'}</span>
+            </div>
+          </div>
+
+          <div className="flex items-center gap-2 shrink-0">
+            {onPreview && (
+              <button
+                onClick={() => onPreview(resource)}
+                className="px-3 py-1.5 rounded-xl bg-slate-800/90 hover:bg-slate-700 text-slate-200 font-semibold border border-slate-700/80 text-[11px] flex items-center justify-center gap-1.5 transition-all"
+              >
+                <Eye className="w-3.5 h-3.5 text-orange-400 shrink-0" />
+                <span>View</span>
+              </button>
+            )}
+
+            <button
+              onClick={handleDownload}
+              disabled={downloading}
+              className="px-3 py-1.5 rounded-xl bg-orange-600 hover:bg-orange-500 text-white font-bold text-[11px] flex items-center justify-center gap-1.5 shadow-md shadow-orange-600/20 transition-all"
+            >
+              <Download className="w-3.5 h-3.5 text-white shrink-0" />
+              <span>Download</span>
+            </button>
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="bg-slate-900/90 backdrop-blur-md rounded-2xl p-5 flex flex-col justify-between relative group border border-slate-800/90 hover:border-slate-700 transition-all shadow-lg hover:shadow-xl overflow-hidden">

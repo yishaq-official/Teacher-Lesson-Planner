@@ -60,7 +60,6 @@ export const uploadToCloudinary = (
       api_secret: apiSecret,
     });
 
-    const isPdf = ext === '.pdf';
     const resourceType = isPdf ? 'raw' : 'auto';
 
     console.log(`[Cloudinary Uploading]: File '${filename}' (${fileBuffer.length} bytes, type: ${resourceType}) to Cloud '${cloudName}'`);

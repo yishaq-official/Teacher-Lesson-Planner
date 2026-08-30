@@ -4,6 +4,7 @@ import { MongoClient } from 'mongodb';
 
 const mongoUri = process.env.MONGODB_URI || 'mongodb://localhost:27017/teacher_planner';
 export const mongoClient = new MongoClient(mongoUri);
+const baseURL = process.env.BETTER_AUTH_URL || 'http://localhost:5000';
 
 const clientOrigins = [
   process.env.CLIENT_URL,
@@ -14,6 +15,7 @@ const clientOrigins = [
 ].filter(Boolean) as string[];
 
 export const auth = betterAuth({
+  baseURL,
   database: mongodbAdapter(mongoClient.db()),
   emailAndPassword: {
     enabled: true,
