@@ -12,6 +12,7 @@ export interface IUser {
   phone?: string;
   location?: string;
   yearsOfExperience?: number | string;
+  savedResources?: string[];
   createdAt?: Date;
   updatedAt?: Date;
 }
@@ -29,6 +30,7 @@ const UserSchema: Schema = new Schema(
     phone: { type: String, default: '' },
     location: { type: String, default: '' },
     yearsOfExperience: { type: Schema.Types.Mixed, default: '' },
+    savedResources: [{ type: String, ref: 'Resource' }],
   },
   { timestamps: true, collection: 'user' }
 );

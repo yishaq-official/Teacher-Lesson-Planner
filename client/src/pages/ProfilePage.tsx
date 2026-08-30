@@ -25,8 +25,10 @@ import {
   ArrowRight,
   Eye,
   Calendar,
+  Calendar,
   Layers,
   Settings,
+  Bookmark,
 } from 'lucide-react';
 
 interface ProfileStats {
@@ -38,7 +40,7 @@ interface ProfileStats {
 export const ProfilePage: React.FC = () => {
   const { user, refetchSession } = useAuth();
 
-  const [activeTab, setActiveTab] = useState<'settings' | 'resources' | 'lessons'>('settings');
+  const [activeTab, setActiveTab] = useState<'settings' | 'resources' | 'saved' | 'lessons'>('settings');
 
   const [name, setName] = useState(user?.name || '');
   const [institution, setInstitution] = useState(user?.institution || '');

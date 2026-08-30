@@ -10,6 +10,7 @@ export interface User {
   phone?: string;
   location?: string;
   yearsOfExperience?: number | string;
+  savedResources?: string[];
 }
 
 export interface Resource {

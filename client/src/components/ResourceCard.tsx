@@ -13,6 +13,7 @@ import {
   Lock,
   Calendar,
   Eye,
+  Bookmark,
 } from 'lucide-react';
 
 interface ResourceCardProps {
@@ -21,7 +22,9 @@ interface ResourceCardProps {
   onToggleVisibility?: (id: string, currentIsPublic: boolean) => void;
   onPreview?: (resource: Resource) => void;
   onAttach?: (resource: Resource) => void;
+  onBookmarkToggle?: (id: string, isBookmarked: boolean) => void;
   isAttached?: boolean;
+  isBookmarkedInitial?: boolean;
 }
 
 export const ResourceCard: React.FC<ResourceCardProps> = ({
@@ -30,11 +33,40 @@ export const ResourceCard: React.FC<ResourceCardProps> = ({
   onToggleVisibility,
   onPreview,
   onAttach,
+  onBookmarkToggle,
   isAttached = false,
+  isBookmarkedInitial,
 }) => {
   const { user } = useAuth();
   const [downloading, setDownloading] = useState(false);
   const [downloadsCount, setDownloadsCount] = useState(resource.downloadsCount || 0);
+
+  const initialBookmarked =
+    isBookmarkedInitial !== undefined
+      ? isBookmarkedInitial
+      : Boolean(user?.savedResources && user.savedResources.includes(resource._id));
+
+  const [bookmarked, setBookmarked] = useState(initialBookmarked);
+  const [bookmarking, setBookmarking] = useState(false);
+
+  const handleToggleBookmark = async (e: React.MouseEvent) => {
+    e.stopPropagation();
+    if (bookmarking) return;
+    try {
+      setBookmarking(true);
+      const res = await api.post(`/user/bookmarks/${resource._id}`);
+      if (res.data.success) {
+        setBookmarked(res.data.isBookmarked);
+        if (onBookmarkToggle) {
+          onBookmarkToggle(resource._id, res.data.isBookmarked);
+        }
+      }
+    } catch (err) {
+      console.error('Failed to toggle bookmark:', err);
+    } finally {
+      setBookmarking(false);
+    }
+  };
 
   const teacherObj = typeof resource.teacherId === 'object' ? (resource.teacherId as any) : null;
   const teacherName = teacherObj?.name || 'Teacher User';
@@ -126,13 +158,26 @@ export const ResourceCard: React.FC<ResourceCardProps> = ({
             </span>
           </div>
 
-          <div className="flex items-center gap-1 text-xs text-slate-400">
+          <div className="flex items-center gap-1.5 text-xs text-slate-400">
             <span className="px-2 py-0.5 rounded bg-slate-800 border border-slate-700 text-slate-300 font-mono text-[11px]">
               {resource.subject}
             </span>
             <span className="px-2 py-0.5 rounded bg-slate-800 border border-slate-700 text-slate-300 font-mono text-[11px]">
               {resource.grade}
             </span>
+            <button
+              type="button"
+              onClick={handleToggleBookmark}
+              disabled={bookmarking}
+              title={bookmarked ? 'Remove from Saved Items' : 'Save to Bookmarks'}
+              className={`p-1.5 rounded-lg border transition-all shrink-0 ${
+                bookmarked
+                  ? 'bg-orange-500/20 text-orange-400 border-orange-500/40 shadow-sm shadow-orange-500/20'
+                  : 'bg-slate-900 text-slate-400 border-slate-700/80 hover:text-orange-400 hover:border-slate-600'
+              }`}
+            >
+              <Bookmark className={`w-3.5 h-3.5 ${bookmarked ? 'fill-orange-400 text-orange-400' : ''}`} />
+            </button>
           </div>
         </div>
 

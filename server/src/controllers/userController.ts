@@ -103,3 +103,71 @@ export const updateProfile = async (req: AuthenticatedRequest, res: Response): P
     res.status(500).json({ success: false, message: error.message || 'Failed to update user profile' });
   }
 };
+
+// POST /api/user/bookmarks/:resourceId - Toggle save/bookmark resource
+export const toggleBookmark = async (req: AuthenticatedRequest, res: Response): Promise<void> => {
+  try {
+    const userId = req.user?.id;
+    const { resourceId } = req.params;
+
+    if (!userId) {
+      res.status(401).json({ success: false, message: 'Unauthorized' });
+      return;
+    }
+
+    const user = await User.findById(userId);
+    if (!user) {
+      res.status(404).json({ success: false, message: 'User not found' });
+      return;
+    }
+
+    const saved = user.savedResources || [];
+    const existsIndex = saved.findIndex((id: string) => String(id) === String(resourceId));
+
+    let isBookmarked = false;
+    if (existsIndex > -1) {
+      saved.splice(existsIndex, 1);
+      isBookmarked = false;
+    } else {
+      saved.push(resourceId);
+      isBookmarked = true;
+    }
+
+    user.savedResources = saved;
+    await user.save();
+
+    res.json({
+      success: true,
+      isBookmarked,
+      savedResources: user.savedResources,
+      message: isBookmarked ? 'Resource saved to your bookmarks' : 'Resource removed from bookmarks',
+    });
+  } catch (error) {
+    console.error('[toggleBookmark Error]:', error);
+    res.status(500).json({ success: false, message: 'Failed to update bookmark' });
+  }
+};
+
+// GET /api/user/bookmarks - Get bookmarked resources
+export const getBookmarkedResources = async (req: AuthenticatedRequest, res: Response): Promise<void> => {
+  try {
+    const userId = req.user?.id;
+    if (!userId) {
+      res.status(401).json({ success: false, message: 'Unauthorized' });
+      return;
+    }
+
+    const user = await User.findById(userId).populate({
+      path: 'savedResources',
+      populate: { path: 'teacherId', select: 'name institution email image' },
+    });
+
+    res.json({
+      success: true,
+      resources: user?.savedResources || [],
+    });
+  } catch (error) {
+    console.error('[getBookmarkedResources Error]:', error);
+    res.status(500).json({ success: false, message: 'Failed to retrieve saved resources' });
+  }
+};
