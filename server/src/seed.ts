@@ -37,56 +37,7 @@ const seed = async () => {
     const teacherId = authUser.user.id;
     console.log(`Demo Teacher Account created! User ID: ${teacherId}`);
 
-    // 2. Create Shared Teaching Resources
-    const res1 = await Resource.create({
-      title: 'Photosynthesis & Chloroplast Structure Diagram Worksheet',
-      description: 'Comprehensive 2-page student worksheet covering light-dependent reactions, Calvin cycle, and chloroplast anatomy with answer key.',
-      fileUrl: 'https://res.cloudinary.com/demo/image/upload/v1/samples/biodemo_photosynthesis.pdf',
-      publicId: 'biodemo_photosynthesis',
-      fileSize: 1048576,
-      fileType: 'application/pdf',
-      subject: 'Biology',
-      grade: 'Grade 9',
-      topic: 'Photosynthesis & Cellular Energy',
-      type: 'worksheet',
-      teacherId: teacherId,
-      downloadsCount: 42,
-      tags: ['biology', 'photosynthesis', 'worksheet', 'cell-biology'],
-    });
-
-    const res2 = await Resource.create({
-      title: 'Quadratic Functions & Parabola Graphing Slide Deck',
-      description: '30-slide presentation explaining vertex form, axis of symmetry, and real-world trajectory problem solving.',
-      fileUrl: 'https://res.cloudinary.com/demo/image/upload/v1/samples/math_quadratics.pptx',
-      publicId: 'math_quadratics',
-      fileSize: 3145728,
-      fileType: 'application/vnd.openxmlformats-officedocument.presentationml.presentation',
-      subject: 'Mathematics',
-      grade: 'Grade 10',
-      topic: 'Quadratic Functions & Algebra',
-      type: 'presentation',
-      teacherId: teacherId,
-      downloadsCount: 18,
-      tags: ['math', 'algebra', 'slides', 'quadratics'],
-    });
-
-    const res3 = await Resource.create({
-      title: 'Periodic Table & Chemical Bonding Midterm Review Exam',
-      description: 'Practice exam with multiple choice, short answer, and ionic vs covalent bonding diagrams.',
-      fileUrl: 'https://res.cloudinary.com/demo/image/upload/v1/samples/chem_midterm_exam.pdf',
-      publicId: 'chem_midterm_exam',
-      fileSize: 2097152,
-      fileType: 'application/pdf',
-      subject: 'Chemistry',
-      grade: 'Grade 11',
-      topic: 'Chemical Bonding & Periodic Trends',
-      type: 'exam',
-      teacherId: teacherId,
-      downloadsCount: 29,
-      tags: ['chemistry', 'exam', 'periodic-table', 'bonding'],
-    });
-
-    console.log('Sample teaching resources created!');
+    // 2. Sample resources step removed (teachers upload their own real resources)
 
     // 3. Create Sample Lesson Plans
     await LessonPlan.create({
@@ -110,7 +61,7 @@ const seed = async () => {
       teacherNotes: 'Bring mitochondrion model from lab prep room before Period 2.',
       status: 'upcoming',
       teacherId: teacherId,
-      resources: [res1._id],
+      resources: [],
     });
 
     await LessonPlan.create({
@@ -134,7 +85,7 @@ const seed = async () => {
       teacherNotes: 'Check in with Sarah and Marcus on isolating terms with negative coefficients.',
       status: 'upcoming',
       teacherId: teacherId,
-      resources: [res2._id],
+      resources: [],
     });
 
     await LessonPlan.create({
@@ -157,7 +108,7 @@ const seed = async () => {
       teacherNotes: 'Lab demo went great! High student participation during whiteboard section.',
       status: 'completed',
       teacherId: teacherId,
-      resources: [res3._id],
+      resources: [],
     });
 
     console.log('Sample lesson plans created!');
