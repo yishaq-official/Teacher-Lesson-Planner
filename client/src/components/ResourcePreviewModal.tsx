@@ -15,7 +15,6 @@ export const ResourcePreviewModal: React.FC<ResourcePreviewModalProps> = ({
   onDownload,
 }) => {
   const [loadError, setLoadError] = useState(false);
-  const [useGoogleViewer, setUseGoogleViewer] = useState(false);
 
   if (!resource) return null;
 
