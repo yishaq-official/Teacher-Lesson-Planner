@@ -11,6 +11,7 @@ import {
   FolderOpen,
   Loader2,
   Sparkles,
+  Bookmark,
 } from 'lucide-react';
 
 export const ResourceHubPage: React.FC = () => {
@@ -20,15 +21,36 @@ export const ResourceHubPage: React.FC = () => {
   const [subject, setSubject] = useState('');
   const [type, setType] = useState('');
   const [myResources, setMyResources] = useState(false);
+  const [onlySaved, setOnlySaved] = useState(false);
   const [previewResource, setPreviewResource] = useState<Resource | null>(null);
 
   useEffect(() => {
     fetchResources();
-  }, [search, subject, type, myResources]);
+  }, [search, subject, type, myResources, onlySaved]);
 
   const fetchResources = async () => {
     try {
       setLoading(true);
+      if (onlySaved) {
+        const res = await api.get('/user/bookmarks');
+        if (res.data.success) {
+          let list = res.data.resources || [];
+          if (subject) list = list.filter((r: Resource) => r.subject === subject);
+          if (type) list = list.filter((r: Resource) => r.type === type);
+          if (search) {
+            const q = search.toLowerCase();
+            list = list.filter(
+              (r: Resource) =>
+                r.title.toLowerCase().includes(q) ||
+                r.topic?.toLowerCase().includes(q) ||
+                r.description?.toLowerCase().includes(q)
+            );
+          }
+          setResources(list);
+        }
+        return;
+      }
+
       const params: any = {};
       if (search) params.q = search;
       if (subject) params.subject = subject;
@@ -167,7 +189,10 @@ export const ResourceHubPage: React.FC = () => {
 
         {/* My Resources Toggle */}
         <button
-          onClick={() => setMyResources(!myResources)}
+          onClick={() => {
+            setMyResources(!myResources);
+            if (!myResources) setOnlySaved(false);
+          }}
           className={`w-full md:w-auto justify-center px-3 py-2 rounded-xl text-xs font-semibold flex items-center gap-1.5 transition-all ${
             myResources
               ? 'gradient-bg-primary text-white shadow-md shadow-orange-600/20'
@@ -176,6 +201,22 @@ export const ResourceHubPage: React.FC = () => {
         >
           <UserCheck className="w-3.5 h-3.5" />
           My Uploads
+        </button>
+
+        {/* Saved Items Toggle */}
+        <button
+          onClick={() => {
+            setOnlySaved(!onlySaved);
+            if (!onlySaved) setMyResources(false);
+          }}
+          className={`w-full md:w-auto justify-center px-3 py-2 rounded-xl text-xs font-semibold flex items-center gap-1.5 transition-all ${
+            onlySaved
+              ? 'bg-amber-500/20 text-amber-300 border border-amber-500/40 shadow-md shadow-amber-500/10'
+              : 'bg-slate-900 text-slate-400 border border-slate-700 hover:text-slate-200'
+          }`}
+        >
+          <Bookmark className={`w-3.5 h-3.5 ${onlySaved ? 'fill-amber-300 text-amber-300' : ''}`} />
+          Saved Items
         </button>
       </div>
 
