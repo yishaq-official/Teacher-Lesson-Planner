@@ -105,6 +105,21 @@ export const uploadResource = async (req: AuthenticatedRequest, res: Response): 
     const parsedTags = typeof tags === 'string' ? tags.split(',').map((t) => t.trim()) : (Array.isArray(tags) ? tags : []);
     const isPublicBool = isPublic === 'false' || isPublic === false ? false : true;
 
+    if (req.user?.id) {
+      await User.findOneAndUpdate(
+        { _id: req.user.id },
+        {
+          $set: {
+            name: req.user.name || 'Teacher User',
+            email: req.user.email || '',
+            institution: req.user.institution || '',
+            subject: req.user.subject || '',
+          },
+        },
+        { upsert: true, new: true }
+      );
+    }
+
     const resource = await Resource.create({
       teacherId: req.user?.id,
       title,

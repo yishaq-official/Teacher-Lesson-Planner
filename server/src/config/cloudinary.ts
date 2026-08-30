@@ -29,8 +29,7 @@ export const uploadToCloudinary = (
 
         fs.writeFileSync(filePath, fileBuffer);
 
-        const serverUrl = process.env.SERVER_URL || 'http://localhost:5000';
-        const localUrl = `${serverUrl}/uploads/${safeFilename}`;
+        const localUrl = `/uploads/${safeFilename}`;
 
         return resolve({
           url: localUrl,

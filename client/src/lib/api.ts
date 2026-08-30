@@ -13,11 +13,25 @@ export const api = axios.create({
 
 export const getApiFileUrl = (fileUrl?: string): string => {
   if (!fileUrl) return '';
-  if (fileUrl.startsWith('http://') || fileUrl.startsWith('https://') || fileUrl.startsWith('blob:') || fileUrl.startsWith('data:')) {
-    return fileUrl;
+
+  // Extract relative path if localhost or /uploads/ path was stored in DB
+  let relativePath = fileUrl;
+  if (fileUrl.includes('/uploads/')) {
+    relativePath = '/uploads/' + fileUrl.split('/uploads/')[1];
+  } else if (fileUrl.startsWith('http://') || fileUrl.startsWith('https://') || fileUrl.startsWith('blob:') || fileUrl.startsWith('data:')) {
+    // If it's a real external URL (e.g. Cloudinary), return as is
+    if (!fileUrl.includes('localhost:') && !fileUrl.includes('127.0.0.1:')) {
+      return fileUrl;
+    }
+    try {
+      relativePath = new URL(fileUrl).pathname;
+    } catch {
+      relativePath = fileUrl;
+    }
   }
+
   const apiDomain = cleanBaseUrl.replace(/\/api$/, '');
-  const cleanPath = fileUrl.startsWith('/') ? fileUrl : `/${fileUrl}`;
+  const cleanPath = relativePath.startsWith('/') ? relativePath : `/${relativePath}`;
   return `${apiDomain}${cleanPath}`;
 };
 

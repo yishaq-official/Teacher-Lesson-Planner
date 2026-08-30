@@ -23,10 +23,8 @@ export const ResourcePreviewModal: React.FC<ResourcePreviewModalProps> = ({
   const isImage = resource.fileType?.startsWith('image/') || /\.(jpg|jpeg|png|webp|gif|svg)$/i.test(fileUrl);
   const isPdf = resource.fileType === 'application/pdf' || /\.pdf$/i.test(fileUrl);
 
-  const teacherName =
-    typeof resource.teacherId === 'object' && resource.teacherId?.name
-      ? resource.teacherId.name
-      : 'Teacher User';
+  const teacherObj = typeof resource.teacherId === 'object' ? (resource.teacherId as any) : null;
+  const teacherName = teacherObj?.name || (teacherObj?.email ? teacherObj.email.split('@')[0] : 'Teacher User');
 
   const formatDate = (dateStr?: string) => {
     if (!dateStr) return '';
