@@ -8,6 +8,7 @@ import { toNodeHandler } from 'better-auth/node';
 import { connectDB } from './config/db.js';
 import { auth } from './config/auth.js';
 import './models/User.js';
+import { Resource } from './models/Resource.js';
 
 import lessonRoutes from './routes/lessonRoutes.js';
 import resourceRoutes from './routes/resourceRoutes.js';
@@ -82,6 +83,12 @@ app.use((err: any, req: express.Request, res: express.Response, next: express.Ne
 // Start Server & Connect Database
 const startServer = async () => {
   await connectDB();
+  try {
+    // Ensure all uploaded resources are set to public so they appear on the Community Resource Hub
+    await Resource.updateMany({ $or: [{ isPublic: false }, { isPublic: { $exists: false } }] }, { $set: { isPublic: true } });
+  } catch (e) {
+    console.error('[Resource Migration Warning]:', e);
+  }
   app.listen(PORT, () => {
     console.log(`[Server] Teacher Lesson Planner Server running on http://localhost:${PORT}`);
   });
