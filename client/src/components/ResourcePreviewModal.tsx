@@ -15,6 +15,7 @@ export const ResourcePreviewModal: React.FC<ResourcePreviewModalProps> = ({
   onDownload,
 }) => {
   const [loadError, setLoadError] = useState(false);
+  const [viewerMode, setViewerMode] = useState<'google' | 'native'>('google');
 
   if (!resource) return null;
 
@@ -25,11 +26,14 @@ export const ResourcePreviewModal: React.FC<ResourcePreviewModalProps> = ({
   const isCloudinaryUrl = fileUrl.includes('cloudinary.com') || fileUrl.includes('res.cloudinary');
   const isLocalUploads = fileUrl.includes('/uploads/');
 
-  // For PDFs: always use Google Docs Viewer so browser doesn't need to handle cross-origin iframes
   const getEmbedUrl = (): string | null => {
     if (isImage) return fileUrl;
-    if (isLocalUploads && !isCloudinaryUrl) return null; // ephemeral local filesystem
-    if (isPdf) return `https://docs.google.com/viewer?url=${encodeURIComponent(fileUrl)}&embedded=true`;
+    if (isLocalUploads && !isCloudinaryUrl) return null; // local disk file
+    if (isPdf) {
+      return viewerMode === 'google'
+        ? `https://docs.google.com/viewer?url=${encodeURIComponent(fileUrl)}&embedded=true`
+        : fileUrl;
+    }
     return fileUrl;
   };
   const embedUrl = getEmbedUrl();
@@ -160,20 +164,30 @@ export const ResourcePreviewModal: React.FC<ResourcePreviewModalProps> = ({
             </div>
           ) : embedUrl ? (
             <div className="w-full h-full min-h-[60vh] relative rounded-2xl overflow-hidden border border-slate-800 bg-slate-900/50 flex flex-col">
-              <div className="bg-slate-900 px-4 py-2 border-b border-slate-800 flex items-center justify-between text-xs text-slate-400 shrink-0">
+              <div className="bg-slate-900 px-4 py-2 border-b border-slate-800 flex items-center justify-between text-xs text-slate-400 shrink-0 flex-wrap gap-2">
                 <span className="flex items-center gap-1.5">
                   <FileText className="w-3.5 h-3.5 text-orange-400" />
-                  {isPdf ? 'PDF via Google Docs Viewer' : 'Document Viewer'}
+                  {isPdf ? (viewerMode === 'google' ? 'Google Docs Viewer' : 'Direct Browser PDF Viewer') : 'Document Viewer'}
                 </span>
-                <a
-                  href={fileUrl}
-                  target="_blank"
-                  rel="noreferrer"
-                  className="text-orange-400 hover:text-orange-300 font-semibold flex items-center gap-1"
-                >
-                  <ExternalLink className="w-3.5 h-3.5" />
-                  <span>Open Directly</span>
-                </a>
+                <div className="flex items-center gap-3">
+                  {isPdf && (
+                    <button
+                      onClick={() => setViewerMode(viewerMode === 'google' ? 'native' : 'google')}
+                      className="text-slate-300 hover:text-white underline font-medium"
+                    >
+                      {viewerMode === 'google' ? 'Switch to Direct PDF Embed' : 'Switch to Google Docs Viewer'}
+                    </button>
+                  )}
+                  <a
+                    href={fileUrl}
+                    target="_blank"
+                    rel="noreferrer"
+                    className="text-orange-400 hover:text-orange-300 font-semibold flex items-center gap-1"
+                  >
+                    <ExternalLink className="w-3.5 h-3.5" />
+                    <span>Open Directly</span>
+                  </a>
+                </div>
               </div>
               <iframe
                 src={embedUrl}
