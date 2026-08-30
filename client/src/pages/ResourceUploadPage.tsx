@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
+import toast from 'react-hot-toast';
 import api from '../lib/api.js';
 import { ArrowLeft, Upload, FileUp, CheckCircle2, AlertCircle, Globe, Lock } from 'lucide-react';
 
@@ -63,11 +64,14 @@ export const ResourceUploadPage: React.FC = () => {
       });
 
       if (res.data.success) {
+        toast.success('Teaching resource uploaded successfully!');
         navigate('/resources');
       }
     } catch (err: any) {
       console.error('Resource upload failed:', err);
-      setError(err.response?.data?.message || 'File upload failed. Please try again.');
+      const msg = err.response?.data?.message || 'File upload failed. Please try again.';
+      toast.error(msg);
+      setError(msg);
     } finally {
       setUploading(false);
     }

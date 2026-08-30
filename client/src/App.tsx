@@ -152,11 +152,40 @@ function AppRoutes() {
   );
 }
 
+import { Toaster } from 'react-hot-toast';
+
 export default function App() {
   return (
     <ThemeProvider>
       <AuthProvider>
         <Router>
+          <Toaster
+            position="top-right"
+            toastOptions={{
+              duration: 3500,
+              style: {
+                background: '#1e293b',
+                color: '#f8fafc',
+                border: '1px solid rgba(255, 255, 255, 0.1)',
+                borderRadius: '14px',
+                fontSize: '13px',
+                fontWeight: '600',
+                boxShadow: '0 10px 30px -5px rgba(0, 0, 0, 0.4)',
+              },
+              success: {
+                iconTheme: {
+                  primary: '#f97316',
+                  secondary: '#ffffff',
+                },
+              },
+              error: {
+                iconTheme: {
+                  primary: '#ef4444',
+                  secondary: '#ffffff',
+                },
+              },
+            }}
+          />
           <AppRoutes />
         </Router>
       </AuthProvider>

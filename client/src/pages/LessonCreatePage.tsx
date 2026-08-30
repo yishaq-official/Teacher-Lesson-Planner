@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate, useParams, Link, useSearchParams } from 'react-router-dom';
+import toast from 'react-hot-toast';
 import api from '../lib/api.js';
 import type { Resource } from '../types/index.js';
 import { AttachResourceModal } from '../components/AttachResourceModal.js';
@@ -133,17 +134,21 @@ export const LessonCreatePage: React.FC = () => {
       if (isEditMode && id) {
         const res = await api.put(`/lessons/${id}`, payload);
         if (res.data.success) {
+          toast.success('Lesson plan updated successfully!');
           navigate(`/lessons/${id}`);
         }
       } else {
         const res = await api.post('/lessons', payload);
         if (res.data.success) {
+          toast.success('Lesson plan created successfully!');
           navigate(`/lessons/${res.data.lesson._id}`);
         }
       }
     } catch (err: any) {
       console.error('Save lesson failed:', err);
-      setError(err.response?.data?.message || 'Failed to save lesson plan.');
+      const msg = err.response?.data?.message || 'Failed to save lesson plan.';
+      toast.error(msg);
+      setError(msg);
     } finally {
       setSaving(false);
     }

@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
+import toast from 'react-hot-toast';
 import { useAuth } from '../context/AuthContext.js';
 import api from '../lib/api.js';
 import type { Resource, LessonPlan } from '../types/index.js';
@@ -123,6 +124,7 @@ export const ProfilePage: React.FC = () => {
       });
 
       if (res.data.success) {
+        toast.success('Profile updated successfully!');
         setSuccessMsg('Profile updated successfully!');
         if (refetchSession) {
           refetchSession();
@@ -131,7 +133,9 @@ export const ProfilePage: React.FC = () => {
       }
     } catch (err: any) {
       console.error('Failed to update profile:', err);
-      setErrorMsg(err.response?.data?.message || 'Failed to update profile. Please try again.');
+      const msg = err.response?.data?.message || 'Failed to update profile. Please try again.';
+      toast.error(msg);
+      setErrorMsg(msg);
     } finally {
       setSaving(false);
     }
@@ -140,27 +144,34 @@ export const ProfilePage: React.FC = () => {
   const handleDeleteResource = async (id: string) => {
     if (!window.confirm('Are you sure you want to delete this resource?')) return;
     try {
-      await api.delete(`/resources/${id}`);
-      setResources((prev) => prev.filter((r) => r._id !== id));
-      setStats((prev) => ({
-        ...prev,
-        totalResources: Math.max(0, prev.totalResources - 1),
-      }));
+      const res = await api.delete(`/resources/${id}`);
+      if (res.data.success) {
+        setResources((prev) => prev.filter((r) => r._id !== id));
+        setStats((prev) => ({
+          ...prev,
+          totalResources: Math.max(0, prev.totalResources - 1),
+        }));
+        toast.success('Resource deleted successfully!');
+      }
     } catch (err) {
       console.error('Delete failed:', err);
+      toast.error('Failed to delete resource');
     }
   };
 
   const handleToggleVisibility = async (id: string, currentIsPublic: boolean) => {
     try {
-      const res = await api.patch(`/resources/${id}/visibility`, { isPublic: !currentIsPublic });
+      const nextPublic = !currentIsPublic;
+      const res = await api.patch(`/resources/${id}/visibility`, { isPublic: nextPublic });
       if (res.data.success) {
         setResources((prev) =>
-          prev.map((r) => (r._id === id ? { ...r, isPublic: !currentIsPublic } : r))
+          prev.map((r) => (r._id === id ? { ...r, isPublic: nextPublic } : r))
         );
+        toast.success(nextPublic ? 'Resource is now Public' : 'Resource is now Private');
       }
     } catch (err) {
       console.error('Failed to update visibility:', err);
+      toast.error('Failed to update resource visibility');
     }
   };
 

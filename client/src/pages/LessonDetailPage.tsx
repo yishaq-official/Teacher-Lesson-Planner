@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, Link, useNavigate } from 'react-router-dom';
+import toast from 'react-hot-toast';
 import api from '../lib/api.js';
 import type { LessonPlan } from '../types/index.js';
 import {
@@ -52,9 +53,11 @@ export const LessonDetailPage: React.FC = () => {
       const res = await api.patch(`/lessons/${lesson._id}/status`, { status: nextStatus });
       if (res.data.success) {
         setLesson(res.data.lesson);
+        toast.success(nextStatus === 'completed' ? 'Lesson marked as completed!' : 'Lesson set to upcoming');
       }
     } catch (err) {
       console.error('Status update failed:', err);
+      toast.error('Failed to update lesson status');
     }
   };
 
@@ -63,10 +66,12 @@ export const LessonDetailPage: React.FC = () => {
     try {
       const res = await api.post(`/lessons/${lesson._id}/duplicate`);
       if (res.data.success) {
+        toast.success('Lesson plan duplicated successfully!');
         navigate(`/lessons/${res.data.lesson._id}`);
       }
     } catch (err) {
       console.error('Duplicate failed:', err);
+      toast.error('Failed to duplicate lesson plan');
     }
   };
 
@@ -75,9 +80,11 @@ export const LessonDetailPage: React.FC = () => {
     if (!window.confirm('Are you sure you want to delete this lesson plan?')) return;
     try {
       await api.delete(`/lessons/${lesson._id}`);
+      toast.success('Lesson plan deleted successfully!');
       navigate('/lessons');
     } catch (err) {
       console.error('Delete failed:', err);
+      toast.error('Failed to delete lesson plan');
     }
   };
 

@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import toast from 'react-hot-toast';
 import type { Resource } from '../types/index.js';
 import { useAuth } from '../context/AuthContext.js';
 import api from '../lib/api.js';
@@ -23,6 +24,7 @@ interface ResourceCardProps {
   onPreview?: (resource: Resource) => void;
   onAttach?: (resource: Resource) => void;
   onBookmarkToggle?: (id: string, isBookmarked: boolean) => void;
+  onSelectTag?: (tag: string) => void;
   isAttached?: boolean;
   isBookmarkedInitial?: boolean;
 }
@@ -34,6 +36,7 @@ export const ResourceCard: React.FC<ResourceCardProps> = ({
   onPreview,
   onAttach,
   onBookmarkToggle,
+  onSelectTag,
   isAttached = false,
   isBookmarkedInitial,
 }) => {
@@ -57,12 +60,14 @@ export const ResourceCard: React.FC<ResourceCardProps> = ({
       const res = await api.post(`/user/bookmarks/${resource._id}`);
       if (res.data.success) {
         setBookmarked(res.data.isBookmarked);
+        toast.success(res.data.isBookmarked ? 'Saved to bookmarks' : 'Removed from bookmarks');
         if (onBookmarkToggle) {
           onBookmarkToggle(resource._id, res.data.isBookmarked);
         }
       }
     } catch (err) {
       console.error('Failed to toggle bookmark:', err);
+      toast.error('Failed to update bookmark');
     } finally {
       setBookmarking(false);
     }
