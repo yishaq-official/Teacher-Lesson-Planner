@@ -3,7 +3,7 @@ import { GraduationCap } from 'lucide-react';
 
 export const Footer: React.FC = () => {
   return (
-    <footer className="border-t border-slate-800/80 bg-slate-950/40 text-slate-400 text-xs py-6 sm:py-8 mt-auto w-full overflow-x-hidden">
+    <footer className="border-t border-slate-800/80 bg-black text-slate-400 text-xs py-6 sm:py-8 mt-auto w-full overflow-x-hidden">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col sm:flex-row items-center justify-between gap-3 sm:gap-4 text-center sm:text-left">
         <div className="flex flex-wrap items-center justify-center sm:justify-start gap-1.5 sm:gap-2">
           <div className="flex items-center gap-1.5">
