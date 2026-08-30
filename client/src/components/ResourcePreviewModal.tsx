@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import type { Resource } from '../types/index.js';
 import { getApiFileUrl } from '../lib/api.js';
-import { X, Download, ExternalLink, FileText, User, Calendar, Globe, Lock, AlertTriangle, Eye } from 'lucide-react';
+import { X, Download, ExternalLink, FileText, User, Calendar, Globe, Lock, AlertTriangle } from 'lucide-react';
 
 interface ResourcePreviewModalProps {
   resource: Resource | null;
@@ -21,7 +21,19 @@ export const ResourcePreviewModal: React.FC<ResourcePreviewModalProps> = ({
 
   const fileUrl = getApiFileUrl(resource.fileUrl);
   const isImage = resource.fileType?.startsWith('image/') || /\.(jpg|jpeg|png|webp|gif|svg)$/i.test(fileUrl);
-  const isPdf = resource.fileType === 'application/pdf' || /\.pdf$/i.test(fileUrl);
+  const isPdf = resource.fileType === 'application/pdf' || /\.pdf$/i.test(fileUrl) || resource.fileUrl?.includes('/raw/upload/');
+
+  const isCloudinaryUrl = fileUrl.includes('cloudinary.com') || fileUrl.includes('res.cloudinary');
+  const isLocalUploads = fileUrl.includes('/uploads/');
+
+  // For PDFs: always use Google Docs Viewer so browser doesn't need to handle cross-origin iframes
+  const getEmbedUrl = (): string | null => {
+    if (isImage) return fileUrl;
+    if (isLocalUploads && !isCloudinaryUrl) return null; // ephemeral local filesystem
+    if (isPdf) return `https://docs.google.com/viewer?url=${encodeURIComponent(fileUrl)}&embedded=true`;
+    return fileUrl;
+  };
+  const embedUrl = getEmbedUrl();
 
   const teacherObj = typeof resource.teacherId === 'object' ? (resource.teacherId as any) : null;
   const teacherName = teacherObj?.name || (teacherObj?.email ? teacherObj.email.split('@')[0] : 'Teacher User');
@@ -38,14 +50,6 @@ export const ResourcePreviewModal: React.FC<ResourcePreviewModalProps> = ({
       return '';
     }
   };
-
-  const isLocalHost = fileUrl.includes('localhost') || fileUrl.includes('127.0.0.1');
-
-  // Determine viewer embed URL
-  let embedUrl = fileUrl;
-  if (useGoogleViewer || (!isImage && !isPdf && !isLocalHost && fileUrl.startsWith('http'))) {
-    embedUrl = `https://docs.google.com/viewer?url=${encodeURIComponent(fileUrl)}&embedded=true`;
-  }
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-950/80 backdrop-blur-md p-2 sm:p-6 animate-in fade-in duration-200">
@@ -103,9 +107,9 @@ export const ResourcePreviewModal: React.FC<ResourcePreviewModalProps> = ({
               <div className="w-12 h-12 rounded-2xl bg-amber-500/10 text-amber-400 border border-amber-500/20 flex items-center justify-center mx-auto">
                 <AlertTriangle className="w-6 h-6" />
               </div>
-              <h3 className="text-base font-bold text-white">Direct Preview Unavailable</h3>
+              <h3 className="text-base font-bold text-white">Preview Unavailable</h3>
               <p className="text-xs text-slate-400">
-                This document cannot be rendered inline by the browser. You can open it directly or download it.
+                The document could not be rendered. Open it in a new tab to view.
               </p>
               <div className="flex items-center justify-center gap-3 pt-2">
                 <a
@@ -135,26 +139,64 @@ export const ResourcePreviewModal: React.FC<ResourcePreviewModalProps> = ({
                 className="max-h-[68vh] max-w-full rounded-2xl object-contain shadow-xl border border-slate-800"
               />
             </div>
-          ) : (
+          ) : isLocalUploads && !isCloudinaryUrl ? (
+            // Local /uploads/ files don't persist on Render — show a friendly message
+            <div className="text-center p-6 sm:p-8 max-w-md bg-slate-900/80 border border-slate-800 rounded-3xl space-y-4">
+              <div className="w-12 h-12 rounded-2xl bg-orange-500/10 text-orange-400 border border-orange-500/20 flex items-center justify-center mx-auto">
+                <FileText className="w-6 h-6" />
+              </div>
+              <h3 className="text-base font-bold text-white">PDF Preview</h3>
+              <p className="text-xs text-slate-400">
+                This PDF was uploaded earlier and stored on the server disk. Open it in a new tab to view it directly.
+              </p>
+              <a
+                href={fileUrl}
+                target="_blank"
+                rel="noreferrer"
+                className="inline-flex px-5 py-2 rounded-xl gradient-bg-primary text-white text-xs font-semibold items-center gap-1.5 shadow-md shadow-orange-600/20"
+              >
+                <ExternalLink className="w-3.5 h-3.5" />
+                Open PDF in New Tab
+              </a>
+            </div>
+          ) : embedUrl ? (
             <div className="w-full h-full min-h-[60vh] relative rounded-2xl overflow-hidden border border-slate-800 bg-slate-900/50 flex flex-col">
-              {!isLocalHost && !useGoogleViewer && (
-                <div className="bg-slate-900 px-4 py-2 border-b border-slate-800 flex items-center justify-between text-xs text-slate-400 shrink-0">
-                  <span>Standard Document View</span>
-                  <button
-                    onClick={() => setUseGoogleViewer(true)}
-                    className="text-orange-400 hover:text-orange-300 font-semibold flex items-center gap-1"
-                  >
-                    <Eye className="w-3.5 h-3.5" />
-                    <span>Try Google Docs Viewer</span>
-                  </button>
-                </div>
-              )}
+              <div className="bg-slate-900 px-4 py-2 border-b border-slate-800 flex items-center justify-between text-xs text-slate-400 shrink-0">
+                <span className="flex items-center gap-1.5">
+                  <FileText className="w-3.5 h-3.5 text-orange-400" />
+                  {isPdf ? 'PDF via Google Docs Viewer' : 'Document Viewer'}
+                </span>
+                <a
+                  href={fileUrl}
+                  target="_blank"
+                  rel="noreferrer"
+                  className="text-orange-400 hover:text-orange-300 font-semibold flex items-center gap-1"
+                >
+                  <ExternalLink className="w-3.5 h-3.5" />
+                  <span>Open Directly</span>
+                </a>
+              </div>
               <iframe
                 src={embedUrl}
                 title={resource.title}
                 onError={() => setLoadError(true)}
                 className="w-full flex-1 min-h-[55vh] border-0 rounded-b-2xl bg-slate-950"
               />
+            </div>
+          ) : (
+            <div className="text-center p-6 sm:p-8 max-w-md bg-slate-900/80 border border-slate-800 rounded-3xl space-y-4">
+              <div className="w-12 h-12 rounded-2xl bg-rose-500/10 text-rose-400 border border-rose-500/20 flex items-center justify-center mx-auto">
+                <AlertTriangle className="w-6 h-6" />
+              </div>
+              <h3 className="text-base font-bold text-white">File Not Available</h3>
+              <p className="text-xs text-slate-400">This file could not be loaded. Please try downloading it instead.</p>
+              <button
+                onClick={() => onDownload(resource)}
+                className="px-4 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs font-semibold flex items-center gap-1.5 mx-auto"
+              >
+                <Download className="w-3.5 h-3.5" />
+                <span>Download File</span>
+              </button>
             </div>
           )}
         </div>

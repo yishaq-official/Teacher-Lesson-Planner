@@ -29,6 +29,8 @@ export const uploadToCloudinary = (
 
     const ext = path.extname(filename).toLowerCase();
     const isPdf = ext === '.pdf';
+    // For raw uploads, strip the extension from the public_id — Cloudinary appends it automatically
+    const baseName = path.basename(filename, ext).replace(/[^a-zA-Z0-9.-]/g, '_');
 
     // Helper to save locally in server/uploads/
     const saveLocally = () => {
@@ -68,6 +70,8 @@ export const uploadToCloudinary = (
     });
 
     const resourceType = isPdf ? 'raw' : 'auto';
+    // For raw PDFs: use base name without extension as public_id
+    const publicId = isPdf ? `${Date.now()}-${baseName}` : `${Date.now()}-${filename.replace(/[^a-zA-Z0-9.-]/g, '_')}`;
 
     console.log(`[Cloudinary Uploading]: File '${filename}' (${fileBuffer.length} bytes, type: ${resourceType}) to Cloud '${cloudName}'`);
 
@@ -75,7 +79,8 @@ export const uploadToCloudinary = (
       {
         folder,
         resource_type: resourceType,
-        public_id: `${Date.now()}-${filename.replace(/[^a-zA-Z0-9.-]/g, '_')}`,
+        public_id: publicId,
+        ...(isPdf ? { format: 'pdf' } : {}),
       },
       (error, result) => {
         if (error || !result) {
