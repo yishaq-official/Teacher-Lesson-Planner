@@ -21,6 +21,16 @@ export const ResourceUploadPage: React.FC = () => {
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files[0]) {
       const selected = e.target.files[0];
+      const isPdf = selected.type === 'application/pdf' || selected.name.toLowerCase().endsWith('.pdf');
+      if (!isPdf) {
+        const errMsg = 'Only PDF documents (.pdf) can be uploaded as teaching resources.';
+        setError(errMsg);
+        toast.error(errMsg);
+        setFile(null);
+        e.target.value = '';
+        return;
+      }
+      setError('');
       setFile(selected);
       if (!title) {
         // Auto fill title from filename without extension
@@ -35,7 +45,14 @@ export const ResourceUploadPage: React.FC = () => {
     setError('');
 
     if (!file) {
-      setError('Please select a file to upload.');
+      setError('Please select a PDF file to upload.');
+      return;
+    }
+
+    const isPdf = file.type === 'application/pdf' || file.name.toLowerCase().endsWith('.pdf');
+    if (!isPdf) {
+      setError('Only PDF documents (.pdf) can be uploaded.');
+      toast.error('Only PDF documents (.pdf) can be uploaded.');
       return;
     }
 
@@ -100,7 +117,7 @@ export const ResourceUploadPage: React.FC = () => {
         {/* File Drag and Drop Zone */}
         <div>
           <label className="block text-xs font-semibold text-slate-300 mb-2">
-            Upload File (PDF, Word, PowerPoint, Image) <span className="text-rose-400">*</span>
+            Upload PDF Resource (.pdf only) <span className="text-rose-400">*</span>
           </label>
 
           <div className="relative border-2 border-dashed border-slate-700/80 hover:border-orange-500/80 bg-slate-900/60 rounded-2xl p-6 sm:p-8 text-center transition-colors cursor-pointer group">
@@ -108,7 +125,7 @@ export const ResourceUploadPage: React.FC = () => {
               type="file"
               required
               onChange={handleFileChange}
-              accept=".pdf,.doc,.docx,.ppt,.pptx,.jpg,.png,.webp,.txt"
+              accept=".pdf,application/pdf"
               className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
             />
             <div className="flex flex-col items-center space-y-2">
@@ -127,10 +144,10 @@ export const ResourceUploadPage: React.FC = () => {
               ) : (
                 <div>
                   <p className="text-sm font-bold text-white">
-                    Click or drag & drop file here
+                    Click or drag & drop PDF file here
                   </p>
                   <p className="text-xs text-slate-300 font-medium mt-1">
-                    Supports PDF, DOCX, PPTX, PNG, JPG (Max 15MB)
+                    Supports PDF documents up to 15MB (.pdf format only)
                   </p>
                 </div>
               )}
