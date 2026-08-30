@@ -6,14 +6,14 @@ interface AuthContextType {
   user: User | null;
   loading: boolean;
   logout: () => Promise<void>;
-  refetchSession: () => void;
+  refetchSession: () => Promise<any>;
 }
 
 const AuthContext = createContext<AuthContextType>({
   user: null,
   loading: true,
   logout: async () => {},
-  refetchSession: () => {},
+  refetchSession: async () => {},
 });
 
 export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
@@ -37,8 +37,8 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     : null;
 
   const logout = async () => {
-    await signOut();
-    refetch();
+    await signOut({});
+    await refetch();
   };
 
   return (

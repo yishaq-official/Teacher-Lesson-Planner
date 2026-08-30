@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link } from 'react-router-dom';
+import { toast } from 'react-hot-toast';
 import { signUp } from '../lib/auth-client.js';
 import { useAuth } from '../context/AuthContext.js';
 import logoImg from '../assets/logo.png';
@@ -14,7 +15,6 @@ export const RegisterPage: React.FC = () => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   const { refetchSession } = useAuth();
-  const navigate = useNavigate();
 
   const handleRegister = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -33,8 +33,9 @@ export const RegisterPage: React.FC = () => {
       if (res.error) {
         setError(res.error.message || 'Failed to create teacher account.');
       } else {
-        refetchSession();
-        navigate('/dashboard');
+        toast.success('Account created successfully! Welcome to EduShelf.');
+        await refetchSession();
+        window.location.href = '/dashboard';
       }
     } catch (err: any) {
       setError(err.message || 'An unexpected error occurred during registration.');

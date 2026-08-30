@@ -34,5 +34,11 @@ export const auth = betterAuth({
     },
   },
   trustedOrigins: clientOrigins,
+  advanced: {
+    defaultCookieAttributes: {
+      sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'lax',
+      secure: process.env.NODE_ENV === 'production',
+    },
+  },
   secret: process.env.BETTER_AUTH_SECRET || 'nexus_teacher_planner_secret_key_2026',
 });

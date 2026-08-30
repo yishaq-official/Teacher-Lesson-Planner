@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link } from 'react-router-dom';
+import { toast } from 'react-hot-toast';
 import { signIn } from '../lib/auth-client.js';
 import { useAuth } from '../context/AuthContext.js';
 import logoImg from '../assets/logo.png';
@@ -11,7 +12,6 @@ export const LoginPage: React.FC = () => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   const { refetchSession } = useAuth();
-  const navigate = useNavigate();
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -27,8 +27,9 @@ export const LoginPage: React.FC = () => {
       if (res.error) {
         setError(res.error.message || 'Failed to sign in. Check your email & password.');
       } else {
-        refetchSession();
-        navigate('/dashboard');
+        toast.success('Welcome back! Signed in successfully.');
+        await refetchSession();
+        window.location.href = '/dashboard';
       }
     } catch (err: any) {
       setError(err.message || 'An unexpected error occurred during login.');
