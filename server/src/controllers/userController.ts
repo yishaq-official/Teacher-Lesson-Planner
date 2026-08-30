@@ -25,15 +25,18 @@ export const getProfile = async (req: AuthenticatedRequest, res: Response): Prom
       });
     }
 
-    const totalLessons = await LessonPlan.countDocuments({ teacherId: userId });
-    const totalResources = await Resource.countDocuments({ teacherId: userId });
+    const myLessons = await LessonPlan.find({ teacherId: userId }).sort({ date: -1 });
+    const myResources = await Resource.find({ teacherId: userId }).populate('teacherId', 'name subject email image').sort({ createdAt: -1 });
 
-    const resources = await Resource.find({ teacherId: userId }).select('downloadsCount');
-    const totalDownloads = resources.reduce((acc, r) => acc + (r.downloadsCount || 0), 0);
+    const totalLessons = myLessons.length;
+    const totalResources = myResources.length;
+    const totalDownloads = myResources.reduce((acc, r) => acc + (r.downloadsCount || 0), 0);
 
     res.json({
       success: true,
       user,
+      resources: myResources,
+      lessons: myLessons,
       stats: {
         totalLessons,
         totalResources,
