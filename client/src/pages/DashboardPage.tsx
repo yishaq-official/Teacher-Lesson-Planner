@@ -265,30 +265,42 @@ export const DashboardPage: React.FC = () => {
           )}
         </div>
 
-        {/* Right Column: Recent Shared Resources Feed */}
+        {/* Right Column: Featured Resource Hub Samples (Top 3 Samples) */}
         <div className="space-y-4">
           <div className="flex items-center justify-between">
-            <h2 className="text-base sm:text-lg font-bold text-white flex items-center gap-2">
-              <FileSearch className="w-5 h-5 text-rose-400" />
-              Resource Hub Feed
-            </h2>
+            <div>
+              <h2 className="text-base sm:text-lg font-bold text-white flex items-center gap-2">
+                <FileSearch className="w-5 h-5 text-rose-400" />
+                Featured Resource Samples
+              </h2>
+              <p className="text-[11px] text-slate-400 mt-0.5">Top 3 sample resources preview</p>
+            </div>
             <Link
               to="/resources"
-              className="text-xs font-semibold text-rose-400 hover:text-rose-300 flex items-center gap-1"
+              className="text-xs font-semibold text-rose-400 hover:text-rose-300 flex items-center gap-1 shrink-0"
             >
-              Explore All <ChevronRight className="w-3.5 h-3.5" />
+              Explore Hub <ChevronRight className="w-3.5 h-3.5" />
             </Link>
           </div>
 
           {recentResources.length === 0 ? (
             <div className="glass-panel rounded-2xl p-6 text-center text-slate-400">
-              <p className="text-xs">No resources uploaded yet.</p>
+              <p className="text-xs">No teaching resources available yet.</p>
             </div>
           ) : (
             <div className="space-y-3">
               {recentResources.slice(0, 3).map((item) => (
                 <ResourceCard key={item._id} resource={item} />
               ))}
+              
+              <div className="pt-2 text-center">
+                <Link
+                  to="/resources"
+                  className="inline-flex items-center justify-center gap-1.5 w-full py-2.5 rounded-xl bg-slate-900 hover:bg-slate-800 border border-slate-700/80 text-xs font-bold text-slate-300 hover:text-white transition-all"
+                >
+                  View All Shared Resources in Resource Hub ➔
+                </Link>
+              </div>
             </div>
           )}
         </div>

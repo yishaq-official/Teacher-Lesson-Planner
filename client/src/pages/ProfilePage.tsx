@@ -29,6 +29,9 @@ import {
   Layers,
   Settings,
   Bookmark,
+  BarChart2,
+  TrendingUp,
+  Award,
 } from 'lucide-react';
 
 interface ProfileStats {
@@ -40,7 +43,7 @@ interface ProfileStats {
 export const ProfilePage: React.FC = () => {
   const { user, refetchSession } = useAuth();
 
-  const [activeTab, setActiveTab] = useState<'settings' | 'resources' | 'saved' | 'lessons'>('settings');
+  const [activeTab, setActiveTab] = useState<'settings' | 'resources' | 'saved' | 'lessons' | 'analytics'>('settings');
 
   const [name, setName] = useState(user?.name || '');
   const [institution, setInstitution] = useState(user?.institution || '');
@@ -317,18 +320,18 @@ export const ProfilePage: React.FC = () => {
             </button>
 
             <button
-              onClick={() => setActiveTab('resources')}
+              onClick={() => setActiveTab('analytics')}
               className={`glass-card rounded-2xl p-4 flex items-center gap-3 text-left transition-all hover:border-emerald-500/40 ${
-                activeTab === 'resources' ? 'border-emerald-500/50 bg-emerald-500/10' : ''
+                activeTab === 'analytics' ? 'border-emerald-500/50 bg-emerald-500/10' : ''
               }`}
             >
               <div className="w-10 h-10 rounded-xl bg-emerald-500/10 border border-emerald-500/30 text-emerald-400 flex items-center justify-center shrink-0">
-                <Download className="w-5 h-5" />
+                <BarChart2 className="w-5 h-5" />
               </div>
               <div>
                 <div className="text-lg font-bold text-white">{stats.totalDownloads}</div>
                 <div className="text-[11px] text-slate-400 font-medium flex items-center gap-1">
-                  Resource Downloads <ArrowRight className="w-3 h-3 text-emerald-400" />
+                  Download Analytics <ArrowRight className="w-3 h-3 text-emerald-400" />
                 </div>
               </div>
             </button>
@@ -359,6 +362,18 @@ export const ProfilePage: React.FC = () => {
           >
             <Layers className="w-4 h-4" />
             Shared Assets ({resources.length})
+          </button>
+
+          <button
+            onClick={() => setActiveTab('analytics')}
+            className={`px-4 py-2.5 rounded-xl text-xs sm:text-sm font-bold flex items-center gap-2 transition-all shrink-0 ${
+              activeTab === 'analytics'
+                ? 'bg-orange-500/15 text-orange-400 border border-orange-500/30'
+                : 'text-slate-400 hover:text-slate-200 hover:bg-slate-900'
+            }`}
+          >
+            <BarChart2 className="w-4 h-4 text-emerald-400" />
+            Download Analytics ({stats.totalDownloads})
           </button>
 
           <button
@@ -706,7 +721,127 @@ export const ProfilePage: React.FC = () => {
           </div>
         )}
 
-        {/* Tab 4: Lesson Plans Viewer */}
+        {/* Tab 4: Download Analytics */}
+        {activeTab === 'analytics' && (
+          <div className="space-y-6">
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+              <div>
+                <h2 className="text-lg sm:text-xl font-bold text-white flex items-center gap-2">
+                  <BarChart2 className="w-5 h-5 text-emerald-400" />
+                  Resource Download Analytics
+                </h2>
+                <p className="text-xs text-slate-400 mt-1">
+                  Detailed reach and engagement metrics for your shared teaching materials.
+                </p>
+              </div>
+
+              <Link
+                to="/resources/upload"
+                className="px-4 py-2 rounded-xl gradient-bg-primary text-white text-xs font-bold flex items-center justify-center gap-1.5 shadow-md shadow-orange-600/20 shrink-0 self-start sm:self-auto"
+              >
+                <Plus className="w-4 h-4" />
+                Share New Material
+              </Link>
+            </div>
+
+            {/* Metric Summary Grid */}
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+              <div className="glass-panel rounded-2xl p-4 border border-slate-800 space-y-1">
+                <div className="text-xs text-slate-400 font-medium flex items-center gap-1.5">
+                  <Download className="w-4 h-4 text-emerald-400" />
+                  Total Downloads
+                </div>
+                <div className="text-2xl font-extrabold text-white">{stats.totalDownloads}</div>
+                <p className="text-[10px] text-slate-500">Across all uploaded resources</p>
+              </div>
+
+              <div className="glass-panel rounded-2xl p-4 border border-slate-800 space-y-1">
+                <div className="text-xs text-slate-400 font-medium flex items-center gap-1.5">
+                  <Layers className="w-4 h-4 text-rose-400" />
+                  Shared Portfolio
+                </div>
+                <div className="text-2xl font-extrabold text-white">{resources.length}</div>
+                <p className="text-[10px] text-slate-500">Active public & private materials</p>
+              </div>
+
+              <div className="glass-panel rounded-2xl p-4 border border-slate-800 space-y-1">
+                <div className="text-xs text-slate-400 font-medium flex items-center gap-1.5">
+                  <TrendingUp className="w-4 h-4 text-amber-400" />
+                  Avg Downloads / Item
+                </div>
+                <div className="text-2xl font-extrabold text-white">
+                  {resources.length > 0 ? (stats.totalDownloads / resources.length).toFixed(1) : 0}
+                </div>
+                <p className="text-[10px] text-slate-500">Engagement density per item</p>
+              </div>
+
+              <div className="glass-panel rounded-2xl p-4 border border-slate-800 space-y-1">
+                <div className="text-xs text-slate-400 font-medium flex items-center gap-1.5">
+                  <Award className="w-4 h-4 text-orange-400" />
+                  Top Download Record
+                </div>
+                <div className="text-2xl font-extrabold text-white">
+                  {resources.length > 0
+                    ? Math.max(...resources.map((r) => r.downloadsCount || 0))
+                    : 0}
+                </div>
+                <p className="text-[10px] text-slate-500">Highest single material downloads</p>
+              </div>
+            </div>
+
+            {/* Top Performing Resources Table */}
+            <div className="glass-panel rounded-3xl p-6 border border-slate-800 space-y-4">
+              <h3 className="text-base font-bold text-white flex items-center gap-2">
+                <Award className="w-4 h-4 text-orange-400" />
+                Material Download Leaderboard
+              </h3>
+
+              {resources.length === 0 ? (
+                <p className="text-xs text-slate-400 py-6 text-center">
+                  No resources uploaded yet. Upload worksheets or presentations to start tracking download analytics.
+                </p>
+              ) : (
+                <div className="overflow-x-auto">
+                  <table className="w-full text-left text-xs text-slate-300">
+                    <thead className="text-[11px] text-slate-400 uppercase bg-slate-900/60 border-b border-slate-800">
+                      <tr>
+                        <th className="px-4 py-3 rounded-l-xl">Resource Title</th>
+                        <th className="px-4 py-3">Subject & Grade</th>
+                        <th className="px-4 py-3">Type</th>
+                        <th className="px-4 py-3 text-right rounded-r-xl">Downloads</th>
+                      </tr>
+                    </thead>
+                    <tbody className="divide-y divide-slate-800/60">
+                      {[...resources]
+                        .sort((a, b) => (b.downloadsCount || 0) - (a.downloadsCount || 0))
+                        .map((res) => (
+                          <tr key={res._id} className="hover:bg-slate-900/40 transition-colors">
+                            <td className="px-4 py-3.5 font-bold text-white flex items-center gap-2">
+                              <span className="truncate max-w-xs">{res.title}</span>
+                              {res.isPublic === false && (
+                                <span className="px-2 py-0.5 rounded text-[10px] bg-slate-800 text-slate-400 border border-slate-700">
+                                  Private
+                                </span>
+                              )}
+                            </td>
+                            <td className="px-4 py-3.5">
+                              {res.subject} • {res.grade}
+                            </td>
+                            <td className="px-4 py-3.5 capitalize">{res.type}</td>
+                            <td className="px-4 py-3.5 text-right font-extrabold text-emerald-400">
+                              {res.downloadsCount || 0}
+                            </td>
+                          </tr>
+                        ))}
+                    </tbody>
+                  </table>
+                </div>
+              )}
+            </div>
+          </div>
+        )}
+
+        {/* Tab 5: Lesson Plans Viewer */}
         {activeTab === 'lessons' && (
           <div className="space-y-6">
             <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">

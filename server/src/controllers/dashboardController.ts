@@ -23,13 +23,13 @@ export const getDashboardSummary = async (
       .sort({ date: 1 })
       .limit(4);
 
-    // Recent resources in the hub (Public resources or owned by current teacher)
+    // Recent resources in the hub (Public resources or owned by current teacher) - 3 samples for dashboard
     const recentResources = await Resource.find({
       $or: [{ isPublic: true }, { isPublic: { $ne: false } }, { teacherId }],
     })
       .populate('teacherId', 'name institution email image')
       .sort({ createdAt: -1 })
-      .limit(6);
+      .limit(3);
 
     res.json({
       success: true,
