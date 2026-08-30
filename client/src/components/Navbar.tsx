@@ -32,19 +32,19 @@ export const Navbar: React.FC = () => {
   const isActive = (path: string) => location.pathname === path;
 
   return (
-    <header className="sticky top-0 z-50 glass-panel border-b border-slate-800 transition-colors duration-300">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex items-center justify-between h-16">
+    <header className="sticky top-0 z-50 glass-panel border-b border-slate-800 transition-colors duration-300 w-full overflow-x-hidden">
+      <div className="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8">
+        <div className="flex items-center justify-between h-16 gap-2">
           {/* Brand Logo */}
-          <Link to={user ? '/dashboard' : '/'} className="flex items-center gap-3 group">
-            <div className="w-10 h-10 rounded-xl gradient-bg-primary flex items-center justify-center shadow-lg shadow-orange-500/25 group-hover:scale-105 transition-transform">
-              <GraduationCap className="w-6 h-6 text-white" />
+          <Link to={user ? '/dashboard' : '/'} className="flex items-center gap-2 sm:gap-3 group shrink-0">
+            <div className="w-9 h-9 sm:w-10 sm:h-10 rounded-xl gradient-bg-primary flex items-center justify-center shadow-lg shadow-orange-500/25 group-hover:scale-105 transition-transform shrink-0">
+              <GraduationCap className="w-5 h-5 sm:w-6 sm:h-6 text-white" />
             </div>
-            <div>
-              <span className="font-bold text-lg text-white tracking-tight flex items-center gap-1">
+            <div className="min-w-0">
+              <span className="font-bold text-base sm:text-lg text-white tracking-tight flex items-center gap-1">
                 EduNexus <span className="gradient-text font-extrabold">Hub</span>
               </span>
-              <span className="block text-[11px] text-slate-400 -mt-1">Lesson Planner & Resources</span>
+              <span className="hidden sm:block text-[11px] text-slate-400 -mt-1 truncate">Lesson Planner & Resources</span>
             </div>
           </Link>
 

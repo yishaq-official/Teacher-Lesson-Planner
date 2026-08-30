@@ -266,7 +266,7 @@ export const CalendarPage: React.FC = () => {
   const activeMobileDayObj = weekDays.find((d) => d.name === selectedMobileDay) || weekDays[0];
 
   return (
-    <div className="space-y-6 max-w-7xl mx-auto px-2 sm:px-6 lg:px-8 py-4 sm:py-6">
+    <div className="space-y-6 max-w-7xl w-full mx-auto px-2 sm:px-6 lg:px-8 py-4 sm:py-6 overflow-x-hidden">
       {/* Header Banner & Controls */}
       <div className="glass-panel rounded-3xl p-4 sm:p-6 border border-orange-500/20 relative overflow-hidden flex flex-col md:flex-row md:items-center justify-between gap-4 sm:gap-6">
         <div className="space-y-1 z-10">
@@ -282,7 +282,7 @@ export const CalendarPage: React.FC = () => {
           </p>
         </div>
 
-        <div className="flex items-center flex-wrap gap-2.5 sm:gap-3 z-10">
+        <div className="flex items-center flex-wrap gap-2 sm:gap-3 z-10 w-full sm:w-auto">
           <button
             onClick={handleToday}
             className="px-3 py-2 rounded-xl bg-slate-900 hover:bg-slate-800 text-slate-300 text-xs font-semibold border border-slate-700 transition-all"
@@ -298,7 +298,7 @@ export const CalendarPage: React.FC = () => {
             >
               <ChevronLeft className="w-4 h-4" />
             </button>
-            <span className="px-2 sm:px-3 text-xs font-semibold text-slate-200 min-w-[120px] sm:min-w-[140px] text-center font-mono">
+            <span className="px-2 sm:px-3 text-xs font-semibold text-slate-200 min-w-[100px] sm:min-w-[130px] text-center font-mono">
               {weekRangeText}
             </span>
             <button
@@ -329,7 +329,7 @@ export const CalendarPage: React.FC = () => {
       </div>
 
       {/* Mobile Day Selector Tabs (visible only on < md screens) */}
-      <div className="flex md:hidden items-center gap-1.5 overflow-x-auto pb-1 no-scrollbar">
+      <div className="flex md:hidden items-center gap-1.5 overflow-x-auto pb-1 max-w-full no-scrollbar">
         {weekDays.map((day) => {
           const isSelected = selectedMobileDay === day.name;
           return (

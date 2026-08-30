@@ -93,9 +93,9 @@ export const LandingPage: React.FC = () => {
       </nav>
 
       {/* Hero Section */}
-      <section className="relative pt-16 pb-16 md:pt-24 md:pb-24 overflow-hidden">
+      <section className="relative pt-16 pb-16 md:pt-24 md:pb-24 overflow-hidden w-full max-w-full">
         {/* Background glow */}
-        <div className="absolute top-1/4 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-orange-600/15 blur-[140px] rounded-full pointer-events-none" />
+        <div className="absolute top-1/4 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[300px] sm:w-[600px] h-[300px] sm:h-[600px] bg-orange-600/15 blur-[140px] rounded-full pointer-events-none" />
 
         <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 text-center relative z-10 space-y-8">
           <ScrollReveal animation="fade-up" delay={0}>

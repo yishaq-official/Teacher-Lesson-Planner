@@ -19,9 +19,9 @@ import { CalendarPage } from './pages/CalendarPage.js';
 
 const AppLayout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   return (
-    <div className="min-h-screen bg-slate-950 flex flex-col selection:bg-orange-500 selection:text-white transition-colors duration-300">
+    <div className="min-h-screen bg-slate-950 flex flex-col selection:bg-orange-500 selection:text-white transition-colors duration-300 overflow-x-hidden w-full max-w-full">
       <Navbar />
-      <main className="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-8">
+      <main className="flex-1 max-w-7xl w-full mx-auto px-2 sm:px-6 lg:px-8 py-4 sm:py-8 overflow-x-hidden">
         {children}
       </main>
       <Footer />
