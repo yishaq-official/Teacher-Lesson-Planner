@@ -74,15 +74,15 @@ export const ResourceUploadPage: React.FC = () => {
   };
 
   return (
-    <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-6">
-      <div className="flex items-center justify-between">
+    <div className="max-w-3xl mx-auto px-2 sm:px-6 lg:px-8 py-4 sm:py-8 space-y-6">
+      <div className="flex items-center justify-between gap-4">
         <Link
           to="/resources"
           className="inline-flex items-center gap-1.5 text-xs font-semibold text-slate-400 hover:text-white transition-colors"
         >
           <ArrowLeft className="w-4 h-4" /> Back to Resource Hub
         </Link>
-        <h1 className="text-xl font-bold text-white">Upload Teaching Resource</h1>
+        <h1 className="text-lg sm:text-xl font-bold text-white text-right">Upload Teaching Resource</h1>
       </div>
 
       {error && (
@@ -92,14 +92,14 @@ export const ResourceUploadPage: React.FC = () => {
         </div>
       )}
 
-      <form onSubmit={handleSubmit} className="glass-panel rounded-3xl p-6 sm:p-8 space-y-6 border border-slate-800">
+      <form onSubmit={handleSubmit} className="glass-panel rounded-3xl p-5 sm:p-8 space-y-6 border border-slate-800">
         {/* File Drag and Drop Zone */}
         <div>
           <label className="block text-xs font-semibold text-slate-300 mb-2">
             Upload File (PDF, Word, PowerPoint, Image) <span className="text-rose-400">*</span>
           </label>
 
-          <div className="relative border-2 border-dashed border-slate-700/80 hover:border-indigo-500/80 bg-slate-900/60 rounded-2xl p-8 text-center transition-colors cursor-pointer group">
+          <div className="relative border-2 border-dashed border-slate-700/80 hover:border-orange-500/80 bg-slate-900/60 rounded-2xl p-6 sm:p-8 text-center transition-colors cursor-pointer group">
             <input
               type="file"
               required
@@ -108,7 +108,7 @@ export const ResourceUploadPage: React.FC = () => {
               className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
             />
             <div className="flex flex-col items-center space-y-2">
-              <div className="w-12 h-12 rounded-xl bg-indigo-500/10 border border-indigo-500/20 text-indigo-400 flex items-center justify-center group-hover:scale-110 transition-transform">
+              <div className="w-12 h-12 rounded-xl bg-orange-500/10 border border-orange-500/20 text-orange-400 flex items-center justify-center group-hover:scale-110 transition-transform">
                 <FileUp className="w-6 h-6" />
               </div>
               {file ? (
@@ -146,7 +146,7 @@ export const ResourceUploadPage: React.FC = () => {
               placeholder="e.g. Photosynthesis Diagram Worksheet & Answer Key"
               value={title}
               onChange={(e) => setTitle(e.target.value)}
-              className="w-full bg-slate-900 border border-slate-700/80 rounded-xl px-4 py-2.5 text-sm text-slate-100 placeholder:text-slate-500 focus:outline-none focus:border-indigo-500"
+              className="w-full bg-slate-900 border border-slate-700/80 rounded-xl px-4 py-2.5 text-xs sm:text-sm text-slate-100 placeholder:text-slate-500 focus:outline-none focus:border-orange-500"
             />
           </div>
 
@@ -159,7 +159,7 @@ export const ResourceUploadPage: React.FC = () => {
               placeholder="Provide context or instructions for other teachers using this material..."
               value={description}
               onChange={(e) => setDescription(e.target.value)}
-              className="w-full bg-slate-900 border border-slate-700/80 rounded-xl p-3 text-xs text-slate-100 placeholder:text-slate-500 focus:outline-none focus:border-indigo-500"
+              className="w-full bg-slate-900 border border-slate-700/80 rounded-xl p-3 text-xs text-slate-100 placeholder:text-slate-500 focus:outline-none focus:border-orange-500"
             />
           </div>
 
@@ -171,7 +171,7 @@ export const ResourceUploadPage: React.FC = () => {
               <select
                 value={type}
                 onChange={(e) => setType(e.target.value)}
-                className="w-full bg-slate-900 border border-slate-700/80 rounded-xl px-3 py-2 text-xs text-slate-100 focus:outline-none focus:border-indigo-500 capitalize"
+                className="w-full bg-slate-900 border border-slate-700/80 rounded-xl px-3 py-2 text-xs text-slate-100 focus:outline-none focus:border-orange-500 capitalize"
               >
                 <option value="worksheet">Worksheet</option>
                 <option value="presentation">Presentation</option>
@@ -189,7 +189,7 @@ export const ResourceUploadPage: React.FC = () => {
               <select
                 value={subject}
                 onChange={(e) => setSubject(e.target.value)}
-                className="w-full bg-slate-900 border border-slate-700/80 rounded-xl px-3 py-2 text-xs text-slate-100 focus:outline-none focus:border-indigo-500"
+                className="w-full bg-slate-900 border border-slate-700/80 rounded-xl px-3 py-2 text-xs text-slate-100 focus:outline-none focus:border-orange-500"
               >
                 <option value="Biology">Biology</option>
                 <option value="Mathematics">Mathematics</option>
@@ -213,7 +213,7 @@ export const ResourceUploadPage: React.FC = () => {
                 placeholder="e.g. Grade 9"
                 value={grade}
                 onChange={(e) => setGrade(e.target.value)}
-                className="w-full bg-slate-900 border border-slate-700/80 rounded-xl px-3 py-2 text-xs text-slate-100 focus:outline-none focus:border-indigo-500"
+                className="w-full bg-slate-900 border border-slate-700/80 rounded-xl px-3 py-2 text-xs text-slate-100 focus:outline-none focus:border-orange-500"
               />
             </div>
           </div>
@@ -229,7 +229,7 @@ export const ResourceUploadPage: React.FC = () => {
                 placeholder="e.g. Light Reaction & ATP"
                 value={topic}
                 onChange={(e) => setTopic(e.target.value)}
-                className="w-full bg-slate-900 border border-slate-700/80 rounded-xl px-3 py-2 text-xs text-slate-100 focus:outline-none focus:border-indigo-500"
+                className="w-full bg-slate-900 border border-slate-700/80 rounded-xl px-3 py-2 text-xs text-slate-100 focus:outline-none focus:border-orange-500"
               />
             </div>
 
@@ -242,7 +242,7 @@ export const ResourceUploadPage: React.FC = () => {
                 placeholder="e.g. biology, chloroplast, printable"
                 value={tags}
                 onChange={(e) => setTags(e.target.value)}
-                className="w-full bg-slate-900 border border-slate-700/80 rounded-xl px-3 py-2 text-xs text-slate-100 focus:outline-none focus:border-indigo-500"
+                className="w-full bg-slate-900 border border-slate-700/80 rounded-xl px-3 py-2 text-xs text-slate-100 focus:outline-none focus:border-orange-500"
               />
             </div>
           </div>
@@ -303,7 +303,7 @@ export const ResourceUploadPage: React.FC = () => {
           <button
             type="submit"
             disabled={uploading}
-            className="px-6 py-2.5 rounded-xl text-xs font-semibold text-white gradient-bg-primary hover:opacity-95 shadow-lg shadow-indigo-600/20 transition-all flex items-center gap-2"
+            className="px-6 py-2.5 rounded-xl text-xs font-semibold text-white gradient-bg-primary hover:opacity-95 shadow-lg shadow-orange-600/20 transition-all flex items-center gap-2"
           >
             <Upload className="w-4 h-4" />
             {uploading ? 'Uploading File...' : 'Publish to Resource Hub'}

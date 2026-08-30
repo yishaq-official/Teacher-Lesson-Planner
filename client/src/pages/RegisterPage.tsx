@@ -48,7 +48,7 @@ export const RegisterPage: React.FC = () => {
         {/* Brand Header */}
         <div className="text-center mb-6">
           <Link to="/" className="inline-flex items-center gap-3 mb-2">
-            <div className="w-12 h-12 rounded-2xl gradient-bg-primary flex items-center justify-center shadow-xl shadow-indigo-500/30">
+            <div className="w-12 h-12 rounded-2xl gradient-bg-primary flex items-center justify-center shadow-xl shadow-orange-500/30">
               <GraduationCap className="w-7 h-7 text-white" />
             </div>
           </Link>
@@ -80,7 +80,7 @@ export const RegisterPage: React.FC = () => {
                   value={name}
                   onChange={(e) => setName(e.target.value)}
                   placeholder="e.g. Hana Tesfaye"
-                  className="w-full bg-slate-900 border border-slate-700/80 rounded-xl pl-10 pr-4 py-2.5 text-sm text-slate-100 placeholder:text-slate-500 focus:outline-none focus:border-indigo-500 transition-colors"
+                  className="w-full bg-slate-900 border border-slate-700/80 rounded-xl pl-10 pr-4 py-2.5 text-sm text-slate-100 placeholder:text-slate-500 focus:outline-none focus:border-orange-500 transition-colors"
                 />
               </div>
             </div>
@@ -97,12 +97,12 @@ export const RegisterPage: React.FC = () => {
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   placeholder="hana.teacher@school.edu"
-                  className="w-full bg-slate-900 border border-slate-700/80 rounded-xl pl-10 pr-4 py-2.5 text-sm text-slate-100 placeholder:text-slate-500 focus:outline-none focus:border-indigo-500 transition-colors"
+                  className="w-full bg-slate-900 border border-slate-700/80 rounded-xl pl-10 pr-4 py-2.5 text-sm text-slate-100 placeholder:text-slate-500 focus:outline-none focus:border-orange-500 transition-colors"
                 />
               </div>
             </div>
 
-            <div className="grid grid-cols-2 gap-3">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
               <div>
                 <label className="block text-xs font-semibold text-slate-300 mb-1">
                   Primary Subject
@@ -112,7 +112,7 @@ export const RegisterPage: React.FC = () => {
                   <select
                     value={subject}
                     onChange={(e) => setSubject(e.target.value)}
-                    className="w-full bg-slate-900 border border-slate-700/80 rounded-xl pl-10 pr-3 py-2.5 text-xs text-slate-100 focus:outline-none focus:border-indigo-500"
+                    className="w-full bg-slate-900 border border-slate-700/80 rounded-xl pl-10 pr-3 py-2.5 text-xs text-slate-100 focus:outline-none focus:border-orange-500"
                   >
                     <option value="Biology">Biology</option>
                     <option value="Mathematics">Mathematics</option>
@@ -137,7 +137,7 @@ export const RegisterPage: React.FC = () => {
                     value={institution}
                     onChange={(e) => setInstitution(e.target.value)}
                     placeholder="Nexus Academy"
-                    className="w-full bg-slate-900 border border-slate-700/80 rounded-xl pl-10 pr-3 py-2.5 text-xs text-slate-100 placeholder:text-slate-500 focus:outline-none focus:border-indigo-500"
+                    className="w-full bg-slate-900 border border-slate-700/80 rounded-xl pl-10 pr-3 py-2.5 text-xs text-slate-100 placeholder:text-slate-500 focus:outline-none focus:border-orange-500"
                   />
                 </div>
               </div>
@@ -156,7 +156,7 @@ export const RegisterPage: React.FC = () => {
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                   placeholder="At least 6 characters"
-                  className="w-full bg-slate-900 border border-slate-700/80 rounded-xl pl-10 pr-4 py-2.5 text-sm text-slate-100 placeholder:text-slate-500 focus:outline-none focus:border-indigo-500 transition-colors"
+                  className="w-full bg-slate-900 border border-slate-700/80 rounded-xl pl-10 pr-4 py-2.5 text-sm text-slate-100 placeholder:text-slate-500 focus:outline-none focus:border-orange-500 transition-colors"
                 />
               </div>
             </div>
@@ -164,7 +164,7 @@ export const RegisterPage: React.FC = () => {
             <button
               type="submit"
               disabled={loading}
-              className="w-full py-3 px-4 rounded-xl text-sm font-semibold text-white gradient-bg-primary hover:opacity-95 shadow-lg shadow-indigo-600/20 transition-all flex items-center justify-center gap-2 mt-4"
+              className="w-full py-3 px-4 rounded-xl text-sm font-semibold text-white gradient-bg-primary hover:opacity-95 shadow-lg shadow-orange-600/20 transition-all flex items-center justify-center gap-2 mt-4"
             >
               {loading ? 'Creating Account...' : 'Create Account'}
               <ArrowRight className="w-4 h-4" />
@@ -175,7 +175,7 @@ export const RegisterPage: React.FC = () => {
         {/* Footer Link */}
         <p className="text-center text-xs text-slate-400 mt-6">
           Already registered?{' '}
-          <Link to="/login" className="text-indigo-400 hover:text-indigo-300 font-semibold underline">
+          <Link to="/login" className="text-orange-400 hover:text-orange-300 font-semibold underline">
             Sign In here
           </Link>
         </p>

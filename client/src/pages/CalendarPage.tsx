@@ -61,10 +61,10 @@ const getSubjectStyle = (subject: string) => {
   }
   if (s.includes('chem')) {
     return {
-      bg: 'bg-purple-500/15 hover:bg-purple-500/25',
-      border: 'border-purple-500/40',
-      badge: 'bg-purple-500/20 text-purple-300 border-purple-500/30',
-      text: 'text-purple-300',
+      bg: 'bg-rose-500/15 hover:bg-rose-500/25',
+      border: 'border-rose-500/40',
+      badge: 'bg-rose-500/20 text-rose-300 border-rose-500/30',
+      text: 'text-rose-300',
     };
   }
   if (s.includes('phys')) {
@@ -76,10 +76,10 @@ const getSubjectStyle = (subject: string) => {
     };
   }
   return {
-    bg: 'bg-indigo-500/15 hover:bg-indigo-500/25',
-    border: 'border-indigo-500/40',
-    badge: 'bg-indigo-500/20 text-indigo-300 border-indigo-500/30',
-    text: 'text-indigo-300',
+    bg: 'bg-orange-500/15 hover:bg-orange-500/25',
+    border: 'border-orange-500/40',
+    badge: 'bg-orange-500/20 text-orange-300 border-orange-500/30',
+    text: 'text-orange-300',
   };
 };
 
@@ -96,6 +96,9 @@ export const CalendarPage: React.FC = () => {
     monday.setHours(0, 0, 0, 0);
     return monday;
   });
+
+  // Mobile selected day tab (Monday - Friday)
+  const [selectedMobileDay, setSelectedMobileDay] = useState<'Monday' | 'Tuesday' | 'Wednesday' | 'Thursday' | 'Friday'>('Monday');
 
   const [lessons, setLessons] = useState<LessonPlan[]>([]);
   const [timetable, setTimetable] = useState<Timetable | null>(null);
@@ -260,16 +263,18 @@ export const CalendarPage: React.FC = () => {
       l.topic.toLowerCase().includes(lessonSearch.toLowerCase())
   );
 
+  const activeMobileDayObj = weekDays.find((d) => d.name === selectedMobileDay) || weekDays[0];
+
   return (
-    <div className="space-y-6 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
+    <div className="space-y-6 max-w-7xl mx-auto px-2 sm:px-6 lg:px-8 py-4 sm:py-6">
       {/* Header Banner & Controls */}
-      <div className="glass-panel rounded-3xl p-6 border border-purple-500/20 relative overflow-hidden flex flex-col md:flex-row md:items-center justify-between gap-6">
+      <div className="glass-panel rounded-3xl p-4 sm:p-6 border border-orange-500/20 relative overflow-hidden flex flex-col md:flex-row md:items-center justify-between gap-4 sm:gap-6">
         <div className="space-y-1 z-10">
-          <div className="flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-purple-400">
+          <div className="flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-orange-400">
             <Sparkles className="w-4 h-4" />
             Weekly Class Timetable
           </div>
-          <h1 className="text-2xl sm:text-3xl font-extrabold text-white tracking-tight">
+          <h1 className="text-xl sm:text-3xl font-extrabold text-white tracking-tight">
             Teaching Period Schedule
           </h1>
           <p className="text-xs sm:text-sm text-slate-300 max-w-xl">
@@ -277,10 +282,10 @@ export const CalendarPage: React.FC = () => {
           </p>
         </div>
 
-        <div className="flex items-center flex-wrap gap-3 z-10">
+        <div className="flex items-center flex-wrap gap-2.5 sm:gap-3 z-10">
           <button
             onClick={handleToday}
-            className="px-3.5 py-2 rounded-xl bg-slate-900 hover:bg-slate-800 text-slate-300 text-xs font-semibold border border-slate-700 transition-all"
+            className="px-3 py-2 rounded-xl bg-slate-900 hover:bg-slate-800 text-slate-300 text-xs font-semibold border border-slate-700 transition-all"
           >
             Current Week
           </button>
@@ -293,7 +298,7 @@ export const CalendarPage: React.FC = () => {
             >
               <ChevronLeft className="w-4 h-4" />
             </button>
-            <span className="px-3 text-xs font-semibold text-slate-200 min-w-[140px] text-center font-mono">
+            <span className="px-2 sm:px-3 text-xs font-semibold text-slate-200 min-w-[120px] sm:min-w-[140px] text-center font-mono">
               {weekRangeText}
             </span>
             <button
@@ -307,15 +312,15 @@ export const CalendarPage: React.FC = () => {
 
           <button
             onClick={() => setShowSetupModal(true)}
-            className="flex items-center gap-1.5 px-3.5 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs font-semibold border border-slate-700 transition-all"
+            className="flex items-center gap-1.5 px-3 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs font-semibold border border-slate-700 transition-all"
           >
-            <Settings2 className="w-3.5 h-3.5 text-indigo-400" />
+            <Settings2 className="w-3.5 h-3.5 text-orange-400" />
             <span>Setup Timetable</span>
           </button>
 
           <Link
             to="/lessons/create"
-            className="flex items-center gap-2 px-4 py-2 rounded-xl text-xs font-semibold text-white gradient-bg-primary hover:opacity-95 shadow-lg shadow-indigo-600/20 transition-all"
+            className="flex items-center gap-2 px-3.5 py-2 rounded-xl text-xs font-semibold text-white gradient-bg-primary hover:opacity-95 shadow-lg shadow-orange-600/20 transition-all"
           >
             <Plus className="w-4 h-4" />
             <span>New Lesson Plan</span>
@@ -323,143 +328,186 @@ export const CalendarPage: React.FC = () => {
         </div>
       </div>
 
-      {/* Main Timetable Grid */}
+      {/* Mobile Day Selector Tabs (visible only on < md screens) */}
+      <div className="flex md:hidden items-center gap-1.5 overflow-x-auto pb-1 no-scrollbar">
+        {weekDays.map((day) => {
+          const isSelected = selectedMobileDay === day.name;
+          return (
+            <button
+              key={day.name}
+              onClick={() => setSelectedMobileDay(day.name)}
+              className={`px-4 py-2 rounded-2xl text-xs font-bold whitespace-nowrap transition-all flex items-center gap-1.5 border ${
+                isSelected
+                  ? 'gradient-bg-primary text-white border-transparent shadow-md'
+                  : 'bg-slate-900/80 text-slate-400 border-slate-800 hover:bg-slate-800 hover:text-white'
+              }`}
+            >
+              <span>{day.name}</span>
+              <span className={`text-[10px] font-mono ${isSelected ? 'text-white/80' : 'text-slate-500'}`}>
+                {day.formatted}
+              </span>
+            </button>
+          );
+        })}
+      </div>
+
+      {/* Main Timetable Content */}
       {loading ? (
         <div className="flex flex-col items-center justify-center py-20 text-slate-400 space-y-3">
-          <Loader2 className="w-10 h-10 text-indigo-500 animate-spin" />
+          <Loader2 className="w-10 h-10 text-orange-500 animate-spin" />
           <p className="text-sm font-medium">Loading weekly class schedule...</p>
         </div>
       ) : (
-        <div className="glass-panel rounded-3xl border border-slate-800 overflow-hidden shadow-2xl">
-          <div className="overflow-x-auto">
-            <table className="w-full border-collapse min-w-[950px]">
-              <thead>
-                <tr className="bg-slate-900/90 border-b border-slate-800">
-                  <th className="py-4 px-4 text-left text-xs font-bold text-slate-400 uppercase tracking-wider w-48 border-r border-slate-800">
-                    Teaching Period
-                  </th>
-                  {weekDays.map((day) => (
-                    <th
-                      key={day.name}
-                      className={`py-4 px-4 text-center border-r border-slate-800 last:border-r-0 ${
-                        day.isToday ? 'bg-indigo-500/10 text-indigo-300' : 'text-slate-300'
-                      }`}
-                    >
-                      <div className="font-extrabold text-sm text-white">{day.name}</div>
-                      <div className={`text-[11px] font-mono mt-0.5 ${day.isToday ? 'text-indigo-400 font-bold' : 'text-slate-500'}`}>
-                        {day.formatted} {day.isToday && '(Today)'}
-                      </div>
+        <>
+          {/* Desktop Table Grid (visible md and up) */}
+          <div className="hidden md:block glass-panel rounded-3xl border border-slate-800 overflow-hidden shadow-2xl">
+            <div className="overflow-x-auto">
+              <table className="w-full border-collapse min-w-[950px]">
+                <thead>
+                  <tr className="bg-slate-900/90 border-b border-slate-800">
+                    <th className="py-4 px-4 text-left text-xs font-bold text-slate-400 uppercase tracking-wider w-48 border-r border-slate-800">
+                      Teaching Period
                     </th>
-                  ))}
-                </tr>
-              </thead>
-
-              <tbody>
-                {PERIODS.map((period) => {
-                  const isLunch = period.includes('Lunch');
-
-                  if (isLunch) {
-                    return (
-                      <tr key={period} className="bg-slate-950/80 border-b border-slate-800/80">
-                        <td className="py-2.5 px-4 text-xs font-semibold text-amber-400/80 border-r border-slate-800">
-                          {period}
-                        </td>
-                        <td colSpan={5} className="py-2.5 text-center text-xs font-bold text-slate-500 tracking-widest uppercase">
-                          ☕ RECESS & LUNCH BREAK
-                        </td>
-                      </tr>
-                    );
-                  }
-
-                  return (
-                    <tr key={period} className="border-b border-slate-800/60 hover:bg-slate-900/30 transition-all">
-                      {/* Period Time Column */}
-                      <td className="py-3 px-4 text-xs font-medium text-slate-400 bg-slate-900/40 border-r border-slate-800">
-                        <div className="font-bold text-slate-200">{period.split('(')[0]}</div>
-                        <div className="text-[11px] font-mono text-slate-500 mt-0.5">
-                          {period.split('(')[1]?.replace(')', '')}
+                    {weekDays.map((day) => (
+                      <th
+                        key={day.name}
+                        className={`py-4 px-4 text-center border-r border-slate-800 last:border-r-0 ${
+                          day.isToday ? 'bg-orange-500/10 text-orange-300' : 'text-slate-300'
+                        }`}
+                      >
+                        <div className="font-extrabold text-sm text-white">{day.name}</div>
+                        <div className={`text-[11px] font-mono mt-0.5 ${day.isToday ? 'text-orange-400 font-bold' : 'text-slate-500'}`}>
+                          {day.formatted} {day.isToday && '(Today)'}
                         </div>
-                      </td>
+                      </th>
+                    ))}
+                  </tr>
+                </thead>
 
-                      {/* Day Columns */}
-                      {weekDays.map((day) => {
-                        const assignedClass = getClassForCell(day.name, period);
-                        const lesson = getLessonForCell(day.dateStr, period);
-                        const subjectStyle = lesson ? getSubjectStyle(lesson.subject) : null;
+                <tbody>
+                  {PERIODS.map((period) => {
+                    const isLunch = period.includes('Lunch');
 
-                        return (
-                          <td
-                            key={day.name}
-                            className={`p-2 border-r border-slate-800/60 last:border-r-0 align-top transition-all ${
-                              day.isToday ? 'bg-indigo-500/[0.02]' : ''
-                            }`}
-                          >
-                            {lesson ? (
-                              /* Attached Lesson Plan Card */
-                              <div
-                                onClick={() => setSelectedLesson(lesson)}
-                                className={`p-3 rounded-2xl border transition-all cursor-pointer shadow-md group ${subjectStyle?.bg} ${subjectStyle?.border}`}
-                              >
-                                {/* Top Header Badges */}
-                                <div className="flex items-start justify-between gap-1 mb-2">
-                                  <div className="flex items-center gap-1.5">
-                                    {assignedClass && (
-                                      <span className="text-[10px] font-bold px-2 py-0.5 rounded-md bg-purple-500/20 text-purple-300 border border-purple-500/30 font-mono">
-                                        {assignedClass}
+                    if (isLunch) {
+                      return (
+                        <tr key={period} className="bg-slate-950/80 border-b border-slate-800/80">
+                          <td className="py-2.5 px-4 text-xs font-semibold text-amber-400/80 border-r border-slate-800">
+                            {period}
+                          </td>
+                          <td colSpan={5} className="py-2.5 text-center text-xs font-bold text-slate-500 tracking-widest uppercase">
+                            ☕ RECESS & LUNCH BREAK
+                          </td>
+                        </tr>
+                      );
+                    }
+
+                    return (
+                      <tr key={period} className="border-b border-slate-800/60 hover:bg-slate-900/30 transition-all">
+                        {/* Period Time Column */}
+                        <td className="py-3 px-4 text-xs font-medium text-slate-400 bg-slate-900/40 border-r border-slate-800">
+                          <div className="font-bold text-slate-200">{period.split('(')[0]}</div>
+                          <div className="text-[11px] font-mono text-slate-500 mt-0.5">
+                            {period.split('(')[1]?.replace(')', '')}
+                          </div>
+                        </td>
+
+                        {/* Day Columns */}
+                        {weekDays.map((day) => {
+                          const assignedClass = getClassForCell(day.name, period);
+                          const lesson = getLessonForCell(day.dateStr, period);
+                          const subjectStyle = lesson ? getSubjectStyle(lesson.subject) : null;
+
+                          return (
+                            <td
+                              key={day.name}
+                              className={`p-2 border-r border-slate-800/60 last:border-r-0 align-top transition-all ${
+                                day.isToday ? 'bg-orange-500/[0.02]' : ''
+                              }`}
+                            >
+                              {lesson ? (
+                                /* Attached Lesson Plan Card */
+                                <div
+                                  onClick={() => setSelectedLesson(lesson)}
+                                  className={`p-3 rounded-2xl border transition-all cursor-pointer shadow-md group ${subjectStyle?.bg} ${subjectStyle?.border}`}
+                                >
+                                  {/* Top Header Badges */}
+                                  <div className="flex items-start justify-between gap-1 mb-2">
+                                    <div className="flex items-center gap-1.5">
+                                      {assignedClass && (
+                                        <span className="text-[10px] font-bold px-2 py-0.5 rounded-md bg-orange-500/20 text-orange-300 border border-orange-500/30 font-mono">
+                                          {assignedClass}
+                                        </span>
+                                      )}
+                                      <span className={`text-[10px] font-semibold px-2 py-0.5 rounded-md border ${subjectStyle?.badge}`}>
+                                        {lesson.subject}
                                       </span>
-                                    )}
-                                    <span className={`text-[10px] font-semibold px-2 py-0.5 rounded-md border ${subjectStyle?.badge}`}>
-                                      {lesson.subject}
-                                    </span>
+                                    </div>
+
+                                    <button
+                                      onClick={(e) => toggleLessonStatus(lesson, e)}
+                                      title={lesson.status === 'completed' ? 'Mark Upcoming' : 'Mark Completed'}
+                                      className="text-slate-400 hover:text-emerald-400 transition"
+                                    >
+                                      <CheckCircle2
+                                        className={`w-3.5 h-3.5 ${
+                                          lesson.status === 'completed'
+                                            ? 'text-emerald-400 fill-emerald-500/20'
+                                            : 'text-slate-500'
+                                        }`}
+                                      />
+                                    </button>
                                   </div>
 
-                                  <button
-                                    onClick={(e) => toggleLessonStatus(lesson, e)}
-                                    title={lesson.status === 'completed' ? 'Mark Upcoming' : 'Mark Completed'}
-                                    className="text-slate-400 hover:text-emerald-400 transition"
-                                  >
-                                    <CheckCircle2
-                                      className={`w-3.5 h-3.5 ${
-                                        lesson.status === 'completed'
-                                          ? 'text-emerald-400 fill-emerald-500/20'
-                                          : 'text-slate-500'
-                                      }`}
-                                    />
-                                  </button>
-                                </div>
+                                  {/* Title & Topic */}
+                                  <h4 className="text-xs font-bold text-white line-clamp-2 group-hover:text-orange-200 transition mb-1">
+                                    {lesson.title}
+                                  </h4>
 
-                                {/* Title & Topic */}
-                                <h4 className="text-xs font-bold text-white line-clamp-2 group-hover:text-indigo-200 transition mb-1">
-                                  {lesson.title}
-                                </h4>
+                                  <p className="text-[11px] text-slate-400 line-clamp-1 mb-2">
+                                    {lesson.topic}
+                                  </p>
 
-                                <p className="text-[11px] text-slate-400 line-clamp-1 mb-2">
-                                  {lesson.topic}
-                                </p>
-
-                                {/* Footer details */}
-                                <div className="flex items-center justify-between pt-2 border-t border-white/10 text-[10px] text-slate-400">
-                                  <span className="flex items-center gap-1">
-                                    <GraduationCap className="w-3 h-3 text-slate-400" />
-                                    {lesson.grade}
-                                  </span>
-                                  <span className="flex items-center gap-1">
-                                    <Clock className="w-3 h-3 text-slate-400" />
-                                    {lesson.duration}m
-                                  </span>
-                                </div>
-                              </div>
-                            ) : (
-                              /* Empty Slot - Display Assigned Class + Attach Action */
-                              <div className="w-full min-h-[95px] p-2.5 rounded-2xl border border-dashed border-slate-800 hover:border-indigo-500/40 hover:bg-slate-900/60 transition-all flex flex-col justify-between group">
-                                <div className="flex items-center justify-between">
-                                  {assignedClass ? (
-                                    <span className="text-[11px] font-bold px-2 py-0.5 rounded-md bg-indigo-500/10 text-indigo-300 border border-indigo-500/20 font-mono">
-                                      {assignedClass}
+                                  {/* Footer details */}
+                                  <div className="flex items-center justify-between pt-2 border-t border-white/10 text-[10px] text-slate-400">
+                                    <span className="flex items-center gap-1">
+                                      <GraduationCap className="w-3 h-3 text-slate-400" />
+                                      {lesson.grade}
                                     </span>
-                                  ) : (
-                                    <span className="text-[10px] text-slate-500 italic">No class assigned</span>
-                                  )}
+                                    <span className="flex items-center gap-1">
+                                      <Clock className="w-3 h-3 text-slate-400" />
+                                      {lesson.duration}m
+                                    </span>
+                                  </div>
+                                </div>
+                              ) : (
+                                /* Empty Slot - Display Assigned Class + Attach Action */
+                                <div className="w-full min-h-[95px] p-2.5 rounded-2xl border border-dashed border-slate-800 hover:border-orange-500/40 hover:bg-slate-900/60 transition-all flex flex-col justify-between group">
+                                  <div className="flex items-center justify-between">
+                                    {assignedClass ? (
+                                      <span className="text-[11px] font-bold px-2 py-0.5 rounded-md bg-orange-500/10 text-orange-300 border border-orange-500/20 font-mono">
+                                        {assignedClass}
+                                      </span>
+                                    ) : (
+                                      <span className="text-[10px] text-slate-500 italic">No class assigned</span>
+                                    )}
+
+                                    <button
+                                      onClick={() => {
+                                        setClassNameInput(assignedClass);
+                                        setCellModal({
+                                          open: true,
+                                          day: day.name,
+                                          dateStr: day.dateStr,
+                                          period,
+                                          className: assignedClass,
+                                        });
+                                      }}
+                                      title="Edit Class / Attach Lesson Plan"
+                                      className="p-1 rounded-lg text-slate-500 hover:text-orange-300 hover:bg-slate-800 transition"
+                                    >
+                                      <Edit3 className="w-3 h-3" />
+                                    </button>
+                                  </div>
 
                                   <button
                                     onClick={() => {
@@ -472,44 +520,123 @@ export const CalendarPage: React.FC = () => {
                                         className: assignedClass,
                                       });
                                     }}
-                                    title="Edit Class / Attach Lesson Plan"
-                                    className="p-1 rounded-lg text-slate-500 hover:text-indigo-300 hover:bg-slate-800 transition"
+                                    className="w-full py-1.5 px-2 rounded-xl bg-slate-900 hover:bg-orange-600/20 text-slate-400 hover:text-orange-300 border border-slate-800 hover:border-orange-500/30 text-[11px] font-semibold flex items-center justify-center gap-1 transition-all mt-2"
                                   >
-                                    <Edit3 className="w-3 h-3" />
+                                    <Plus className="w-3 h-3 text-orange-400" />
+                                    <span>{assignedClass ? `Attach to ${assignedClass}` : 'Attach Lesson'}</span>
                                   </button>
                                 </div>
-
-                                <button
-                                  onClick={() => {
-                                    setClassNameInput(assignedClass);
-                                    setCellModal({
-                                      open: true,
-                                      day: day.name,
-                                      dateStr: day.dateStr,
-                                      period,
-                                      className: assignedClass,
-                                    });
-                                  }}
-                                  className="w-full py-1.5 px-2 rounded-xl bg-slate-900 hover:bg-indigo-600/20 text-slate-400 hover:text-indigo-300 border border-slate-800 hover:border-indigo-500/30 text-[11px] font-semibold flex items-center justify-center gap-1 transition-all mt-2"
-                                >
-                                  <Plus className="w-3 h-3 text-indigo-400" />
-                                  <span>{assignedClass ? `Attach to ${assignedClass}` : 'Attach Lesson'}</span>
-                                </button>
-                              </div>
-                            )}
-                          </td>
-                        );
-                      })}
-                    </tr>
-                  );
-                })}
-              </tbody>
-            </table>
+                              )}
+                            </td>
+                          );
+                        })}
+                      </tr>
+                    );
+                  })}
+                </tbody>
+              </table>
+            </div>
           </div>
-        </div>
+
+          {/* Mobile Single-Day View Cards (visible only on < md screens) */}
+          <div className="block md:hidden space-y-3">
+            {PERIODS.map((period) => {
+              const isLunch = period.includes('Lunch');
+
+              if (isLunch) {
+                return (
+                  <div key={period} className="glass-panel p-3 rounded-2xl text-center text-xs font-bold text-amber-400/80 border border-slate-800">
+                    ☕ RECESS & LUNCH BREAK ({period.split('(')[1]?.replace(')', '')})
+                  </div>
+                );
+              }
+
+              const assignedClass = getClassForCell(activeMobileDayObj.name, period);
+              const lesson = getLessonForCell(activeMobileDayObj.dateStr, period);
+              const subjectStyle = lesson ? getSubjectStyle(lesson.subject) : null;
+
+              return (
+                <div key={period} className="glass-panel p-4 rounded-2xl border border-slate-800 space-y-3">
+                  <div className="flex items-center justify-between border-b border-slate-800/80 pb-2">
+                    <span className="text-xs font-bold text-white">{period.split('(')[0]}</span>
+                    <span className="text-[11px] font-mono text-slate-400">{period.split('(')[1]?.replace(')', '')}</span>
+                  </div>
+
+                  {lesson ? (
+                    <div
+                      onClick={() => setSelectedLesson(lesson)}
+                      className={`p-3 rounded-2xl border transition-all cursor-pointer shadow-md ${subjectStyle?.bg} ${subjectStyle?.border}`}
+                    >
+                      <div className="flex items-center justify-between gap-1 mb-2">
+                        <div className="flex items-center gap-1.5">
+                          {assignedClass && (
+                            <span className="text-[10px] font-bold px-2 py-0.5 rounded-md bg-orange-500/20 text-orange-300 border border-orange-500/30 font-mono">
+                              {assignedClass}
+                            </span>
+                          )}
+                          <span className={`text-[10px] font-semibold px-2 py-0.5 rounded-md border ${subjectStyle?.badge}`}>
+                            {lesson.subject}
+                          </span>
+                        </div>
+
+                        <button
+                          onClick={(e) => toggleLessonStatus(lesson, e)}
+                          className="text-slate-400 hover:text-emerald-400 transition"
+                        >
+                          <CheckCircle2
+                            className={`w-4 h-4 ${
+                              lesson.status === 'completed' ? 'text-emerald-400 fill-emerald-500/20' : 'text-slate-500'
+                            }`}
+                          />
+                        </button>
+                      </div>
+
+                      <h4 className="text-sm font-bold text-white mb-1">{lesson.title}</h4>
+                      <p className="text-xs text-slate-400 mb-2">{lesson.topic}</p>
+
+                      <div className="flex items-center justify-between text-xs text-slate-400 pt-2 border-t border-white/10">
+                        <span>Grade: {lesson.grade}</span>
+                        <span>Duration: {lesson.duration} mins</span>
+                      </div>
+                    </div>
+                  ) : (
+                    <div className="flex items-center justify-between gap-3 bg-slate-900/60 p-3 rounded-2xl border border-slate-800">
+                      <div>
+                        {assignedClass ? (
+                          <span className="text-xs font-bold px-2.5 py-1 rounded-md bg-orange-500/10 text-orange-300 border border-orange-500/20 font-mono">
+                            {assignedClass}
+                          </span>
+                        ) : (
+                          <span className="text-xs text-slate-500 italic">No class section set</span>
+                        )}
+                      </div>
+
+                      <button
+                        onClick={() => {
+                          setClassNameInput(assignedClass);
+                          setCellModal({
+                            open: true,
+                            day: activeMobileDayObj.name,
+                            dateStr: activeMobileDayObj.dateStr,
+                            period,
+                            className: assignedClass,
+                          });
+                        }}
+                        className="px-3 py-1.5 rounded-xl bg-orange-600 hover:bg-orange-500 text-white text-xs font-semibold flex items-center gap-1 transition"
+                      >
+                        <Plus className="w-3.5 h-3.5" />
+                        <span>Manage</span>
+                      </button>
+                    </div>
+                  )}
+                </div>
+              );
+            })}
+          </div>
+        </>
       )}
 
-      {/* Lesson Details Drawer / Modal */}
+      {/* Lesson Details Modal */}
       {selectedLesson && (
         <div className="fixed inset-0 z-50 bg-slate-950/80 backdrop-blur-md flex items-center justify-center p-4">
           <div className="glass-panel max-w-lg w-full rounded-3xl border border-slate-700 p-6 space-y-5 shadow-2xl relative animate-in fade-in zoom-in-95 duration-200">
@@ -522,7 +649,7 @@ export const CalendarPage: React.FC = () => {
 
             <div>
               <div className="flex items-center gap-2 mb-2">
-                <span className="px-2.5 py-0.5 text-xs font-semibold rounded-md bg-indigo-500/20 text-indigo-300 border border-indigo-500/30">
+                <span className="px-2.5 py-0.5 text-xs font-semibold rounded-md bg-orange-500/20 text-orange-300 border border-orange-500/30">
                   {selectedLesson.subject}
                 </span>
                 <span className="px-2.5 py-0.5 text-xs font-semibold rounded-md bg-slate-800 text-slate-300 border border-slate-700">
@@ -568,7 +695,7 @@ export const CalendarPage: React.FC = () => {
                 <ul className="space-y-1 text-xs text-slate-300">
                   {selectedLesson.objectives.map((obj, i) => (
                     <li key={i} className="flex items-start gap-2">
-                      <span className="text-indigo-400 font-bold">•</span>
+                      <span className="text-orange-400 font-bold">•</span>
                       <span>{obj}</span>
                     </li>
                   ))}
@@ -588,10 +715,10 @@ export const CalendarPage: React.FC = () => {
                       href={r.fileUrl}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="flex items-center justify-between p-2.5 rounded-xl bg-slate-900 border border-slate-800 hover:border-indigo-500/50 text-xs text-indigo-300 transition"
+                      className="flex items-center justify-between p-2.5 rounded-xl bg-slate-900 border border-slate-800 hover:border-orange-500/50 text-xs text-orange-300 transition"
                     >
                       <span className="flex items-center gap-2 truncate">
-                        <FileText className="w-3.5 h-3.5 text-indigo-400 flex-shrink-0" />
+                        <FileText className="w-3.5 h-3.5 text-orange-400 flex-shrink-0" />
                         <span className="truncate">{r.title}</span>
                       </span>
                       <ExternalLink className="w-3.5 h-3.5 flex-shrink-0 text-slate-500" />
@@ -611,7 +738,7 @@ export const CalendarPage: React.FC = () => {
 
               <button
                 onClick={() => navigate(`/lessons/${selectedLesson._id}`)}
-                className="flex items-center gap-2 px-4 py-2 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-xs font-semibold text-white shadow-lg transition"
+                className="flex items-center gap-2 px-4 py-2 rounded-xl bg-orange-600 hover:bg-orange-500 text-xs font-semibold text-white shadow-lg transition"
               >
                 <span>Full Document View</span>
                 <ExternalLink className="w-3.5 h-3.5" />
@@ -634,7 +761,7 @@ export const CalendarPage: React.FC = () => {
 
             {/* Header */}
             <div>
-              <div className="flex items-center gap-2 text-xs font-bold text-indigo-400 uppercase tracking-wider mb-1">
+              <div className="flex items-center gap-2 text-xs font-bold text-orange-400 uppercase tracking-wider mb-1">
                 <BookOpen className="w-4 h-4" />
                 Schedule Slot Assignment
               </div>
@@ -646,7 +773,7 @@ export const CalendarPage: React.FC = () => {
             {/* Section 1: Class Name Configuration */}
             <div className="bg-slate-900 p-4 rounded-2xl border border-slate-800 space-y-3">
               <label className="text-xs font-semibold text-slate-300 flex items-center gap-1.5">
-                <GraduationCap className="w-4 h-4 text-purple-400" />
+                <GraduationCap className="w-4 h-4 text-orange-400" />
                 Class Section Name for this Weekly Period:
               </label>
               <div className="flex items-center gap-2">
@@ -655,14 +782,14 @@ export const CalendarPage: React.FC = () => {
                   placeholder="e.g. Grade 9A, Grade 10B, Physics 11C"
                   value={classNameInput}
                   onChange={(e) => setClassNameInput(e.target.value)}
-                  className="flex-1 bg-slate-950 border border-slate-700 rounded-xl px-3.5 py-2 text-xs text-white placeholder:text-slate-500 focus:outline-none focus:border-indigo-500 font-mono"
+                  className="flex-1 bg-slate-950 border border-slate-700 rounded-xl px-3.5 py-2 text-xs text-white placeholder:text-slate-500 focus:outline-none focus:border-orange-500 font-mono"
                 />
                 <button
                   onClick={async () => {
                     await handleSaveClassSlot(cellModal.day, cellModal.period, classNameInput);
                     setCellModal((prev) => ({ ...prev, className: classNameInput }));
                   }}
-                  className="px-4 py-2 rounded-xl bg-purple-600 hover:bg-purple-500 text-white text-xs font-semibold transition"
+                  className="px-4 py-2 rounded-xl bg-orange-600 hover:bg-orange-500 text-white text-xs font-semibold transition"
                 >
                   Save Class
                 </button>
@@ -673,7 +800,7 @@ export const CalendarPage: React.FC = () => {
             <div className="space-y-3">
               <div className="flex items-center justify-between">
                 <h4 className="text-xs font-bold uppercase tracking-wider text-slate-300 flex items-center gap-1.5">
-                  <Link2 className="w-4 h-4 text-indigo-400" />
+                  <Link2 className="w-4 h-4 text-orange-400" />
                   Attach Existing Created Lesson Plan
                 </h4>
                 <span className="text-[11px] text-slate-500">{filteredLessons.length} lessons available</span>
@@ -687,7 +814,7 @@ export const CalendarPage: React.FC = () => {
                   placeholder="Search your created lesson plans..."
                   value={lessonSearch}
                   onChange={(e) => setLessonSearch(e.target.value)}
-                  className="w-full bg-slate-900 border border-slate-800 rounded-xl pl-9 pr-3 py-2 text-xs text-slate-200 focus:outline-none focus:border-indigo-500"
+                  className="w-full bg-slate-900 border border-slate-800 rounded-xl pl-9 pr-3 py-2 text-xs text-slate-200 focus:outline-none focus:border-orange-500"
                 />
               </div>
 
@@ -701,11 +828,11 @@ export const CalendarPage: React.FC = () => {
                   filteredLessons.map((l) => (
                     <div
                       key={l._id}
-                      className="p-3 rounded-2xl bg-slate-900 hover:bg-slate-850 border border-slate-800 hover:border-indigo-500/40 flex items-center justify-between gap-3 transition-all"
+                      className="p-3 rounded-2xl bg-slate-900 hover:bg-slate-850 border border-slate-800 hover:border-orange-500/40 flex items-center justify-between gap-3 transition-all"
                     >
                       <div className="min-w-0 flex-1">
                         <div className="flex items-center gap-2 mb-1">
-                          <span className="text-[10px] font-bold px-2 py-0.5 rounded bg-indigo-500/20 text-indigo-300 border border-indigo-500/30">
+                          <span className="text-[10px] font-bold px-2 py-0.5 rounded bg-orange-500/20 text-orange-300 border border-orange-500/30">
                             {l.subject}
                           </span>
                           <span className="text-[10px] px-2 py-0.5 rounded bg-slate-800 text-slate-400 font-mono">
@@ -718,7 +845,7 @@ export const CalendarPage: React.FC = () => {
 
                       <button
                         onClick={() => handleAttachLesson(l)}
-                        className="px-3 py-1.5 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white text-xs font-semibold shrink-0 transition"
+                        className="px-3 py-1.5 rounded-xl bg-orange-600 hover:bg-orange-500 text-white text-xs font-semibold shrink-0 transition"
                       >
                         Attach
                       </button>
@@ -746,7 +873,7 @@ export const CalendarPage: React.FC = () => {
                   }).toString();
                   navigate(`/lessons/create?${query}`);
                 }}
-                className="px-4 py-2 rounded-xl gradient-bg-primary text-white text-xs font-semibold flex items-center gap-1.5 shadow-lg shadow-indigo-600/20 transition"
+                className="px-4 py-2 rounded-xl gradient-bg-primary text-white text-xs font-semibold flex items-center gap-1.5 shadow-lg shadow-orange-600/20 transition"
               >
                 <Plus className="w-3.5 h-3.5" />
                 <span>Create New Lesson Plan for {cellModal.className || 'this Period'}</span>
@@ -768,7 +895,7 @@ export const CalendarPage: React.FC = () => {
             </button>
 
             <div>
-              <div className="flex items-center gap-2 text-xs font-bold text-purple-400 uppercase tracking-wider mb-1">
+              <div className="flex items-center gap-2 text-xs font-bold text-orange-400 uppercase tracking-wider mb-1">
                 <Settings2 className="w-4 h-4" />
                 Timetable Setup
               </div>
@@ -781,7 +908,7 @@ export const CalendarPage: React.FC = () => {
             <div className="flex-1 overflow-y-auto space-y-4 pr-1 custom-scrollbar">
               {DAYS.map((day) => (
                 <div key={day} className="bg-slate-900 p-4 rounded-2xl border border-slate-800 space-y-3">
-                  <h4 className="text-xs font-bold text-indigo-300 uppercase tracking-wider flex items-center gap-2">
+                  <h4 className="text-xs font-bold text-orange-300 uppercase tracking-wider flex items-center gap-2">
                     <CalendarIcon className="w-3.5 h-3.5" />
                     {day}
                   </h4>
@@ -798,12 +925,11 @@ export const CalendarPage: React.FC = () => {
                             placeholder="e.g. 9A"
                             defaultValue={currentVal}
                             onBlur={(e) => {
-                              const val = e.target.value.trim();
-                              if (val !== currentVal) {
-                                handleSaveClassSlot(day, period, val);
+                              if (e.target.value !== currentVal) {
+                                handleSaveClassSlot(day, period, e.target.value);
                               }
                             }}
-                            className="w-full bg-slate-950 border border-slate-800 rounded-xl px-2.5 py-1.5 text-xs text-white font-mono placeholder:text-slate-600 focus:outline-none focus:border-indigo-500"
+                            className="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-1.5 text-xs text-white placeholder:text-slate-600 font-mono focus:outline-none focus:border-orange-500"
                           />
                         </div>
                       );
@@ -813,10 +939,10 @@ export const CalendarPage: React.FC = () => {
               ))}
             </div>
 
-            <div className="pt-3 border-t border-slate-800 flex justify-end">
+            <div className="pt-4 border-t border-slate-800 flex justify-end">
               <button
                 onClick={() => setShowSetupModal(false)}
-                className="px-5 py-2 rounded-xl bg-purple-600 hover:bg-purple-500 text-white text-xs font-semibold shadow-lg shadow-purple-600/20"
+                className="px-6 py-2.5 rounded-xl gradient-bg-primary text-white text-xs font-bold shadow-lg transition"
               >
                 Done
               </button>

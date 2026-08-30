@@ -86,14 +86,14 @@ export const ResourceHubPage: React.FC = () => {
   };
 
   return (
-    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-8">
+    <div className="max-w-7xl mx-auto px-2 sm:px-6 lg:px-8 py-4 sm:py-8 space-y-6 sm:space-y-8">
       {/* Page Banner Header */}
-      <div className="glass-panel rounded-3xl p-6 sm:p-8 border border-purple-500/20 relative overflow-hidden">
-        <div className="absolute top-0 right-0 w-96 h-96 bg-purple-500/10 blur-[100px] rounded-full pointer-events-none" />
+      <div className="glass-panel rounded-3xl p-5 sm:p-8 border border-orange-500/20 relative overflow-hidden">
+        <div className="absolute top-0 right-0 w-96 h-96 bg-orange-500/10 blur-[100px] rounded-full pointer-events-none" />
 
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-6 relative z-10">
           <div>
-            <div className="flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-purple-400 mb-2">
+            <div className="flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-orange-400 mb-2">
               <Sparkles className="w-4 h-4" />
               Teacher Community Hub
             </div>
@@ -107,7 +107,7 @@ export const ResourceHubPage: React.FC = () => {
 
           <Link
             to="/resources/upload"
-            className="px-5 py-3 rounded-xl text-sm font-semibold text-white gradient-bg-primary hover:opacity-95 shadow-lg shadow-indigo-600/20 transition-all flex items-center justify-center gap-2 shrink-0"
+            className="px-5 py-3 rounded-xl text-xs sm:text-sm font-semibold text-white gradient-bg-primary hover:opacity-95 shadow-lg shadow-orange-600/20 transition-all flex items-center justify-center gap-2 shrink-0"
           >
             <Upload className="w-4 h-4" />
             Upload Teaching Resource
@@ -125,49 +125,52 @@ export const ResourceHubPage: React.FC = () => {
             placeholder="Search resources by title, topic, or tags..."
             value={search}
             onChange={(e) => setSearch(e.target.value)}
-            className="w-full bg-slate-900 border border-slate-700/80 rounded-xl pl-10 pr-4 py-2 text-xs text-slate-100 placeholder:text-slate-500 focus:outline-none focus:border-indigo-500"
+            className="w-full bg-slate-900 border border-slate-700/80 rounded-xl pl-10 pr-4 py-2 text-xs text-slate-100 placeholder:text-slate-500 focus:outline-none focus:border-orange-500"
           />
         </div>
 
-        {/* Type Filter */}
-        <select
-          value={type}
-          onChange={(e) => setType(e.target.value)}
-          className="bg-slate-900 border border-slate-700/80 rounded-xl px-3 py-2 text-xs text-slate-200 focus:outline-none focus:border-indigo-500 capitalize"
-        >
-          <option value="">All Resource Types</option>
-          <option value="worksheet">Worksheets</option>
-          <option value="presentation">Presentations</option>
-          <option value="exercise">Exercises</option>
-          <option value="exam">Exams</option>
-          <option value="notes">Teacher Notes</option>
-          <option value="other">Other</option>
-        </select>
+        {/* Filters Group for Mobile Wrap */}
+        <div className="grid grid-cols-2 md:flex items-center gap-2.5">
+          {/* Type Filter */}
+          <select
+            value={type}
+            onChange={(e) => setType(e.target.value)}
+            className="bg-slate-900 border border-slate-700/80 rounded-xl px-3 py-2 text-xs text-slate-200 focus:outline-none focus:border-orange-500 capitalize"
+          >
+            <option value="">All Types</option>
+            <option value="worksheet">Worksheets</option>
+            <option value="presentation">Presentations</option>
+            <option value="exercise">Exercises</option>
+            <option value="exam">Exams</option>
+            <option value="notes">Teacher Notes</option>
+            <option value="other">Other</option>
+          </select>
 
-        {/* Subject Filter */}
-        <select
-          value={subject}
-          onChange={(e) => setSubject(e.target.value)}
-          className="bg-slate-900 border border-slate-700/80 rounded-xl px-3 py-2 text-xs text-slate-200 focus:outline-none focus:border-indigo-500"
-        >
-          <option value="">All Subjects</option>
-          <option value="Biology">Biology</option>
-          <option value="Mathematics">Mathematics</option>
-          <option value="Chemistry">Chemistry</option>
-          <option value="Physics">Physics</option>
-          <option value="English">English</option>
-          <option value="History">History</option>
-          <option value="Geography">Geography</option>
-          <option value="Technology">Technology</option>
-          <option value="Art">Art</option>
-        </select>
+          {/* Subject Filter */}
+          <select
+            value={subject}
+            onChange={(e) => setSubject(e.target.value)}
+            className="bg-slate-900 border border-slate-700/80 rounded-xl px-3 py-2 text-xs text-slate-200 focus:outline-none focus:border-orange-500"
+          >
+            <option value="">All Subjects</option>
+            <option value="Biology">Biology</option>
+            <option value="Mathematics">Mathematics</option>
+            <option value="Chemistry">Chemistry</option>
+            <option value="Physics">Physics</option>
+            <option value="English">English</option>
+            <option value="History">History</option>
+            <option value="Geography">Geography</option>
+            <option value="Technology">Technology</option>
+            <option value="Art">Art</option>
+          </select>
+        </div>
 
         {/* My Resources Toggle */}
         <button
           onClick={() => setMyResources(!myResources)}
-          className={`px-3 py-2 rounded-xl text-xs font-semibold flex items-center gap-1.5 transition-all ${
+          className={`w-full md:w-auto justify-center px-3 py-2 rounded-xl text-xs font-semibold flex items-center gap-1.5 transition-all ${
             myResources
-              ? 'bg-purple-600 text-white shadow-md shadow-purple-600/20'
+              ? 'gradient-bg-primary text-white shadow-md shadow-orange-600/20'
               : 'bg-slate-900 text-slate-400 border border-slate-700 hover:text-slate-200'
           }`}
         >
@@ -179,12 +182,12 @@ export const ResourceHubPage: React.FC = () => {
       {/* Grid Display */}
       {loading ? (
         <div className="py-20 text-center text-slate-400 flex flex-col items-center">
-          <Loader2 className="w-10 h-10 text-indigo-500 animate-spin mb-3" />
+          <Loader2 className="w-10 h-10 text-orange-500 animate-spin mb-3" />
           <p className="text-sm font-medium">Searching educational resources...</p>
         </div>
       ) : resources.length === 0 ? (
-        <div className="glass-panel rounded-3xl p-12 text-center text-slate-400 space-y-4 max-w-lg mx-auto">
-          <div className="w-16 h-16 rounded-2xl bg-purple-500/10 border border-purple-500/20 text-purple-400 flex items-center justify-center mx-auto">
+        <div className="glass-panel rounded-3xl p-8 sm:p-12 text-center text-slate-400 space-y-4 max-w-lg mx-auto">
+          <div className="w-16 h-16 rounded-2xl bg-orange-500/10 border border-orange-500/20 text-orange-400 flex items-center justify-center mx-auto">
             <FolderOpen className="w-8 h-8" />
           </div>
           <h3 className="text-lg font-bold text-white">No resources found</h3>
@@ -195,13 +198,13 @@ export const ResourceHubPage: React.FC = () => {
           </p>
           <Link
             to="/resources/upload"
-            className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-purple-600 hover:bg-purple-500 text-white font-semibold text-xs shadow-lg shadow-purple-600/20"
+            className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl gradient-bg-primary text-white font-semibold text-xs shadow-lg shadow-orange-600/20"
           >
             + Upload Resource
           </Link>
         </div>
       ) : (
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
           {resources.map((item) => (
             <ResourceCard
               key={item._id}

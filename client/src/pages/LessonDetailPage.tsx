@@ -88,7 +88,7 @@ export const LessonDetailPage: React.FC = () => {
   if (loading) {
     return (
       <div className="py-20 text-center text-slate-400 flex flex-col items-center">
-        <Loader2 className="w-10 h-10 text-indigo-500 animate-spin mb-3" />
+        <Loader2 className="w-10 h-10 text-orange-500 animate-spin mb-3" />
         <p className="text-sm font-medium">Loading lesson plan...</p>
       </div>
     );
@@ -102,7 +102,7 @@ export const LessonDetailPage: React.FC = () => {
         </div>
         <Link
           to="/lessons"
-          className="inline-flex items-center gap-2 text-xs font-semibold text-indigo-400 hover:underline"
+          className="inline-flex items-center gap-2 text-xs font-semibold text-orange-400 hover:underline"
         >
           <ArrowLeft className="w-4 h-4" /> Back to Lesson Plans
         </Link>
@@ -111,7 +111,7 @@ export const LessonDetailPage: React.FC = () => {
   }
 
   return (
-    <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-6">
+    <div className="max-w-4xl mx-auto px-2 sm:px-6 lg:px-8 py-4 sm:py-8 space-y-6">
       {/* Top Bar Actions */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 print:hidden">
         <Link
@@ -138,7 +138,7 @@ export const LessonDetailPage: React.FC = () => {
             onClick={handleDuplicate}
             className="px-3 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 text-xs font-semibold flex items-center gap-1.5 transition-colors"
           >
-            <Copy className="w-3.5 h-3.5 text-indigo-400" />
+            <Copy className="w-3.5 h-3.5 text-orange-400" />
             Duplicate
           </button>
 
@@ -168,29 +168,29 @@ export const LessonDetailPage: React.FC = () => {
       </div>
 
       {/* Main Document Layout */}
-      <div className="glass-panel rounded-3xl p-6 sm:p-10 border border-slate-800 space-y-8 print:bg-white print:text-black print:border-none">
+      <div className="glass-panel rounded-3xl p-5 sm:p-10 border border-slate-800 space-y-6 sm:space-y-8 print:bg-white print:text-black print:border-none">
         {/* Document Header */}
         <div className="border-b border-slate-800 pb-6 space-y-3">
           <div className="flex flex-wrap items-center gap-2 text-xs">
-            <span className="font-bold uppercase tracking-wider px-3 py-1 rounded-lg bg-indigo-500/10 text-indigo-400 border border-indigo-500/20">
+            <span className="font-bold uppercase tracking-wider px-3 py-1 rounded-lg bg-orange-500/10 text-orange-400 border border-orange-500/20">
               {lesson.subject}
             </span>
             <span className="px-3 py-1 rounded-lg bg-slate-800 text-slate-300 font-mono">
               {lesson.grade}
             </span>
             <span className="px-3 py-1 rounded-lg bg-slate-800 text-slate-300 font-mono flex items-center gap-1">
-              <Clock className="w-3.5 h-3.5 text-indigo-400" />
+              <Clock className="w-3.5 h-3.5 text-orange-400" />
               {lesson.duration || 45} Minutes
             </span>
           </div>
 
-          <h1 className="text-2xl sm:text-4xl font-extrabold text-white tracking-tight">
+          <h1 className="text-xl sm:text-4xl font-extrabold text-white tracking-tight">
             {lesson.title}
           </h1>
 
-          <div className="flex flex-wrap items-center gap-4 text-xs text-slate-400 pt-1">
+          <div className="flex flex-wrap items-center gap-3 text-xs text-slate-400 pt-1">
             <span className="flex items-center gap-1 font-mono">
-              <Calendar className="w-4 h-4 text-indigo-400" />
+              <Calendar className="w-4 h-4 text-orange-400" />
               Date: {new Date(lesson.date).toLocaleDateString()}
             </span>
             <span>&bull;</span>
@@ -201,13 +201,13 @@ export const LessonDetailPage: React.FC = () => {
         {/* Section 1: Objectives */}
         {lesson.objectives && lesson.objectives.length > 0 && (
           <div className="space-y-3">
-            <h2 className="text-base font-bold text-indigo-300 flex items-center gap-2">
+            <h2 className="text-base font-bold text-orange-300 flex items-center gap-2">
               <Sparkles className="w-4 h-4" />
               Learning Objectives
             </h2>
             <ul className="space-y-2">
               {lesson.objectives.map((obj, idx) => (
-                <li key={idx} className="flex items-start gap-2 text-sm text-slate-200">
+                <li key={idx} className="flex items-start gap-2 text-xs sm:text-sm text-slate-200">
                   <Check className="w-4 h-4 text-emerald-400 shrink-0 mt-0.5" />
                   <span>{obj}</span>
                 </li>
@@ -217,8 +217,8 @@ export const LessonDetailPage: React.FC = () => {
         )}
 
         {/* Section 2: Lesson Structure */}
-        <div className="space-y-6">
-          <h2 className="text-base font-bold text-indigo-300 flex items-center gap-2">
+        <div className="space-y-4 sm:space-y-6">
+          <h2 className="text-base font-bold text-orange-300 flex items-center gap-2">
             <BookOpen className="w-4 h-4" />
             Lesson Activities & Structure
           </h2>
@@ -226,7 +226,7 @@ export const LessonDetailPage: React.FC = () => {
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             {lesson.introduction && (
               <div className="glass-card rounded-2xl p-4 space-y-1">
-                <span className="text-xs font-bold text-indigo-400 uppercase tracking-wider">
+                <span className="text-xs font-bold text-orange-400 uppercase tracking-wider">
                   1. Introduction & Warm-up
                 </span>
                 <p className="text-xs text-slate-300 leading-relaxed whitespace-pre-line">
@@ -237,7 +237,7 @@ export const LessonDetailPage: React.FC = () => {
 
             {lesson.mainActivity && (
               <div className="glass-card rounded-2xl p-4 space-y-1">
-                <span className="text-xs font-bold text-indigo-400 uppercase tracking-wider">
+                <span className="text-xs font-bold text-orange-400 uppercase tracking-wider">
                   2. Main Activity
                 </span>
                 <p className="text-xs text-slate-300 leading-relaxed whitespace-pre-line">
@@ -248,7 +248,7 @@ export const LessonDetailPage: React.FC = () => {
 
             {lesson.practiceActivity && (
               <div className="glass-card rounded-2xl p-4 space-y-1">
-                <span className="text-xs font-bold text-indigo-400 uppercase tracking-wider">
+                <span className="text-xs font-bold text-orange-400 uppercase tracking-wider">
                   3. Practice & Exercises
                 </span>
                 <p className="text-xs text-slate-300 leading-relaxed whitespace-pre-line">
@@ -259,7 +259,7 @@ export const LessonDetailPage: React.FC = () => {
 
             {lesson.conclusion && (
               <div className="glass-card rounded-2xl p-4 space-y-1">
-                <span className="text-xs font-bold text-indigo-400 uppercase tracking-wider">
+                <span className="text-xs font-bold text-orange-400 uppercase tracking-wider">
                   4. Conclusion & Exit Ticket
                 </span>
                 <p className="text-xs text-slate-300 leading-relaxed whitespace-pre-line">
@@ -300,7 +300,7 @@ export const LessonDetailPage: React.FC = () => {
         {/* Section 4: Attached Shared Resources */}
         {lesson.resources && lesson.resources.length > 0 && (
           <div className="pt-6 border-t border-slate-800 space-y-4">
-            <h2 className="text-base font-bold text-indigo-300 flex items-center gap-2">
+            <h2 className="text-base font-bold text-orange-300 flex items-center gap-2">
               <Paperclip className="w-4 h-4" />
               Attached Teaching Materials ({lesson.resources.length})
             </h2>
@@ -313,7 +313,7 @@ export const LessonDetailPage: React.FC = () => {
                 >
                   <div className="min-w-0">
                     <div className="flex items-center gap-2 mb-1">
-                      <span className="text-[10px] font-bold uppercase px-2 py-0.5 rounded bg-indigo-500/10 text-indigo-400 border border-indigo-500/20">
+                      <span className="text-[10px] font-bold uppercase px-2 py-0.5 rounded bg-orange-500/10 text-orange-400 border border-orange-500/20">
                         {res.type}
                       </span>
                       <span className="text-xs text-slate-400">{res.subject}</span>
@@ -325,7 +325,7 @@ export const LessonDetailPage: React.FC = () => {
                     href={res.fileUrl}
                     target="_blank"
                     rel="noreferrer"
-                    className="px-3 py-1.5 rounded-xl bg-indigo-600/20 hover:bg-indigo-600/30 text-indigo-300 border border-indigo-500/30 text-xs font-semibold flex items-center gap-1 transition-colors shrink-0"
+                    className="px-3 py-1.5 rounded-xl bg-orange-600/20 hover:bg-orange-600/30 text-orange-300 border border-orange-500/30 text-xs font-semibold flex items-center gap-1 transition-colors shrink-0"
                   >
                     <Download className="w-3.5 h-3.5" /> Download
                   </a>

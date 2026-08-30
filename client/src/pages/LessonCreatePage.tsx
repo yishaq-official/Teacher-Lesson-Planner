@@ -152,16 +152,16 @@ export const LessonCreatePage: React.FC = () => {
   if (loading) {
     return (
       <div className="py-20 text-center text-slate-400 flex flex-col items-center">
-        <Loader2 className="w-10 h-10 text-indigo-500 animate-spin mb-3" />
+        <Loader2 className="w-10 h-10 text-orange-500 animate-spin mb-3" />
         <p className="text-sm font-medium">Loading lesson plan details...</p>
       </div>
     );
   }
 
   return (
-    <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-6">
+    <div className="max-w-4xl mx-auto px-2 sm:px-6 lg:px-8 py-4 sm:py-8 space-y-6">
       {/* Header */}
-      <div className="flex items-center justify-between">
+      <div className="flex items-center justify-between gap-4">
         <Link
           to="/lessons"
           className="inline-flex items-center gap-1.5 text-xs font-semibold text-slate-400 hover:text-white transition-colors"
@@ -169,7 +169,7 @@ export const LessonCreatePage: React.FC = () => {
           <ArrowLeft className="w-4 h-4" />
           Back to Lessons
         </Link>
-        <h1 className="text-xl font-bold text-white">
+        <h1 className="text-lg sm:text-xl font-bold text-white text-right">
           {isEditMode ? 'Edit Lesson Plan' : 'Create New Lesson Plan'}
         </h1>
       </div>
@@ -182,8 +182,8 @@ export const LessonCreatePage: React.FC = () => {
 
       <form onSubmit={handleSubmit} className="space-y-6">
         {/* Section 1: Basic Information */}
-        <div className="glass-panel rounded-2xl p-6 space-y-4 border border-slate-800">
-          <h2 className="text-base font-bold text-indigo-300 flex items-center gap-2">
+        <div className="glass-panel rounded-2xl p-5 sm:p-6 space-y-4 border border-slate-800">
+          <h2 className="text-base font-bold text-orange-300 flex items-center gap-2">
             <BookOpen className="w-4.5 h-4.5" />
             1. Basic Information
           </h2>
@@ -198,7 +198,7 @@ export const LessonCreatePage: React.FC = () => {
               placeholder="e.g. Introduction to Photosynthesis & Plant Cells"
               value={title}
               onChange={(e) => setTitle(e.target.value)}
-              className="w-full bg-slate-900 border border-slate-700/80 rounded-xl px-4 py-2.5 text-sm text-slate-100 placeholder:text-slate-500 focus:outline-none focus:border-indigo-500"
+              className="w-full bg-slate-900 border border-slate-700/80 rounded-xl px-4 py-2.5 text-xs sm:text-sm text-slate-100 placeholder:text-slate-500 focus:outline-none focus:border-orange-500"
             />
           </div>
 
@@ -210,7 +210,7 @@ export const LessonCreatePage: React.FC = () => {
               <select
                 value={subject}
                 onChange={(e) => setSubject(e.target.value)}
-                className="w-full bg-slate-900 border border-slate-700/80 rounded-xl px-3 py-2 text-xs text-slate-100 focus:outline-none focus:border-indigo-500"
+                className="w-full bg-slate-900 border border-slate-700/80 rounded-xl px-3 py-2 text-xs text-slate-100 focus:outline-none focus:border-orange-500"
               >
                 <option value="Biology">Biology</option>
                 <option value="Mathematics">Mathematics</option>
@@ -234,7 +234,7 @@ export const LessonCreatePage: React.FC = () => {
                 placeholder="e.g. Grade 9"
                 value={grade}
                 onChange={(e) => setGrade(e.target.value)}
-                className="w-full bg-slate-900 border border-slate-700/80 rounded-xl px-3 py-2 text-xs text-slate-100 focus:outline-none focus:border-indigo-500"
+                className="w-full bg-slate-900 border border-slate-700/80 rounded-xl px-3 py-2 text-xs text-slate-100 focus:outline-none focus:border-orange-500"
               />
             </div>
 
@@ -248,7 +248,7 @@ export const LessonCreatePage: React.FC = () => {
                 placeholder="e.g. Chloroplasts & Light Reactions"
                 value={topic}
                 onChange={(e) => setTopic(e.target.value)}
-                className="w-full bg-slate-900 border border-slate-700/80 rounded-xl px-3 py-2 text-xs text-slate-100 focus:outline-none focus:border-indigo-500"
+                className="w-full bg-slate-900 border border-slate-700/80 rounded-xl px-3 py-2 text-xs text-slate-100 focus:outline-none focus:border-orange-500"
               />
             </div>
           </div>
@@ -263,7 +263,7 @@ export const LessonCreatePage: React.FC = () => {
                 required
                 value={date}
                 onChange={(e) => setDate(e.target.value)}
-                className="w-full bg-slate-900 border border-slate-700/80 rounded-xl px-3 py-2 text-xs text-slate-100 focus:outline-none focus:border-indigo-500"
+                className="w-full bg-slate-900 border border-slate-700/80 rounded-xl px-3 py-2 text-xs text-slate-100 focus:outline-none focus:border-orange-500"
               />
             </div>
 
@@ -274,7 +274,7 @@ export const LessonCreatePage: React.FC = () => {
               <select
                 value={period}
                 onChange={(e) => setPeriod(e.target.value)}
-                className="w-full bg-slate-900 border border-slate-700/80 rounded-xl px-3 py-2 text-xs text-slate-100 focus:outline-none focus:border-indigo-500"
+                className="w-full bg-slate-900 border border-slate-700/80 rounded-xl px-3 py-2 text-xs text-slate-100 focus:outline-none focus:border-orange-500"
               >
                 <option value="Period 1 (08:30 - 09:15)">Period 1 (08:30 - 09:15)</option>
                 <option value="Period 2 (09:20 - 10:05)">Period 2 (09:20 - 10:05)</option>
@@ -295,23 +295,23 @@ export const LessonCreatePage: React.FC = () => {
                 max={240}
                 value={duration}
                 onChange={(e) => setDuration(Number(e.target.value))}
-                className="w-full bg-slate-900 border border-slate-700/80 rounded-xl px-3 py-2 text-xs text-slate-100 focus:outline-none focus:border-indigo-500"
+                className="w-full bg-slate-900 border border-slate-700/80 rounded-xl px-3 py-2 text-xs text-slate-100 focus:outline-none focus:border-orange-500"
               />
             </div>
           </div>
         </div>
 
         {/* Section 2: Learning Objectives */}
-        <div className="glass-panel rounded-2xl p-6 space-y-4 border border-slate-800">
+        <div className="glass-panel rounded-2xl p-5 sm:p-6 space-y-4 border border-slate-800">
           <div className="flex items-center justify-between">
-            <h2 className="text-base font-bold text-indigo-300 flex items-center gap-2">
+            <h2 className="text-base font-bold text-orange-300 flex items-center gap-2">
               <Sparkles className="w-4.5 h-4.5" />
               2. Learning Objectives
             </h2>
             <button
               type="button"
               onClick={addObjective}
-              className="text-xs font-semibold text-indigo-400 hover:text-indigo-300 flex items-center gap-1"
+              className="text-xs font-semibold text-orange-400 hover:text-orange-300 flex items-center gap-1"
             >
               + Add Objective
             </button>
@@ -326,7 +326,7 @@ export const LessonCreatePage: React.FC = () => {
                   placeholder="Students will be able to..."
                   value={obj}
                   onChange={(e) => handleObjectiveChange(idx, e.target.value)}
-                  className="flex-1 bg-slate-900 border border-slate-700/80 rounded-xl px-3.5 py-2 text-xs text-slate-100 focus:outline-none focus:border-indigo-500"
+                  className="flex-1 bg-slate-900 border border-slate-700/80 rounded-xl px-3.5 py-2 text-xs text-slate-100 focus:outline-none focus:border-orange-500"
                 />
                 {objectives.length > 1 && (
                   <button
@@ -343,8 +343,8 @@ export const LessonCreatePage: React.FC = () => {
         </div>
 
         {/* Section 3: Lesson Activities */}
-        <div className="glass-panel rounded-2xl p-6 space-y-4 border border-slate-800">
-          <h2 className="text-base font-bold text-indigo-300 flex items-center gap-2">
+        <div className="glass-panel rounded-2xl p-5 sm:p-6 space-y-4 border border-slate-800">
+          <h2 className="text-base font-bold text-orange-300 flex items-center gap-2">
             <Clock className="w-4.5 h-4.5" />
             3. Lesson Structure & Activities
           </h2>
@@ -358,7 +358,7 @@ export const LessonCreatePage: React.FC = () => {
               placeholder="e.g. Review previous concept, ask hook question about light energy..."
               value={introduction}
               onChange={(e) => setIntroduction(e.target.value)}
-              className="w-full bg-slate-900 border border-slate-700/80 rounded-xl p-3 text-xs text-slate-100 placeholder:text-slate-500 focus:outline-none focus:border-indigo-500"
+              className="w-full bg-slate-900 border border-slate-700/80 rounded-xl p-3 text-xs text-slate-100 placeholder:text-slate-500 focus:outline-none focus:border-orange-500"
             />
           </div>
 
@@ -371,7 +371,7 @@ export const LessonCreatePage: React.FC = () => {
               placeholder="e.g. Explain chemical formula of photosynthesis using slide deck presentation..."
               value={mainActivity}
               onChange={(e) => setMainActivity(e.target.value)}
-              className="w-full bg-slate-900 border border-slate-700/80 rounded-xl p-3 text-xs text-slate-100 placeholder:text-slate-500 focus:outline-none focus:border-indigo-500"
+              className="w-full bg-slate-900 border border-slate-700/80 rounded-xl p-3 text-xs text-slate-100 placeholder:text-slate-500 focus:outline-none focus:border-orange-500"
             />
           </div>
 
@@ -384,7 +384,7 @@ export const LessonCreatePage: React.FC = () => {
               placeholder="e.g. Students complete photosynthesis worksheet in pairs..."
               value={practiceActivity}
               onChange={(e) => setPracticeActivity(e.target.value)}
-              className="w-full bg-slate-900 border border-slate-700/80 rounded-xl p-3 text-xs text-slate-100 placeholder:text-slate-500 focus:outline-none focus:border-indigo-500"
+              className="w-full bg-slate-900 border border-slate-700/80 rounded-xl p-3 text-xs text-slate-100 placeholder:text-slate-500 focus:outline-none focus:border-orange-500"
             />
           </div>
 
@@ -397,14 +397,14 @@ export const LessonCreatePage: React.FC = () => {
               placeholder="e.g. Summarize key takeaways, collect exit ticket responses..."
               value={conclusion}
               onChange={(e) => setConclusion(e.target.value)}
-              className="w-full bg-slate-900 border border-slate-700/80 rounded-xl p-3 text-xs text-slate-100 placeholder:text-slate-500 focus:outline-none focus:border-indigo-500"
+              className="w-full bg-slate-900 border border-slate-700/80 rounded-xl p-3 text-xs text-slate-100 placeholder:text-slate-500 focus:outline-none focus:border-orange-500"
             />
           </div>
         </div>
 
         {/* Section 4: Homework & Teacher Notes */}
-        <div className="glass-panel rounded-2xl p-6 space-y-4 border border-slate-800">
-          <h2 className="text-base font-bold text-indigo-300 flex items-center gap-2">
+        <div className="glass-panel rounded-2xl p-5 sm:p-6 space-y-4 border border-slate-800">
+          <h2 className="text-base font-bold text-orange-300 flex items-center gap-2">
             <BookOpen className="w-4.5 h-4.5" />
             4. Homework & Personal Teacher Notes
           </h2>
@@ -419,7 +419,7 @@ export const LessonCreatePage: React.FC = () => {
                 placeholder="e.g. Read textbook page 45-48 and complete questions 1-5."
                 value={homework}
                 onChange={(e) => setHomework(e.target.value)}
-                className="w-full bg-slate-900 border border-slate-700/80 rounded-xl p-3 text-xs text-slate-100 placeholder:text-slate-500 focus:outline-none focus:border-indigo-500"
+                className="w-full bg-slate-900 border border-slate-700/80 rounded-xl p-3 text-xs text-slate-100 placeholder:text-slate-500 focus:outline-none focus:border-orange-500"
               />
             </div>
 
@@ -432,17 +432,17 @@ export const LessonCreatePage: React.FC = () => {
                 placeholder="e.g. Remember to bring microscope samples for period 3."
                 value={teacherNotes}
                 onChange={(e) => setTeacherNotes(e.target.value)}
-                className="w-full bg-slate-900 border border-slate-700/80 rounded-xl p-3 text-xs text-slate-100 placeholder:text-slate-500 focus:outline-none focus:border-indigo-500"
+                className="w-full bg-slate-900 border border-slate-700/80 rounded-xl p-3 text-xs text-slate-100 placeholder:text-slate-500 focus:outline-none focus:border-orange-500"
               />
             </div>
           </div>
         </div>
 
         {/* Section 5: Resource Hub Integration */}
-        <div className="glass-panel rounded-2xl p-6 space-y-4 border border-slate-800">
-          <div className="flex items-center justify-between">
+        <div className="glass-panel rounded-2xl p-5 sm:p-6 space-y-4 border border-slate-800">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
             <div>
-              <h2 className="text-base font-bold text-indigo-300 flex items-center gap-2">
+              <h2 className="text-base font-bold text-orange-300 flex items-center gap-2">
                 <Paperclip className="w-4.5 h-4.5" />
                 5. Link Teaching Resources
               </h2>
@@ -454,7 +454,7 @@ export const LessonCreatePage: React.FC = () => {
             <button
               type="button"
               onClick={() => setModalOpen(true)}
-              className="px-3.5 py-2 rounded-xl bg-indigo-600/20 hover:bg-indigo-600/30 text-indigo-300 border border-indigo-500/30 text-xs font-semibold flex items-center gap-1.5 transition-colors"
+              className="px-3.5 py-2 rounded-xl bg-orange-600/20 hover:bg-orange-600/30 text-orange-300 border border-orange-500/30 text-xs font-semibold flex items-center justify-center gap-1.5 transition-colors self-start sm:self-auto"
             >
               <Plus className="w-4 h-4" />
               Attach Shared Resource
@@ -473,7 +473,7 @@ export const LessonCreatePage: React.FC = () => {
                   className="p-3 rounded-xl bg-slate-900 border border-slate-800 flex items-center justify-between gap-3 text-xs"
                 >
                   <div className="flex items-center gap-2 truncate">
-                    <span className="font-bold uppercase text-[10px] px-2 py-0.5 rounded bg-indigo-500/10 text-indigo-400 border border-indigo-500/20">
+                    <span className="font-bold uppercase text-[10px] px-2 py-0.5 rounded bg-orange-500/10 text-orange-400 border border-orange-500/20">
                       {res.type}
                     </span>
                     <span className="text-slate-200 font-semibold truncate">{res.title}</span>
@@ -503,7 +503,7 @@ export const LessonCreatePage: React.FC = () => {
           <button
             type="submit"
             disabled={saving}
-            className="px-6 py-2.5 rounded-xl text-xs font-semibold text-white gradient-bg-primary hover:opacity-95 shadow-lg shadow-indigo-600/20 transition-all flex items-center gap-2"
+            className="px-6 py-2.5 rounded-xl text-xs font-semibold text-white gradient-bg-primary hover:opacity-95 shadow-lg shadow-orange-600/20 transition-all flex items-center gap-2"
           >
             <Save className="w-4 h-4" />
             {saving ? 'Saving...' : isEditMode ? 'Update Lesson Plan' : 'Save Lesson Plan'}
