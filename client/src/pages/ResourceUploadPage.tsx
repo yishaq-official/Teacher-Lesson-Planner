@@ -116,16 +116,16 @@ export const ResourceUploadPage: React.FC = () => {
                   <p className="text-sm font-bold text-emerald-400 flex items-center justify-center gap-1.5">
                     <CheckCircle2 className="w-4 h-4" /> {file.name}
                   </p>
-                  <p className="text-[11px] text-slate-500 mt-0.5">
+                  <p className="text-xs text-slate-300 font-medium mt-0.5">
                     {(file.size / (1024 * 1024)).toFixed(2)} MB &bull; Click to replace file
                   </p>
                 </div>
               ) : (
                 <div>
-                  <p className="text-sm font-semibold text-slate-200">
+                  <p className="text-sm font-bold text-white">
                     Click or drag & drop file here
                   </p>
-                  <p className="text-xs text-slate-500 mt-1">
+                  <p className="text-xs text-slate-300 font-medium mt-1">
                     Supports PDF, DOCX, PPTX, PNG, JPG (Max 15MB)
                   </p>
                 </div>

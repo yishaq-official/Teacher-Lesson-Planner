@@ -139,13 +139,13 @@ export const ResourceCard: React.FC<ResourceCardProps> = ({
         {/* Resource Title */}
         <h3
           onClick={() => onPreview && onPreview(resource)}
-          className="font-bold text-base text-slate-100 group-hover:text-orange-400 transition-colors line-clamp-1 mb-1.5 cursor-pointer flex items-center gap-1.5"
+          className="font-extrabold text-base text-white group-hover:text-orange-400 transition-colors line-clamp-1 mb-1.5 cursor-pointer flex items-center gap-1.5"
         >
           <span>{resource.title}</span>
         </h3>
 
         {/* Topic & Description */}
-        <p className="text-xs font-medium text-slate-400 mb-3 line-clamp-2">
+        <p className="text-xs font-semibold text-slate-300 mb-3 line-clamp-2 leading-relaxed">
           {resource.description || `Educational ${resource.type} focusing on ${resource.topic}.`}
         </p>
 
@@ -155,7 +155,7 @@ export const ResourceCard: React.FC<ResourceCardProps> = ({
             {resource.tags.slice(0, 3).map((tag, idx) => (
               <span
                 key={idx}
-                className="text-[10px] font-medium text-slate-400 bg-slate-800/80 px-2 py-0.5 rounded-md flex items-center gap-1"
+                className="text-[10px] font-bold text-slate-200 bg-slate-800 px-2 py-0.5 rounded-md flex items-center gap-1 border border-slate-700/60"
               >
                 <Tag className="w-2.5 h-2.5 text-orange-400" />
                 {tag}
@@ -168,27 +168,27 @@ export const ResourceCard: React.FC<ResourceCardProps> = ({
       <div>
         {/* Author metadata, Post Date & file size */}
         <div className="pt-3 border-t border-slate-800/80 space-y-1.5 mb-4">
-          <div className="flex items-center justify-between text-xs text-slate-300">
+          <div className="flex items-center justify-between text-xs text-slate-200">
             <div className="flex items-center gap-1.5 truncate">
               <User className="w-3.5 h-3.5 text-orange-400 shrink-0" />
-              <span className="font-semibold text-slate-200 truncate">
+              <span className="font-bold text-slate-100 truncate">
                 {teacherName} {isOwner && <span className="text-[10px] text-orange-400 font-mono">(You)</span>}
               </span>
             </div>
-            <span className="text-[11px] font-mono text-slate-400">
+            <span className="text-[11px] font-mono text-slate-300 font-semibold">
               {formatFileSize(resource.fileSize)}
             </span>
           </div>
 
-          <div className="flex items-center justify-between text-[11px] text-slate-400">
+          <div className="flex items-center justify-between text-[11px] text-slate-300 font-medium">
             <div className="flex items-center gap-1">
-              <Calendar className="w-3 h-3 text-slate-500" />
+              <Calendar className="w-3 h-3 text-orange-400" />
               <span>Posted: {formatDate(resource.createdAt) || 'Recently'}</span>
             </div>
             {resource.publicId && resource.publicId.startsWith('local/') ? (
-              <span className="text-[10px] text-slate-500 font-mono">Local File</span>
+              <span className="text-[10px] text-slate-400 font-mono">Local File</span>
             ) : (
-              <span className="text-[10px] text-emerald-400 font-mono">Cloudinary</span>
+              <span className="text-[10px] text-emerald-400 font-mono font-bold">Cloudinary</span>
             )}
           </div>
         </div>
