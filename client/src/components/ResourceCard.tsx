@@ -30,6 +30,7 @@ interface ResourceCardProps {
   onSelectTag?: (tag: string) => void;
   isAttached?: boolean;
   isBookmarkedInitial?: boolean;
+  showManagementActions?: boolean;
 }
 
 export const ResourceCard: React.FC<ResourceCardProps> = ({
@@ -44,6 +45,7 @@ export const ResourceCard: React.FC<ResourceCardProps> = ({
   onSelectTag,
   isAttached = false,
   isBookmarkedInitial,
+  showManagementActions = false,
 }) => {
   const { user } = useAuth();
   const { theme } = useTheme();
@@ -92,6 +94,7 @@ export const ResourceCard: React.FC<ResourceCardProps> = ({
     (currentUserId && teacherIdStr && currentUserId === teacherIdStr) ||
     (currentUserEmail && teacherEmail && currentUserEmail === teacherEmail.toLowerCase())
   );
+  const canManageResource = showManagementActions || isOwner;
 
   const rawTeacherName = teacherObj?.name || (isOwner ? user?.name : null);
   const activeTeacherEmail = teacherEmail || (isOwner ? user?.email : '');
@@ -276,7 +279,7 @@ export const ResourceCard: React.FC<ResourceCardProps> = ({
           </div>
 
           <div className="flex items-center gap-2 shrink-0">
-            {isOwner && onEdit && (
+            {canManageResource && onEdit && (
               <button
                 onClick={(e) => {
                   e.stopPropagation();
@@ -442,7 +445,7 @@ export const ResourceCard: React.FC<ResourceCardProps> = ({
             </button>
           )}
 
-          {isOwner && onEdit && (
+          {canManageResource && onEdit && (
             <button
               onClick={(e) => {
                 e.stopPropagation();
@@ -458,7 +461,7 @@ export const ResourceCard: React.FC<ResourceCardProps> = ({
             </button>
           )}
 
-          {isOwner && onToggleVisibility && (
+          {canManageResource && onToggleVisibility && (
             <button
               onClick={() => onToggleVisibility(resource._id, isPublic)}
               title={isPublic ? 'Click to make Private (Only visible to you)' : 'Click to make Public (Shared in Hub)'}
@@ -476,7 +479,7 @@ export const ResourceCard: React.FC<ResourceCardProps> = ({
             </button>
           )}
 
-          {isOwner && onDelete && (
+          {canManageResource && onDelete && (
             <button
               onClick={(e) => {
                 e.stopPropagation();

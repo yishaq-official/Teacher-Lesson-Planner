@@ -3,8 +3,39 @@ import { AuthenticatedRequest } from '../middleware/auth.js';
 import { Resource } from '../models/Resource.js';
 import { LessonPlan } from '../models/LessonPlan.js';
 import { User } from '../models/User.js';
-import { uploadToCloudinary, deleteFromCloudinary } from '../config/cloudinary.js';
+import { uploadToCloudinary, deleteFromCloudinary, hasValidCloudinaryConfig } from '../config/cloudinary.js';
 import mongoose from 'mongoose';
+import fs from 'fs';
+import path from 'path';
+
+const upgradeLocalResourceIfNeeded = async (resource: any) => {
+  if (!resource) return resource;
+  if (!hasValidCloudinaryConfig()) return resource;
+
+  const isLocalResource =
+    String(resource.publicId || '').startsWith('local/') || String(resource.fileUrl || '').includes('/uploads/');
+
+  if (!isLocalResource) return resource;
+
+  const existingPath = String(resource.publicId || '').startsWith('local/')
+    ? String(resource.publicId).replace('local/', '')
+    : String(resource.fileUrl || '').includes('/uploads/')
+      ? String(resource.fileUrl).split('/uploads/')[1]
+      : '';
+
+  if (!existingPath) return resource;
+
+  const filePath = path.join(process.cwd(), 'uploads', existingPath);
+  if (!fs.existsSync(filePath)) return resource;
+
+  const fileBuffer = fs.readFileSync(filePath);
+  const uploadResult = await uploadToCloudinary(fileBuffer, path.basename(filePath));
+
+  resource.fileUrl = uploadResult.url;
+  resource.publicId = uploadResult.publicId;
+  await resource.save();
+  return resource;
+};
 
 // GET /api/resources - Search and browse public resources
 export const getResources = async (req: AuthenticatedRequest, res: Response): Promise<void> => {
@@ -52,6 +83,8 @@ export const getResources = async (req: AuthenticatedRequest, res: Response): Pr
       .populate('teacherId', 'name institution email image')
       .sort({ createdAt: -1 });
 
+    await Promise.all(resources.map((resource) => upgradeLocalResourceIfNeeded(resource)));
+
     res.json({ success: true, count: resources.length, resources });
   } catch (error) {
     console.error('[getResources Error]:', error);
@@ -73,6 +106,8 @@ export const getResourceById = async (req: AuthenticatedRequest, res: Response):
       res.status(404).json({ success: false, message: 'Resource not found' });
       return;
     }
+
+    await upgradeLocalResourceIfNeeded(resource);
 
     res.json({ success: true, resource });
   } catch (error) {
@@ -324,6 +359,8 @@ export const downloadResource = async (req: AuthenticatedRequest, res: Response)
       res.status(404).json({ success: false, message: 'Resource not found' });
       return;
     }
+
+    await upgradeLocalResourceIfNeeded(resource);
 
     res.json({
       success: true,

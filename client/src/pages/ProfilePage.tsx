@@ -660,6 +660,7 @@ export const ProfilePage: React.FC = () => {
                     onDelete={(id: string) => handleDeleteResource(id)}
                     onEdit={handleEditResource}
                     onToggleVisibility={(id: string, current: boolean) => handleToggleVisibility(id, current)}
+                    showManagementActions={true}
                   />
                 ))}
               </div>
