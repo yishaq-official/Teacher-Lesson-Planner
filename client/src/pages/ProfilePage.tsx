@@ -25,7 +25,6 @@ import {
   ArrowRight,
   Eye,
   Calendar,
-  Calendar,
   Layers,
   Settings,
   Bookmark,
@@ -52,6 +51,7 @@ export const ProfilePage: React.FC = () => {
   const [yearsOfExperience, setYearsOfExperience] = useState<string | number>(user?.yearsOfExperience || '');
 
   const [resources, setResources] = useState<Resource[]>([]);
+  const [savedResourcesList, setSavedResourcesList] = useState<Resource[]>([]);
   const [lessons, setLessons] = useState<LessonPlan[]>([]);
   const [stats, setStats] = useState<ProfileStats>({ totalLessons: 0, totalResources: 0, totalDownloads: 0 });
   const [loading, setLoading] = useState(true);
@@ -68,7 +68,11 @@ export const ProfilePage: React.FC = () => {
   const fetchProfile = async () => {
     try {
       setLoading(true);
-      const res = await api.get('/user/profile');
+      const [res, bookmarksRes] = await Promise.all([
+        api.get('/user/profile'),
+        api.get('/user/bookmarks'),
+      ]);
+
       if (res.data.success) {
         const u = res.data.user;
         setName(u.name || user?.name || '');
@@ -88,6 +92,10 @@ export const ProfilePage: React.FC = () => {
         if (res.data.stats) {
           setStats(res.data.stats);
         }
+      }
+
+      if (bookmarksRes.data.success) {
+        setSavedResourcesList(bookmarksRes.data.resources);
       }
     } catch (err: any) {
       console.error('Failed to load profile:', err);
@@ -340,6 +348,18 @@ export const ProfilePage: React.FC = () => {
           >
             <Layers className="w-4 h-4" />
             Shared Assets ({resources.length})
+          </button>
+
+          <button
+            onClick={() => setActiveTab('saved')}
+            className={`px-4 py-2.5 rounded-xl text-xs sm:text-sm font-bold flex items-center gap-2 transition-all shrink-0 ${
+              activeTab === 'saved'
+                ? 'bg-orange-500/15 text-orange-400 border border-orange-500/30'
+                : 'text-slate-400 hover:text-slate-200 hover:bg-slate-900'
+            }`}
+          >
+            <Bookmark className="w-4 h-4" />
+            Saved Items ({savedResourcesList.length})
           </button>
 
           <button
@@ -615,7 +635,67 @@ export const ProfilePage: React.FC = () => {
           </div>
         )}
 
-        {/* Tab 3: Lesson Plans Viewer */}
+        {/* Tab 3: Saved Items (Bookmarked Resources) */}
+        {activeTab === 'saved' && (
+          <div className="space-y-6">
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+              <div>
+                <h2 className="text-lg sm:text-xl font-bold text-white flex items-center gap-2">
+                  <Bookmark className="w-5 h-5 text-orange-400" />
+                  Saved Community Resources
+                </h2>
+                <p className="text-xs text-slate-400 mt-1">
+                  Bookmarked teaching materials saved for quick reference.
+                </p>
+              </div>
+
+              <Link
+                to="/resources"
+                className="px-4 py-2 rounded-xl gradient-bg-primary text-white text-xs font-bold flex items-center justify-center gap-1.5 shadow-md shadow-orange-600/20 shrink-0 self-start sm:self-auto"
+              >
+                <FileSearch className="w-4 h-4" />
+                Browse Resource Hub
+              </Link>
+            </div>
+
+            {savedResourcesList.length === 0 ? (
+              <div className="glass-panel rounded-3xl p-12 text-center border border-slate-800 space-y-4">
+                <div className="w-16 h-16 rounded-2xl bg-orange-500/10 border border-orange-500/30 text-orange-400 flex items-center justify-center mx-auto">
+                  <Bookmark className="w-8 h-8" />
+                </div>
+                <h3 className="text-lg font-bold text-white">No Saved Items Yet</h3>
+                <p className="text-xs text-slate-400 max-w-md mx-auto">
+                  Click the bookmark icon on any teaching worksheet or presentation to save it here for quick access.
+                </p>
+                <Link
+                  to="/resources"
+                  className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl gradient-bg-primary text-white text-xs font-bold shadow-md shadow-orange-600/20"
+                >
+                  <FileSearch className="w-4 h-4" />
+                  Explore Resource Hub
+                </Link>
+              </div>
+            ) : (
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                {savedResourcesList.map((resource) => (
+                  <ResourceCard
+                    key={resource._id}
+                    resource={resource}
+                    isBookmarkedInitial={true}
+                    onPreview={(r: Resource) => setPreviewResource(r)}
+                    onBookmarkToggle={(id: string, isBookmarked: boolean) => {
+                      if (!isBookmarked) {
+                        setSavedResourcesList((prev) => prev.filter((item) => item._id !== id));
+                      }
+                    }}
+                  />
+                ))}
+              </div>
+            )}
+          </div>
+        )}
+
+        {/* Tab 4: Lesson Plans Viewer */}
         {activeTab === 'lessons' && (
           <div className="space-y-6">
             <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
