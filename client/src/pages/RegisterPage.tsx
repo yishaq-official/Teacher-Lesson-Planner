@@ -2,7 +2,8 @@ import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { signUp } from '../lib/auth-client.js';
 import { useAuth } from '../context/AuthContext.js';
-import { GraduationCap, Mail, Lock, User as UserIcon, Building, BookOpen, ArrowRight, AlertCircle } from 'lucide-react';
+import logoImg from '../assets/logo.png';
+import { Mail, Lock, User as UserIcon, Building, BookOpen, ArrowRight, AlertCircle } from 'lucide-react';
 
 export const RegisterPage: React.FC = () => {
   const [name, setName] = useState('');
@@ -48,9 +49,11 @@ export const RegisterPage: React.FC = () => {
         {/* Brand Header */}
         <div className="text-center mb-6">
           <Link to="/" className="inline-flex items-center gap-3 mb-2">
-            <div className="w-12 h-12 rounded-2xl gradient-bg-primary flex items-center justify-center shadow-xl shadow-orange-500/30">
-              <GraduationCap className="w-7 h-7 text-white" />
-            </div>
+            <img
+              src={logoImg}
+              alt="EduShelf Logo"
+              className="w-12 h-12 rounded-2xl object-contain shadow-xl shadow-orange-500/30 hover:scale-105 transition-transform"
+            />
           </Link>
           <h1 className="text-2xl font-bold text-white tracking-tight">Create Teacher Account</h1>
           <p className="text-xs text-slate-400 mt-1">

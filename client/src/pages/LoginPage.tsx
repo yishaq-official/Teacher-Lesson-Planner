@@ -2,7 +2,8 @@ import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { signIn } from '../lib/auth-client.js';
 import { useAuth } from '../context/AuthContext.js';
-import { GraduationCap, Mail, Lock, ArrowRight, AlertCircle, Sparkles } from 'lucide-react';
+import logoImg from '../assets/logo.png';
+import { Mail, Lock, ArrowRight, AlertCircle, Sparkles } from 'lucide-react';
 
 export const LoginPage: React.FC = () => {
   const [email, setEmail] = useState('');
@@ -47,9 +48,11 @@ export const LoginPage: React.FC = () => {
         {/* Brand Header */}
         <div className="text-center mb-8">
           <Link to="/" className="inline-flex items-center gap-3 mb-3">
-            <div className="w-12 h-12 rounded-2xl gradient-bg-primary flex items-center justify-center shadow-xl shadow-orange-500/30">
-              <GraduationCap className="w-7 h-7 text-white" />
-            </div>
+            <img
+              src={logoImg}
+              alt="EduShelf Logo"
+              className="w-12 h-12 rounded-2xl object-contain shadow-xl shadow-orange-500/30 hover:scale-105 transition-transform"
+            />
           </Link>
           <h1 className="text-2xl font-bold text-white tracking-tight">Welcome Back, Educator</h1>
           <p className="text-xs text-slate-400 mt-1">

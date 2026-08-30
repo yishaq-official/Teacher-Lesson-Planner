@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext.js';
 import { useTheme } from '../context/ThemeContext.js';
+import logoImg from '../assets/logo.png';
 import {
   BookOpen,
   FolderKanban,
@@ -11,7 +12,6 @@ import {
   User as UserIcon,
   Menu,
   X,
-  GraduationCap,
   Calendar,
   Sun,
   Moon,
@@ -37,9 +37,11 @@ export const Navbar: React.FC = () => {
         <div className="flex items-center justify-between h-16 gap-2">
           {/* Brand Logo */}
           <Link to={user ? '/dashboard' : '/'} className="flex items-center gap-2 sm:gap-3 group shrink-0">
-            <div className="w-9 h-9 sm:w-10 sm:h-10 rounded-xl gradient-bg-primary flex items-center justify-center shadow-lg shadow-orange-500/25 group-hover:scale-105 transition-transform shrink-0">
-              <GraduationCap className="w-5 h-5 sm:w-6 sm:h-6 text-white" />
-            </div>
+            <img
+              src={logoImg}
+              alt="EduShelf Logo"
+              className="w-9 h-9 sm:w-10 sm:h-10 rounded-xl object-contain shadow-lg shadow-orange-500/25 group-hover:scale-105 transition-transform shrink-0"
+            />
             <div className="min-w-0">
               <span className="font-bold text-base sm:text-lg text-white tracking-tight flex items-center gap-1">
                 Edu<span className="gradient-text font-extrabold">Shelf</span>

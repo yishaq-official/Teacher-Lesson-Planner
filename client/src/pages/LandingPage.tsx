@@ -2,8 +2,8 @@ import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { useTheme } from '../context/ThemeContext.js';
 import { ScrollReveal } from '../components/ScrollReveal.js';
+import logoImg from '../assets/logo.png';
 import {
-  GraduationCap,
   BookOpen,
   Share2,
   ArrowRight,
@@ -46,9 +46,11 @@ export const LandingPage: React.FC = () => {
       {/* Navigation Header */}
       <nav className="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8 w-full py-3.5 sm:py-5 flex items-center justify-between sticky top-0 z-40 glass-panel border-b border-slate-800/80 overflow-x-hidden">
         <div className="flex items-center gap-2 sm:gap-3 shrink-0">
-          <div className="w-8 h-8 sm:w-10 sm:h-10 rounded-xl gradient-bg-primary flex items-center justify-center shadow-lg shadow-orange-500/25 shrink-0">
-            <GraduationCap className="w-5 h-5 sm:w-6 sm:h-6 text-white" />
-          </div>
+          <img
+            src={logoImg}
+            alt="EduShelf Logo"
+            className="w-8 h-8 sm:w-10 sm:h-10 rounded-xl object-contain shadow-lg shadow-orange-500/25 shrink-0"
+          />
           <span className="font-bold text-base sm:text-xl tracking-tight text-white">
             Edu<span className="gradient-text font-extrabold">Shelf</span>
           </span>
@@ -513,9 +515,7 @@ export const LandingPage: React.FC = () => {
       <footer className="mt-auto py-12 border-t border-slate-800 bg-black text-xs text-slate-400">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col sm:flex-row items-center justify-between gap-6">
           <div className="flex items-center gap-3">
-            <div className="w-8 h-8 rounded-xl gradient-bg-primary flex items-center justify-center">
-              <GraduationCap className="w-4 h-4 text-white" />
-            </div>
+            <img src={logoImg} alt="EduShelf Logo" className="w-8 h-8 rounded-xl object-contain" />
             <span className="font-bold text-sm text-white">EduShelf</span>
           </div>
 
