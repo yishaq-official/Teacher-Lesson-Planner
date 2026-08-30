@@ -20,7 +20,7 @@ export interface IUser {
 const UserSchema: Schema = new Schema(
   {
     _id: { type: String, required: true },
-    name: { type: String, required: true, unique: true, trim: true, index: true },
+    name: { type: String, required: true, trim: true, index: true },
     email: { type: String, required: true, unique: true, trim: true, index: true },
     image: { type: String },
     institution: { type: String, default: '' },
