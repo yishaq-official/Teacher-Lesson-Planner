@@ -73,7 +73,7 @@ export const ResourceCard: React.FC<ResourceCardProps> = ({
       case 'exam':
         return 'bg-rose-500/10 text-rose-400 border-rose-500/30';
       case 'notes':
-        return 'bg-purple-500/10 text-purple-400 border-purple-500/30';
+        return 'bg-orange-500/10 text-orange-400 border-orange-500/30';
       default:
         return 'bg-slate-500/10 text-slate-400 border-slate-500/30';
     }
@@ -100,7 +100,7 @@ export const ResourceCard: React.FC<ResourceCardProps> = ({
   };
 
   return (
-    <div className="glass-card rounded-2xl p-5 flex flex-col justify-between relative group border border-slate-800 hover:border-indigo-500/40 transition-all">
+    <div className="glass-card rounded-2xl p-5 flex flex-col justify-between relative group border border-slate-800 hover:border-orange-500/40 transition-all">
       <div>
         {/* Header Badges */}
         <div className="flex items-center justify-between gap-2 mb-3">
@@ -139,7 +139,7 @@ export const ResourceCard: React.FC<ResourceCardProps> = ({
         {/* Resource Title */}
         <h3
           onClick={() => onPreview && onPreview(resource)}
-          className="font-bold text-base text-slate-100 group-hover:text-indigo-400 transition-colors line-clamp-1 mb-1.5 cursor-pointer flex items-center gap-1.5"
+          className="font-bold text-base text-slate-100 group-hover:text-orange-400 transition-colors line-clamp-1 mb-1.5 cursor-pointer flex items-center gap-1.5"
         >
           <span>{resource.title}</span>
         </h3>
@@ -157,7 +157,7 @@ export const ResourceCard: React.FC<ResourceCardProps> = ({
                 key={idx}
                 className="text-[10px] font-medium text-slate-400 bg-slate-800/80 px-2 py-0.5 rounded-md flex items-center gap-1"
               >
-                <Tag className="w-2.5 h-2.5 text-indigo-400" />
+                <Tag className="w-2.5 h-2.5 text-orange-400" />
                 {tag}
               </span>
             ))}
@@ -170,9 +170,9 @@ export const ResourceCard: React.FC<ResourceCardProps> = ({
         <div className="pt-3 border-t border-slate-800/80 space-y-1.5 mb-4">
           <div className="flex items-center justify-between text-xs text-slate-300">
             <div className="flex items-center gap-1.5 truncate">
-              <User className="w-3.5 h-3.5 text-indigo-400 shrink-0" />
+              <User className="w-3.5 h-3.5 text-orange-400 shrink-0" />
               <span className="font-semibold text-slate-200 truncate">
-                {teacherName} {isOwner && <span className="text-[10px] text-purple-400 font-mono">(You)</span>}
+                {teacherName} {isOwner && <span className="text-[10px] text-orange-400 font-mono">(You)</span>}
               </span>
             </div>
             <span className="text-[11px] font-mono text-slate-400">
@@ -194,11 +194,11 @@ export const ResourceCard: React.FC<ResourceCardProps> = ({
         </div>
 
         {/* Action Controls */}
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-2 flex-wrap sm:flex-nowrap">
           {onPreview && (
             <button
               onClick={() => onPreview(resource)}
-              className="py-2 px-3.5 rounded-xl bg-purple-600/20 hover:bg-purple-600/30 text-purple-300 border border-purple-500/30 text-xs font-semibold flex items-center justify-center gap-1.5 transition-all shrink-0"
+              className="py-2 px-3 rounded-xl bg-orange-600/20 hover:bg-orange-600/30 text-orange-300 border border-orange-500/30 text-xs font-semibold flex items-center justify-center gap-1.5 transition-all shrink-0"
               title="View document preview without downloading"
             >
               <Eye className="w-3.5 h-3.5" />
@@ -209,7 +209,7 @@ export const ResourceCard: React.FC<ResourceCardProps> = ({
           <button
             onClick={handleDownload}
             disabled={downloading}
-            className="flex-1 py-2 px-3 rounded-xl bg-indigo-600/20 hover:bg-indigo-600/30 text-indigo-300 border border-indigo-500/30 text-xs font-semibold flex items-center justify-center gap-1.5 transition-all"
+            className="flex-1 py-2 px-3 rounded-xl bg-orange-600/20 hover:bg-orange-600/30 text-orange-300 border border-orange-500/30 text-xs font-semibold flex items-center justify-center gap-1.5 transition-all min-w-[100px]"
           >
             <Download className="w-3.5 h-3.5" />
             <span>Download ({downloadsCount})</span>
@@ -250,7 +250,7 @@ export const ResourceCard: React.FC<ResourceCardProps> = ({
               className="py-2 px-3 rounded-xl bg-rose-500/10 hover:bg-rose-500/20 text-rose-400 border border-rose-500/20 text-xs font-semibold flex items-center gap-1 transition-colors"
             >
               <Trash2 className="w-3.5 h-3.5" />
-              <span>Delete</span>
+              <span className="hidden sm:inline">Delete</span>
             </button>
           )}
         </div>

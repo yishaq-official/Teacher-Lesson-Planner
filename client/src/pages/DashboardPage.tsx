@@ -46,7 +46,7 @@ export const DashboardPage: React.FC = () => {
       }
     } catch (err) {
       console.error('Failed to load dashboard:', err);
-    } fontally {
+    } finally {
       setLoading(false);
     }
   };
