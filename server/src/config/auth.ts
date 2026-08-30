@@ -5,6 +5,14 @@ import { MongoClient } from 'mongodb';
 const mongoUri = process.env.MONGODB_URI || 'mongodb://localhost:27017/teacher_planner';
 export const mongoClient = new MongoClient(mongoUri);
 
+const clientOrigins = [
+  process.env.CLIENT_URL,
+  'https://edushelf-blond.vercel.app',
+  'http://localhost:5173',
+  'http://localhost:5000',
+  'http://localhost:3000',
+].filter(Boolean) as string[];
+
 export const auth = betterAuth({
   database: mongodbAdapter(mongoClient.db()),
   emailAndPassword: {
@@ -25,10 +33,6 @@ export const auth = betterAuth({
       },
     },
   },
-  trustedOrigins: [
-    process.env.CLIENT_URL || 'http://localhost:5173',
-    'http://localhost:5173',
-    'http://localhost:5000',
-  ],
+  trustedOrigins: clientOrigins,
   secret: process.env.BETTER_AUTH_SECRET || 'nexus_teacher_planner_secret_key_2026',
 });
