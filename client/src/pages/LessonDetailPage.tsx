@@ -111,7 +111,7 @@ export const LessonDetailPage: React.FC = () => {
   }
 
   return (
-    <div className="max-w-4xl mx-auto px-2 sm:px-6 lg:px-8 py-4 sm:py-8 space-y-6">
+    <div className="max-w-4xl w-full mx-auto px-2 sm:px-6 lg:px-8 py-4 sm:py-8 space-y-6 overflow-x-hidden">
       {/* Top Bar Actions */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 print:hidden">
         <Link

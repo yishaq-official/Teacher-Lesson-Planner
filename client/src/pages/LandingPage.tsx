@@ -42,14 +42,14 @@ export const LandingPage: React.FC = () => {
   ];
 
   return (
-    <div className="min-h-screen bg-slate-950 text-slate-100 flex flex-col selection:bg-orange-500 selection:text-white transition-colors duration-300 overflow-x-hidden">
+    <div className="min-h-screen bg-slate-950 text-slate-100 flex flex-col selection:bg-orange-500 selection:text-white transition-colors duration-300 overflow-x-hidden w-full max-w-full">
       {/* Navigation Header */}
-      <nav className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full py-5 flex items-center justify-between sticky top-0 z-40 glass-panel border-b border-slate-800/80">
-        <div className="flex items-center gap-3">
-          <div className="w-10 h-10 rounded-xl gradient-bg-primary flex items-center justify-center shadow-lg shadow-orange-500/25">
-            <GraduationCap className="w-6 h-6 text-white" />
+      <nav className="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8 w-full py-3.5 sm:py-5 flex items-center justify-between sticky top-0 z-40 glass-panel border-b border-slate-800/80 overflow-x-hidden">
+        <div className="flex items-center gap-2 sm:gap-3 shrink-0">
+          <div className="w-8 h-8 sm:w-10 sm:h-10 rounded-xl gradient-bg-primary flex items-center justify-center shadow-lg shadow-orange-500/25 shrink-0">
+            <GraduationCap className="w-5 h-5 sm:w-6 sm:h-6 text-white" />
           </div>
-          <span className="font-bold text-xl tracking-tight text-white">
+          <span className="font-bold text-base sm:text-xl tracking-tight text-white">
             EduNexus <span className="gradient-text font-extrabold">Hub</span>
           </span>
         </div>
@@ -62,12 +62,12 @@ export const LandingPage: React.FC = () => {
           <a href="#faq" className="hover:text-white transition">FAQ</a>
         </div>
 
-        <div className="flex items-center gap-3">
+        <div className="flex items-center gap-1.5 sm:gap-3 shrink-0">
           {/* Theme Toggle Button */}
           <button
             onClick={toggleTheme}
             title={`Switch to ${theme === 'dark' ? 'Light' : 'Dark'} Mode`}
-            className="p-2.5 rounded-xl bg-slate-800/60 hover:bg-slate-700/80 text-amber-400 border border-slate-700/60 transition-all flex items-center justify-center shadow-sm"
+            className="p-2 sm:p-2.5 rounded-xl bg-slate-800/60 hover:bg-slate-700/80 text-amber-400 border border-slate-700/60 transition-all flex items-center justify-center shadow-sm"
           >
             {theme === 'dark' ? (
               <Sun className="w-4 h-4 text-amber-400" />
@@ -78,14 +78,14 @@ export const LandingPage: React.FC = () => {
 
           <Link
             to="/login"
-            className="px-4 py-2 rounded-xl text-xs font-semibold text-slate-300 hover:text-white hover:bg-slate-800 transition-colors"
+            className="px-2.5 sm:px-4 py-1.5 sm:py-2 rounded-xl text-xs font-semibold text-slate-300 hover:text-white hover:bg-slate-800 transition-colors"
           >
             Sign In
           </Link>
 
           <Link
             to="/register"
-            className="px-5 py-2.5 rounded-xl text-xs font-bold text-white gradient-bg-primary hover:opacity-95 shadow-lg shadow-orange-500/25 transition-all"
+            className="px-3 sm:px-5 py-1.5 sm:py-2.5 rounded-xl text-xs font-bold text-white gradient-bg-primary hover:opacity-95 shadow-lg shadow-orange-500/25 transition-all"
           >
             Get Started
           </Link>

@@ -194,11 +194,11 @@ export const ResourceCard: React.FC<ResourceCardProps> = ({
         </div>
 
         {/* Action Controls */}
-        <div className="flex items-center gap-2 flex-wrap sm:flex-nowrap">
+        <div className="flex items-center gap-1.5 sm:gap-2 flex-wrap">
           {onPreview && (
             <button
               onClick={() => onPreview(resource)}
-              className="py-2 px-3 rounded-xl bg-orange-600/20 hover:bg-orange-600/30 text-orange-300 border border-orange-500/30 text-xs font-semibold flex items-center justify-center gap-1.5 transition-all shrink-0"
+              className="py-2 px-2.5 sm:px-3 rounded-xl bg-orange-600/20 hover:bg-orange-600/30 text-orange-300 border border-orange-500/30 text-xs font-semibold flex items-center justify-center gap-1 transition-all shrink-0"
               title="View document preview without downloading"
             >
               <Eye className="w-3.5 h-3.5" />
@@ -209,16 +209,16 @@ export const ResourceCard: React.FC<ResourceCardProps> = ({
           <button
             onClick={handleDownload}
             disabled={downloading}
-            className="flex-1 py-2 px-3 rounded-xl bg-orange-600/20 hover:bg-orange-600/30 text-orange-300 border border-orange-500/30 text-xs font-semibold flex items-center justify-center gap-1.5 transition-all min-w-[100px]"
+            className="flex-1 py-2 px-2.5 sm:px-3 rounded-xl bg-orange-600/20 hover:bg-orange-600/30 text-orange-300 border border-orange-500/30 text-xs font-semibold flex items-center justify-center gap-1 transition-all min-w-0"
           >
-            <Download className="w-3.5 h-3.5" />
-            <span>Download ({downloadsCount})</span>
+            <Download className="w-3.5 h-3.5 shrink-0" />
+            <span className="truncate">Download ({downloadsCount})</span>
           </button>
 
           {onAttach && (
             <button
               onClick={() => onAttach(resource)}
-              className={`py-2 px-3 rounded-xl text-xs font-semibold flex items-center justify-center gap-1 transition-all ${
+              className={`py-2 px-2.5 sm:px-3 rounded-xl text-xs font-semibold flex items-center justify-center gap-1 transition-all shrink-0 ${
                 isAttached
                   ? 'bg-emerald-500/20 text-emerald-300 border border-emerald-500/40'
                   : 'bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700'
@@ -233,7 +233,7 @@ export const ResourceCard: React.FC<ResourceCardProps> = ({
             <button
               onClick={() => onToggleVisibility(resource._id, isPublic)}
               title={isPublic ? 'Click to make Private (Only visible to you)' : 'Click to make Public (Shared in Hub)'}
-              className={`p-2 rounded-xl border transition-colors flex items-center justify-center ${
+              className={`p-2 rounded-xl border transition-colors flex items-center justify-center shrink-0 ${
                 isPublic
                   ? 'bg-emerald-500/10 hover:bg-emerald-500/20 text-emerald-300 border-emerald-500/30'
                   : 'bg-amber-500/10 hover:bg-amber-500/20 text-amber-300 border-amber-500/30'
@@ -247,7 +247,7 @@ export const ResourceCard: React.FC<ResourceCardProps> = ({
             <button
               onClick={() => onDelete(resource._id)}
               title="Delete resource"
-              className="py-2 px-3 rounded-xl bg-rose-500/10 hover:bg-rose-500/20 text-rose-400 border border-rose-500/20 text-xs font-semibold flex items-center gap-1 transition-colors"
+              className="py-2 px-2.5 sm:px-3 rounded-xl bg-rose-500/10 hover:bg-rose-500/20 text-rose-400 border border-rose-500/20 text-xs font-semibold flex items-center gap-1 transition-colors shrink-0"
             >
               <Trash2 className="w-3.5 h-3.5" />
               <span className="hidden sm:inline">Delete</span>

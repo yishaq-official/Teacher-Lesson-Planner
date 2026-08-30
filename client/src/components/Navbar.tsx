@@ -143,16 +143,16 @@ export const Navbar: React.FC = () => {
                   </div>
                 </div>
               ) : (
-                <div className="flex items-center gap-3">
+                <div className="flex items-center gap-1.5 sm:gap-3">
                   <Link
                     to="/login"
-                    className="px-4 py-2 rounded-lg text-sm font-medium text-slate-300 hover:text-white hover:bg-slate-800/60 transition-colors"
+                    className="px-2.5 sm:px-4 py-1.5 sm:py-2 rounded-lg text-xs sm:text-sm font-medium text-slate-300 hover:text-white hover:bg-slate-800/60 transition-colors"
                   >
                     Sign In
                   </Link>
                   <Link
                     to="/register"
-                    className="px-4 py-2 rounded-lg text-sm font-semibold text-white gradient-bg-primary hover:opacity-95 shadow-md shadow-orange-600/20 transition-all"
+                    className="px-3 sm:px-4 py-1.5 sm:py-2 rounded-lg text-xs sm:text-sm font-semibold text-white gradient-bg-primary hover:opacity-95 shadow-md shadow-orange-600/20 transition-all"
                   >
                     Get Started
                   </Link>

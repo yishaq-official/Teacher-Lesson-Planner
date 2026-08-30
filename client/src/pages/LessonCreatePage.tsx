@@ -159,7 +159,7 @@ export const LessonCreatePage: React.FC = () => {
   }
 
   return (
-    <div className="max-w-4xl mx-auto px-2 sm:px-6 lg:px-8 py-4 sm:py-8 space-y-6">
+    <div className="max-w-4xl w-full mx-auto px-2 sm:px-6 lg:px-8 py-4 sm:py-8 space-y-6 overflow-x-hidden">
       {/* Header */}
       <div className="flex items-center justify-between gap-4">
         <Link
