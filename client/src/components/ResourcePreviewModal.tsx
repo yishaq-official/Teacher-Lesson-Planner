@@ -80,8 +80,8 @@ export const ResourcePreviewModal: React.FC<ResourcePreviewModalProps> = ({
             <h2 className="text-lg sm:text-xl font-bold text-white truncate">{resource.title}</h2>
 
             <div className="flex items-center gap-4 text-xs text-slate-400">
-              <span className="flex items-center gap-1.5 text-slate-300">
-                <User className="w-3.5 h-3.5 text-orange-400" /> {teacherName}
+              <span className="flex items-center gap-1.5 text-slate-300 font-semibold">
+                <User className="w-3.5 h-3.5 text-orange-400" /> Uploaded by <span className="text-orange-300">@{teacherName}</span>
               </span>
               <span className="flex items-center gap-1">
                 <Calendar className="w-3.5 h-3.5 text-slate-500" /> Posted: {formatDate(resource.createdAt) || 'Recently'}

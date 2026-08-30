@@ -172,7 +172,7 @@ export const ResourceCard: React.FC<ResourceCardProps> = ({
             <div className="flex items-center gap-1.5 truncate">
               <User className="w-3.5 h-3.5 text-orange-400 shrink-0" />
               <span className="font-bold text-slate-100 truncate">
-                {teacherName} {isOwner && <span className="text-[10px] text-orange-400 font-mono">(You)</span>}
+                By <span className="text-orange-300">@{teacherName}</span> {isOwner && <span className="text-[10px] text-orange-400 font-mono font-bold">(You)</span>}
               </span>
             </div>
             <span className="text-[11px] font-mono text-slate-300 font-semibold">
@@ -243,7 +243,7 @@ export const ResourceCard: React.FC<ResourceCardProps> = ({
             </button>
           )}
 
-          {(isOwner || onDelete) && onDelete && (
+          {isOwner && onDelete && (
             <button
               onClick={() => onDelete(resource._id)}
               title="Delete resource"

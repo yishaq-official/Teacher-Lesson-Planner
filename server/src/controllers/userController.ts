@@ -59,6 +59,22 @@ export const updateProfile = async (req: AuthenticatedRequest, res: Response): P
 
     const { name, institution, subject, grade, bio, phone, location, yearsOfExperience, image } = req.body;
 
+    if (name && typeof name === 'string' && name.trim().length > 0) {
+      const trimmedName = name.trim();
+      const existingUser = await User.findOne({
+        _id: { $ne: userId },
+        name: { $regex: new RegExp(`^${trimmedName}$`, 'i') },
+      });
+
+      if (existingUser) {
+        res.status(400).json({
+          success: false,
+          message: `The username "${trimmedName}" is already taken by another teacher. Please choose a unique username.`,
+        });
+        return;
+      }
+    }
+
     const updatedUser = await User.findByIdAndUpdate(
       userId,
       {

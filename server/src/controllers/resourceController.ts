@@ -16,7 +16,7 @@ export const getResources = async (req: AuthenticatedRequest, res: Response): Pr
     if (myResources === 'true') {
       filter.teacherId = req.user?.id;
     } else {
-      // Community Hub: Show public resources, or private resources owned by the current user
+      // Community Hub: Show public resources (isPublic !== false) or resources created by the current user
       filter.$or = [{ isPublic: true }, { isPublic: { $ne: false } }, { teacherId: req.user?.id }];
     }
 
@@ -31,11 +31,24 @@ export const getResources = async (req: AuthenticatedRequest, res: Response): Pr
     }
 
     if (q && typeof q === 'string' && q.trim().length > 0) {
-      filter.$text = { $search: q.trim() };
+      const regex = new RegExp(q.trim(), 'i');
+      const searchConditions = [
+        { title: regex },
+        { topic: regex },
+        { description: regex },
+        { tags: regex },
+      ];
+
+      if (filter.$or) {
+        filter.$and = [{ $or: filter.$or }, { $or: searchConditions }];
+        delete filter.$or;
+      } else {
+        filter.$or = searchConditions;
+      }
     }
 
     const resources = await Resource.find(filter)
-      .populate('teacherId', 'name institution email')
+      .populate('teacherId', 'name institution email image')
       .sort({ createdAt: -1 });
 
     res.json({ success: true, count: resources.length, resources });
@@ -54,7 +67,7 @@ export const getResourceById = async (req: AuthenticatedRequest, res: Response):
       return;
     }
 
-    const resource = await Resource.findById(id).populate('teacherId', 'name institution email');
+    const resource = await Resource.findById(id).populate('teacherId', 'name institution email image');
     if (!resource) {
       res.status(404).json({ success: false, message: 'Resource not found' });
       return;
@@ -108,7 +121,7 @@ export const uploadResource = async (req: AuthenticatedRequest, res: Response): 
       isPublic: isPublicBool,
     });
 
-    const populated = await resource.populate('teacherId', 'name institution email');
+    const populated = await resource.populate('teacherId', 'name institution email image');
 
     res.status(201).json({
       success: true,
@@ -130,9 +143,14 @@ export const toggleResourceVisibility = async (req: AuthenticatedRequest, res: R
       return;
     }
 
-    const resource = await Resource.findOne({ _id: id, teacherId: req.user?.id });
+    const resource = await Resource.findById(id);
     if (!resource) {
-      res.status(404).json({ success: false, message: 'Resource not found or unauthorized' });
+      res.status(404).json({ success: false, message: 'Resource not found' });
+      return;
+    }
+
+    if (String(resource.teacherId) !== String(req.user?.id)) {
+      res.status(403).json({ success: false, message: 'Unauthorized: Only the creator can modify resource visibility.' });
       return;
     }
 
@@ -140,7 +158,7 @@ export const toggleResourceVisibility = async (req: AuthenticatedRequest, res: R
     resource.isPublic = newIsPublic;
     await resource.save();
 
-    const populated = await resource.populate('teacherId', 'name institution email');
+    const populated = await resource.populate('teacherId', 'name institution email image');
 
     res.json({
       success: true,
@@ -162,9 +180,14 @@ export const deleteResource = async (req: AuthenticatedRequest, res: Response): 
       return;
     }
 
-    const resource = await Resource.findOne({ _id: id, teacherId: req.user?.id });
+    const resource = await Resource.findById(id);
     if (!resource) {
-      res.status(404).json({ success: false, message: 'Resource not found or unauthorized' });
+      res.status(404).json({ success: false, message: 'Resource not found' });
+      return;
+    }
+
+    if (String(resource.teacherId) !== String(req.user?.id)) {
+      res.status(403).json({ success: false, message: 'Unauthorized: Only the creator can delete this resource.' });
       return;
     }
 

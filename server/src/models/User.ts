@@ -19,8 +19,8 @@ export interface IUser {
 const UserSchema: Schema = new Schema(
   {
     _id: { type: String, required: true },
-    name: { type: String, required: true },
-    email: { type: String, required: true, unique: true },
+    name: { type: String, required: true, unique: true, trim: true, index: true },
+    email: { type: String, required: true, unique: true, trim: true, index: true },
     image: { type: String },
     institution: { type: String, default: '' },
     subject: { type: String, default: '' },
@@ -30,7 +30,7 @@ const UserSchema: Schema = new Schema(
     location: { type: String, default: '' },
     yearsOfExperience: { type: Schema.Types.Mixed, default: '' },
   },
-  { timestamps: true, collection: 'user', _id: false }
+  { timestamps: true, collection: 'user' }
 );
 
 export const User = mongoose.models.User || mongoose.model<IUser>('User', UserSchema);
