@@ -105,6 +105,17 @@ export const ProfilePage: React.FC = () => {
     }
   };
 
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-slate-950 text-slate-100 py-12 px-4 flex justify-center items-center">
+        <div className="flex flex-col items-center gap-3">
+          <div className="w-10 h-10 border-4 border-orange-500 border-t-transparent rounded-full animate-spin" />
+          <p className="text-xs text-slate-400 font-medium">Loading Teacher Profile...</p>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="min-h-screen bg-slate-950 text-slate-100 py-8 px-4 sm:px-6 lg:px-8 w-full max-w-full overflow-x-hidden">
       <div className="max-w-5xl mx-auto space-y-8">

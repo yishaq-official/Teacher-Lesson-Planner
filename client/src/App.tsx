@@ -16,6 +16,7 @@ import { LessonDetailPage } from './pages/LessonDetailPage.js';
 import { ResourceHubPage } from './pages/ResourceHubPage.js';
 import { ResourceUploadPage } from './pages/ResourceUploadPage.js';
 import { CalendarPage } from './pages/CalendarPage.js';
+import { ProfilePage } from './pages/ProfilePage.js';
 
 const AppLayout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   return (
@@ -132,6 +133,14 @@ function AppRoutes() {
           element={
             <AppLayout>
               <ResourceUploadPage />
+            </AppLayout>
+          }
+        />
+        <Route
+          path="/profile"
+          element={
+            <AppLayout>
+              <ProfilePage />
             </AppLayout>
           }
         />
