@@ -28,6 +28,11 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         image: rawUser.image || undefined,
         institution: rawUser.institution || '',
         subject: rawUser.subject || '',
+        grade: rawUser.grade || '',
+        bio: rawUser.bio || '',
+        phone: rawUser.phone || '',
+        location: rawUser.location || '',
+        yearsOfExperience: rawUser.yearsOfExperience || '',
       }
     : null;
 

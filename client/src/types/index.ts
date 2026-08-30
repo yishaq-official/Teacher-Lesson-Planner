@@ -5,6 +5,11 @@ export interface User {
   image?: string;
   institution?: string;
   subject?: string;
+  grade?: string;
+  bio?: string;
+  phone?: string;
+  location?: string;
+  yearsOfExperience?: number | string;
 }
 
 export interface Resource {

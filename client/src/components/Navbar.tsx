@@ -123,24 +123,29 @@ export const Navbar: React.FC = () => {
 
                   <div className="h-6 w-[1px] bg-slate-800" />
 
-                  <div className="flex items-center gap-3 bg-slate-800/50 border border-slate-700/50 rounded-xl px-3 py-1.5">
-                    <div className="w-8 h-8 rounded-lg bg-orange-500/20 text-orange-400 flex items-center justify-center font-bold text-xs border border-orange-500/30">
+                  <Link
+                    to="/profile"
+                    title="Edit Teacher Profile"
+                    className="flex items-center gap-2.5 bg-slate-800/60 hover:bg-slate-800 border border-slate-700/60 hover:border-orange-500/40 rounded-xl px-3 py-1.5 transition-all group"
+                  >
+                    <div className="w-8 h-8 rounded-lg bg-orange-500/20 text-orange-400 flex items-center justify-center font-bold text-xs border border-orange-500/30 group-hover:scale-105 transition-transform">
                       {user.name.charAt(0).toUpperCase()}
                     </div>
                     <div className="text-left">
-                      <div className="text-xs font-semibold text-slate-200">{user.name}</div>
-                      <div className="text-[10px] text-slate-400 truncate max-w-[120px]">
+                      <div className="text-xs font-semibold text-slate-200 group-hover:text-orange-400 transition-colors">{user.name}</div>
+                      <div className="text-[10px] text-slate-400 truncate max-w-[110px]">
                         {user.subject || 'Teacher'}
                       </div>
                     </div>
-                    <button
-                      onClick={handleLogout}
-                      title="Sign Out"
-                      className="p-1.5 rounded-lg text-slate-400 hover:text-rose-400 hover:bg-rose-500/10 transition-colors ml-1"
-                    >
-                      <LogOut className="w-4 h-4" />
-                    </button>
-                  </div>
+                  </Link>
+
+                  <button
+                    onClick={handleLogout}
+                    title="Sign Out"
+                    className="p-2 rounded-xl text-slate-400 hover:text-rose-400 hover:bg-rose-500/10 border border-transparent hover:border-rose-500/20 transition-all"
+                  >
+                    <LogOut className="w-4 h-4" />
+                  </button>
                 </div>
               ) : (
                 <div className="flex items-center gap-1.5 sm:gap-3">
@@ -205,6 +210,14 @@ export const Navbar: React.FC = () => {
             Resource Hub
           </Link>
           <Link
+            to="/profile"
+            onClick={() => setMobileMenuOpen(false)}
+            className="block px-3 py-2 rounded-lg text-base font-medium text-orange-400 hover:bg-slate-800 hover:text-orange-300 flex items-center gap-2"
+          >
+            <UserIcon className="w-4 h-4" />
+            Teacher Profile Settings
+          </Link>
+          <Link
             to="/lessons/create"
             onClick={() => setMobileMenuOpen(false)}
             className="block px-3 py-2 rounded-lg text-base font-semibold text-white gradient-bg-primary text-center"
@@ -212,10 +225,14 @@ export const Navbar: React.FC = () => {
             + Create New Lesson
           </Link>
           <div className="pt-2 border-t border-slate-800 flex items-center justify-between">
-            <div className="flex items-center gap-2">
+            <Link
+              to="/profile"
+              onClick={() => setMobileMenuOpen(false)}
+              className="flex items-center gap-2 text-slate-200 font-medium text-sm"
+            >
               <UserIcon className="w-4 h-4 text-orange-400" />
-              <span className="text-sm font-medium text-slate-200">{user.name}</span>
-            </div>
+              <span>{user.name}</span>
+            </Link>
             <button
               onClick={handleLogout}
               className="text-xs text-rose-400 font-semibold px-3 py-1 bg-rose-500/10 rounded-lg hover:bg-rose-500/20"
