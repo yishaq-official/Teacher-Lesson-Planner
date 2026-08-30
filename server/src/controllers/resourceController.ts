@@ -105,10 +105,14 @@ export const uploadResource = async (req: AuthenticatedRequest, res: Response): 
     const parsedTags = typeof tags === 'string' ? tags.split(',').map((t) => t.trim()) : (Array.isArray(tags) ? tags : []);
     const isPublicBool = isPublic === 'false' || isPublic === false ? false : true;
 
-    if (req.user?.id) {
+    if (req.user) {
+      const userFilter = req.user.email ? { email: req.user.email } : { _id: req.user.id };
       await User.findOneAndUpdate(
-        { _id: req.user.id },
+        userFilter,
         {
+          $setOnInsert: {
+            _id: req.user.id,
+          },
           $set: {
             name: req.user.name || 'Teacher User',
             email: req.user.email || '',
