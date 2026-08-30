@@ -40,13 +40,6 @@ export const uploadToCloudinary = (
       }
     };
 
-    // Note: Cloudinary free/new accounts restrict PDF delivery (401 x-cld-error: deny or ACL failure).
-    // PDFs are served directly & reliably via local storage with inline PDF headers.
-    if (isPdf) {
-      console.log(`[PDF Handler]: Serving PDF '${filename}' locally for reliable inline browser viewing.`);
-      return saveLocally();
-    }
-
     // Check if real Cloudinary keys are configured
     const hasValidCloudinary =
       cloudName &&
@@ -67,12 +60,15 @@ export const uploadToCloudinary = (
       api_secret: apiSecret,
     });
 
-    console.log(`[Cloudinary Uploading]: File '${filename}' (${fileBuffer.length} bytes) to Cloud '${cloudName}'`);
+    const isPdf = ext === '.pdf';
+    const resourceType = isPdf ? 'raw' : 'auto';
+
+    console.log(`[Cloudinary Uploading]: File '${filename}' (${fileBuffer.length} bytes, type: ${resourceType}) to Cloud '${cloudName}'`);
 
     const uploadStream = cloudinary.uploader.upload_stream(
       {
         folder,
-        resource_type: 'auto',
+        resource_type: resourceType,
         public_id: `${Date.now()}-${filename.replace(/[^a-zA-Z0-9.-]/g, '_')}`,
       },
       (error, result) => {
