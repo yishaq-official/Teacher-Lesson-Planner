@@ -41,8 +41,8 @@ export const Navbar: React.FC = () => {
               <GraduationCap className="w-6 h-6 text-white" />
             </div>
             <div>
-              <span className="font-bold text-lg text-white tracking-tight flex items-center gap-1.5">
-                EduNexus <span className="text-xs px-2 py-0.5 rounded-full bg-indigo-500/20 text-indigo-400 font-semibold border border-indigo-500/30">Hub</span>
+              <span className="font-bold text-lg text-white tracking-tight flex items-center gap-1">
+                EduNexus <span className="gradient-text font-extrabold">Hub</span>
               </span>
               <span className="block text-[11px] text-slate-400 -mt-1">Lesson Planner & Resources</span>
             </div>

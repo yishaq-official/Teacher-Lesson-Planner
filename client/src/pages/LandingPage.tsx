@@ -6,7 +6,6 @@ import {
   GraduationCap,
   BookOpen,
   Share2,
-  Sparkles,
   ArrowRight,
   Layers,
   Sun,
@@ -17,10 +16,6 @@ import {
   ChevronDown,
   ChevronUp,
   Lock,
-  Award,
-  Users,
-  ShieldCheck,
-  Zap,
 } from 'lucide-react';
 
 export const LandingPage: React.FC = () => {
@@ -48,12 +43,6 @@ export const LandingPage: React.FC = () => {
 
   return (
     <div className="min-h-screen bg-slate-950 text-slate-100 flex flex-col selection:bg-indigo-500 selection:text-white transition-colors duration-300 overflow-x-hidden">
-      {/* Top Announcement Bar */}
-      <div className="bg-gradient-to-r from-indigo-600 via-purple-600 to-pink-600 text-white text-xs font-semibold py-2 px-4 text-center flex items-center justify-center gap-2">
-        <Sparkles className="w-3.5 h-3.5 animate-pulse" />
-        <span>EduNexus Hub v2.0 is live! Featuring Weekly Timetables & Cross-Origin Document Previews.</span>
-      </div>
-
       {/* Navigation Header */}
       <nav className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full py-5 flex items-center justify-between sticky top-0 z-40 glass-panel border-b border-slate-800/80">
         <div className="flex items-center gap-3">
@@ -104,32 +93,25 @@ export const LandingPage: React.FC = () => {
       </nav>
 
       {/* Hero Section */}
-      <section className="relative pt-12 pb-16 md:pt-20 md:pb-24 overflow-hidden">
+      <section className="relative pt-16 pb-16 md:pt-24 md:pb-24 overflow-hidden">
         {/* Background glow */}
         <div className="absolute top-1/4 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-indigo-600/15 blur-[140px] rounded-full pointer-events-none" />
 
         <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 text-center relative z-10 space-y-8">
           <ScrollReveal animation="fade-up" delay={0}>
-            <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-indigo-500/10 border border-indigo-500/20 text-indigo-400 text-xs font-semibold">
-              <Award className="w-3.5 h-3.5 text-indigo-400" />
-              Built for Modern Educators & Schools
-            </div>
-          </ScrollReveal>
-
-          <ScrollReveal animation="fade-up" delay={100}>
             <h1 className="text-4xl sm:text-6xl lg:text-7xl font-extrabold tracking-tight text-white leading-tight max-w-4xl mx-auto">
               Lesson Planning Made Effortless.{' '}
               <span className="gradient-text block mt-2">Shared Teaching Resources Reimagined.</span>
             </h1>
           </ScrollReveal>
 
-          <ScrollReveal animation="fade-up" delay={200}>
+          <ScrollReveal animation="fade-up" delay={150}>
             <p className="text-base sm:text-xl text-slate-400 max-w-3xl mx-auto leading-relaxed">
               Stop recreating lesson plans and worksheets from scratch. Organize your weekly period schedule, discover community teaching materials, and link real resources directly into your daily lessons.
             </p>
           </ScrollReveal>
 
-          <ScrollReveal animation="fade-up" delay={300}>
+          <ScrollReveal animation="fade-up" delay={250}>
             <div className="flex flex-col sm:flex-row items-center justify-center gap-4 pt-2">
               <Link
                 to="/register"
@@ -149,7 +131,7 @@ export const LandingPage: React.FC = () => {
           </ScrollReveal>
 
           {/* Live App UI Preview Graphic */}
-          <ScrollReveal animation="zoom-in" delay={400}>
+          <ScrollReveal animation="zoom-in" delay={350}>
             <div className="pt-8">
               <div className="glass-panel p-4 sm:p-6 rounded-3xl border border-slate-800 shadow-2xl relative max-w-5xl mx-auto overflow-hidden">
                 <div className="flex items-center justify-between border-b border-slate-800/80 pb-4 mb-4 text-xs text-slate-400">
@@ -160,8 +142,8 @@ export const LandingPage: React.FC = () => {
                     <span className="ml-2 font-mono text-[11px] text-slate-500">edunexus.hub/calendar</span>
                   </div>
                   <div className="flex items-center gap-2 font-mono text-[11px]">
-                    <span className="px-2 py-0.5 rounded bg-emerald-500/20 text-emerald-300 border border-emerald-500/30">
-                      Live System
+                    <span className="text-emerald-400 font-semibold flex items-center gap-1">
+                      <span className="w-2 h-2 rounded-full bg-emerald-400 animate-ping inline-block" /> Live Workspace
                     </span>
                   </div>
                 </div>
@@ -171,7 +153,7 @@ export const LandingPage: React.FC = () => {
                   <div className="p-3.5 rounded-2xl bg-slate-900 border border-indigo-500/30 space-y-2 transform hover:-translate-y-1 transition-transform duration-300">
                     <div className="flex items-center justify-between text-[11px]">
                       <span className="font-bold text-indigo-400">Monday — Period 1</span>
-                      <span className="px-2 py-0.5 rounded bg-purple-500/20 text-purple-300 font-mono font-bold">Grade 9A</span>
+                      <span className="text-purple-300 font-mono font-bold text-xs">Grade 9A</span>
                     </div>
                     <h4 className="text-xs font-bold text-white">Photosynthesis & Cellular Respiration</h4>
                     <div className="flex items-center justify-between text-[10px] text-slate-400 pt-1">
@@ -185,7 +167,7 @@ export const LandingPage: React.FC = () => {
                   <div className="p-3.5 rounded-2xl bg-slate-900 border border-purple-500/30 space-y-2 transform hover:-translate-y-1 transition-transform duration-300">
                     <div className="flex items-center justify-between text-[11px]">
                       <span className="font-bold text-purple-400">Tuesday — Period 2</span>
-                      <span className="px-2 py-0.5 rounded bg-purple-500/20 text-purple-300 font-mono font-bold">Grade 10B</span>
+                      <span className="text-purple-300 font-mono font-bold text-xs">Grade 10B</span>
                     </div>
                     <h4 className="text-xs font-bold text-white">Quadratic Equations & Functions</h4>
                     <div className="flex items-center justify-between text-[10px] text-slate-400 pt-1">
@@ -199,7 +181,7 @@ export const LandingPage: React.FC = () => {
                   <div className="p-3.5 rounded-2xl bg-slate-900 border border-slate-800 space-y-2 transform hover:-translate-y-1 transition-transform duration-300">
                     <div className="flex items-center justify-between text-[11px]">
                       <span className="font-bold text-amber-400">Wednesday — Period 3</span>
-                      <span className="px-2 py-0.5 rounded bg-purple-500/20 text-purple-300 font-mono font-bold">Grade 11C</span>
+                      <span className="text-purple-300 font-mono font-bold text-xs">Grade 11C</span>
                     </div>
                     <h4 className="text-xs font-bold text-white">Newtonian Mechanics & Forces</h4>
                     <div className="flex items-center justify-between text-[10px] text-slate-400 pt-1">
@@ -255,10 +237,6 @@ export const LandingPage: React.FC = () => {
       <section id="features" className="py-20 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <ScrollReveal animation="fade-up" delay={0}>
           <div className="text-center max-w-3xl mx-auto space-y-4 mb-16">
-            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-indigo-500/10 text-indigo-400 text-xs font-semibold border border-indigo-500/20">
-              <Zap className="w-3.5 h-3.5" />
-              Core Platform Capabilities
-            </div>
             <h2 className="text-3xl sm:text-4xl font-extrabold text-white">
               Everything You Need for Exceptional Teaching
             </h2>
@@ -348,10 +326,6 @@ export const LandingPage: React.FC = () => {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <ScrollReveal animation="fade-up" delay={0}>
             <div className="text-center max-w-3xl mx-auto space-y-4 mb-16">
-              <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-purple-500/10 text-purple-400 text-xs font-semibold border border-purple-500/20">
-                <ShieldCheck className="w-3.5 h-3.5" />
-                Simple Workflow
-              </div>
               <h2 className="text-3xl sm:text-4xl font-extrabold text-white">
                 How EduNexus Hub Works in 4 Steps
               </h2>
@@ -406,10 +380,6 @@ export const LandingPage: React.FC = () => {
       <section id="testimonials" className="py-20 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <ScrollReveal animation="fade-up" delay={0}>
           <div className="text-center max-w-3xl mx-auto space-y-4 mb-16">
-            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-emerald-500/10 text-emerald-400 text-xs font-semibold border border-emerald-500/20">
-              <Users className="w-3.5 h-3.5" />
-              Educator Reviews
-            </div>
             <h2 className="text-3xl sm:text-4xl font-extrabold text-white">
               Loved by Teachers Worldwide
             </h2>
