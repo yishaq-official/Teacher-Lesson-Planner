@@ -198,10 +198,10 @@ export const ResourceCard: React.FC<ResourceCardProps> = ({
           {onPreview && (
             <button
               onClick={() => onPreview(resource)}
-              className="py-2 px-2.5 sm:px-3 rounded-xl bg-orange-600/20 hover:bg-orange-600/30 text-orange-300 border border-orange-500/30 text-xs font-semibold flex items-center justify-center gap-1 transition-all shrink-0"
+              className="py-2 px-3 rounded-xl bg-slate-800 hover:bg-slate-700 text-white font-bold border border-slate-700 text-xs flex items-center justify-center gap-1.5 transition-all shrink-0 shadow-sm"
               title="View document preview without downloading"
             >
-              <Eye className="w-3.5 h-3.5" />
+              <Eye className="w-3.5 h-3.5 text-orange-400 shrink-0" />
               <span>View</span>
             </button>
           )}
@@ -209,22 +209,22 @@ export const ResourceCard: React.FC<ResourceCardProps> = ({
           <button
             onClick={handleDownload}
             disabled={downloading}
-            className="flex-1 py-2 px-2.5 sm:px-3 rounded-xl bg-orange-600/20 hover:bg-orange-600/30 text-orange-300 border border-orange-500/30 text-xs font-semibold flex items-center justify-center gap-1 transition-all min-w-0"
+            className="flex-1 py-2 px-3 rounded-xl gradient-bg-primary hover:opacity-95 text-white font-bold text-xs flex items-center justify-center gap-1.5 shadow-md shadow-orange-600/20 transition-all min-w-0"
           >
-            <Download className="w-3.5 h-3.5 shrink-0" />
+            <Download className="w-3.5 h-3.5 text-white shrink-0" />
             <span className="truncate">Download ({downloadsCount})</span>
           </button>
 
           {onAttach && (
             <button
               onClick={() => onAttach(resource)}
-              className={`py-2 px-2.5 sm:px-3 rounded-xl text-xs font-semibold flex items-center justify-center gap-1 transition-all shrink-0 ${
+              className={`py-2 px-3 rounded-xl text-xs font-bold flex items-center justify-center gap-1.5 transition-all shrink-0 ${
                 isAttached
                   ? 'bg-emerald-500/20 text-emerald-300 border border-emerald-500/40'
-                  : 'bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700'
+                  : 'bg-slate-800 hover:bg-slate-700 text-white border border-slate-700'
               }`}
             >
-              {isAttached ? <Check className="w-3.5 h-3.5" /> : <Plus className="w-3.5 h-3.5" />}
+              {isAttached ? <Check className="w-3.5 h-3.5 text-emerald-400" /> : <Plus className="w-3.5 h-3.5 text-slate-300" />}
               <span>{isAttached ? 'Attached' : 'Attach'}</span>
             </button>
           )}
@@ -247,9 +247,9 @@ export const ResourceCard: React.FC<ResourceCardProps> = ({
             <button
               onClick={() => onDelete(resource._id)}
               title="Delete resource"
-              className="py-2 px-2.5 sm:px-3 rounded-xl bg-rose-500/10 hover:bg-rose-500/20 text-rose-400 border border-rose-500/20 text-xs font-semibold flex items-center gap-1 transition-colors shrink-0"
+              className="py-2 px-3 rounded-xl bg-rose-500/10 hover:bg-rose-500/20 text-rose-400 border border-rose-500/20 text-xs font-bold flex items-center gap-1.5 transition-colors shrink-0"
             >
-              <Trash2 className="w-3.5 h-3.5" />
+              <Trash2 className="w-3.5 h-3.5 text-rose-400" />
               <span className="hidden sm:inline">Delete</span>
             </button>
           )}

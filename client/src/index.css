@@ -91,6 +91,11 @@ html.light .text-slate-500 {
   color: #475569 !important;
 }
 
+html.light .text-orange-300,
+html.light .text-orange-400 {
+  color: #ea580c !important;
+}
+
 html.light .bg-slate-900,
 html.light .bg-slate-950 {
   background-color: #f1f5f9 !important;
