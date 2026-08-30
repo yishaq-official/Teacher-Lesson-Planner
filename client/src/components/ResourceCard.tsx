@@ -202,14 +202,20 @@ export const ResourceCard: React.FC<ResourceCardProps> = ({
         {/* Tags */}
         {resource.tags && resource.tags.length > 0 && (
           <div className="flex flex-wrap gap-1 mb-4">
-            {resource.tags.slice(0, 3).map((tag, idx) => (
-              <span
+            {resource.tags.slice(0, 4).map((tag, idx) => (
+              <button
                 key={idx}
-                className="text-[10px] font-bold text-slate-200 bg-slate-800 px-2 py-0.5 rounded-md flex items-center gap-1 border border-slate-700/60"
+                type="button"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  if (onSelectTag) onSelectTag(tag);
+                }}
+                className="text-[10px] font-bold text-slate-300 bg-slate-800/90 hover:bg-slate-700 hover:text-orange-300 px-2 py-0.5 rounded-md flex items-center gap-1 border border-slate-700/60 transition-all cursor-pointer"
+                title={`Filter by tag #${tag}`}
               >
                 <Tag className="w-2.5 h-2.5 text-orange-400" />
                 {tag}
-              </span>
+              </button>
             ))}
           </div>
         )}

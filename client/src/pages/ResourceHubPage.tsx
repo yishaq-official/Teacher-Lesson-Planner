@@ -12,6 +12,8 @@ import {
   Loader2,
   Sparkles,
   Bookmark,
+  Tag,
+  X,
 } from 'lucide-react';
 
 export const ResourceHubPage: React.FC = () => {
@@ -19,14 +21,16 @@ export const ResourceHubPage: React.FC = () => {
   const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState('');
   const [subject, setSubject] = useState('');
+  const [grade, setGrade] = useState('');
   const [type, setType] = useState('');
+  const [selectedTag, setSelectedTag] = useState('');
   const [myResources, setMyResources] = useState(false);
   const [onlySaved, setOnlySaved] = useState(false);
   const [previewResource, setPreviewResource] = useState<Resource | null>(null);
 
   useEffect(() => {
     fetchResources();
-  }, [search, subject, type, myResources, onlySaved]);
+  }, [search, subject, grade, type, selectedTag, myResources, onlySaved]);
 
   const fetchResources = async () => {
     try {
@@ -36,14 +40,21 @@ export const ResourceHubPage: React.FC = () => {
         if (res.data.success) {
           let list = res.data.resources || [];
           if (subject) list = list.filter((r: Resource) => r.subject === subject);
+          if (grade) list = list.filter((r: Resource) => r.grade === grade);
           if (type) list = list.filter((r: Resource) => r.type === type);
+          if (selectedTag) {
+            list = list.filter((r: Resource) =>
+              r.tags?.some((t) => t.toLowerCase() === selectedTag.toLowerCase())
+            );
+          }
           if (search) {
             const q = search.toLowerCase();
             list = list.filter(
               (r: Resource) =>
                 r.title.toLowerCase().includes(q) ||
                 r.topic?.toLowerCase().includes(q) ||
-                r.description?.toLowerCase().includes(q)
+                r.description?.toLowerCase().includes(q) ||
+                r.tags?.some((t) => t.toLowerCase().includes(q))
             );
           }
           setResources(list);
@@ -52,14 +63,26 @@ export const ResourceHubPage: React.FC = () => {
       }
 
       const params: any = {};
-      if (search) params.q = search;
+      const queryTerm = selectedTag ? selectedTag : search;
+      if (queryTerm) params.q = queryTerm;
       if (subject) params.subject = subject;
+      if (grade) params.grade = grade;
       if (type) params.type = type;
       if (myResources) params.myResources = 'true';
 
       const res = await api.get('/resources', { params });
       if (res.data.success) {
-        setResources(res.data.resources);
+        let list = res.data.resources || [];
+        if (selectedTag && search) {
+          const q = search.toLowerCase();
+          list = list.filter(
+            (r: Resource) =>
+              r.title.toLowerCase().includes(q) ||
+              r.topic?.toLowerCase().includes(q) ||
+              r.description?.toLowerCase().includes(q)
+          );
+        }
+        setResources(list);
       }
     } catch (err) {
       console.error('Failed to fetch resources:', err);
@@ -185,6 +208,21 @@ export const ResourceHubPage: React.FC = () => {
             <option value="Technology">Technology</option>
             <option value="Art">Art</option>
           </select>
+
+          {/* Grade Filter */}
+          <select
+            value={grade}
+            onChange={(e) => setGrade(e.target.value)}
+            className="bg-slate-900 border border-slate-700/80 rounded-xl px-3 py-2 text-xs text-slate-200 focus:outline-none focus:border-orange-500"
+          >
+            <option value="">All Grades</option>
+            <option value="Grade 9">Grade 9</option>
+            <option value="Grade 10">Grade 10</option>
+            <option value="Grade 11">Grade 11</option>
+            <option value="Grade 12">Grade 12</option>
+            <option value="Grade 7">Grade 7</option>
+            <option value="Grade 8">Grade 8</option>
+          </select>
         </div>
 
         {/* My Resources Toggle */}
@@ -220,6 +258,21 @@ export const ResourceHubPage: React.FC = () => {
         </button>
       </div>
 
+      {/* Active Tag Indicator */}
+      {selectedTag && (
+        <div className="flex items-center gap-2 bg-orange-500/10 border border-orange-500/30 rounded-xl px-3 py-2 text-xs text-orange-300 w-fit">
+          <Tag className="w-3.5 h-3.5" />
+          <span>Active Tag: <strong className="text-white">#{selectedTag}</strong></span>
+          <button
+            onClick={() => setSelectedTag('')}
+            className="p-0.5 hover:bg-orange-500/20 rounded-md transition-colors cursor-pointer"
+            title="Clear tag filter"
+          >
+            <X className="w-3.5 h-3.5" />
+          </button>
+        </div>
+      )}
+
       {/* Grid Display */}
       {loading ? (
         <div className="py-20 text-center text-slate-400 flex flex-col items-center">
@@ -233,7 +286,7 @@ export const ResourceHubPage: React.FC = () => {
           </div>
           <h3 className="text-lg font-bold text-white">No resources found</h3>
           <p className="text-xs text-slate-400">
-            {search || subject || type || myResources
+            {search || subject || grade || type || selectedTag || myResources || onlySaved
               ? 'No teaching materials match your active search filters.'
               : 'The resource hub is currently empty. Be the first teacher to share a worksheet or presentation!'}
           </p>
@@ -253,6 +306,7 @@ export const ResourceHubPage: React.FC = () => {
               onDelete={handleDeleteResource}
               onToggleVisibility={handleToggleVisibility}
               onPreview={(r) => setPreviewResource(r)}
+              onSelectTag={(tag) => setSelectedTag(tag)}
             />
           ))}
         </div>
