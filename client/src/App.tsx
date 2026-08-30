@@ -19,7 +19,7 @@ import { CalendarPage } from './pages/CalendarPage.js';
 
 const AppLayout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   return (
-    <div className="min-h-screen bg-slate-950 flex flex-col selection:bg-indigo-500 selection:text-white transition-colors duration-300">
+    <div className="min-h-screen bg-slate-950 flex flex-col selection:bg-orange-500 selection:text-white transition-colors duration-300">
       <Navbar />
       <main className="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-8">
         {children}
@@ -35,7 +35,7 @@ const PublicOnlyRoute: React.FC<{ children: React.ReactNode }> = ({ children }) 
   if (loading) {
     return (
       <div className="min-h-screen bg-slate-950 flex items-center justify-center">
-        <div className="w-8 h-8 border-4 border-indigo-500 border-t-transparent rounded-full animate-spin" />
+        <div className="w-8 h-8 border-4 border-orange-500 border-t-transparent rounded-full animate-spin" />
       </div>
     );
   }

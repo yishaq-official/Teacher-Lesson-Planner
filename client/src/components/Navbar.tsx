@@ -37,7 +37,7 @@ export const Navbar: React.FC = () => {
         <div className="flex items-center justify-between h-16">
           {/* Brand Logo */}
           <Link to={user ? '/dashboard' : '/'} className="flex items-center gap-3 group">
-            <div className="w-10 h-10 rounded-xl gradient-bg-primary flex items-center justify-center shadow-lg shadow-indigo-500/20 group-hover:scale-105 transition-transform">
+            <div className="w-10 h-10 rounded-xl gradient-bg-primary flex items-center justify-center shadow-lg shadow-orange-500/25 group-hover:scale-105 transition-transform">
               <GraduationCap className="w-6 h-6 text-white" />
             </div>
             <div>
@@ -57,7 +57,7 @@ export const Navbar: React.FC = () => {
                   to="/dashboard"
                   className={`px-3.5 py-2 rounded-lg text-sm font-medium transition-all flex items-center gap-2 ${
                     isActive('/dashboard')
-                      ? 'bg-indigo-600/20 text-indigo-300 border border-indigo-500/30'
+                      ? 'bg-orange-500/15 text-orange-400 border border-orange-500/30'
                       : 'text-slate-300 hover:text-white hover:bg-slate-800/60'
                   }`}
                 >
@@ -68,7 +68,7 @@ export const Navbar: React.FC = () => {
                   to="/calendar"
                   className={`px-3.5 py-2 rounded-lg text-sm font-medium transition-all flex items-center gap-2 ${
                     isActive('/calendar')
-                      ? 'bg-indigo-600/20 text-indigo-300 border border-indigo-500/30'
+                      ? 'bg-orange-500/15 text-orange-400 border border-orange-500/30'
                       : 'text-slate-300 hover:text-white hover:bg-slate-800/60'
                   }`}
                 >
@@ -79,7 +79,7 @@ export const Navbar: React.FC = () => {
                   to="/lessons"
                   className={`px-3.5 py-2 rounded-lg text-sm font-medium transition-all flex items-center gap-2 ${
                     isActive('/lessons')
-                      ? 'bg-indigo-600/20 text-indigo-300 border border-indigo-500/30'
+                      ? 'bg-orange-500/15 text-orange-400 border border-orange-500/30'
                       : 'text-slate-300 hover:text-white hover:bg-slate-800/60'
                   }`}
                 >
@@ -90,7 +90,7 @@ export const Navbar: React.FC = () => {
                   to="/resources"
                   className={`px-3.5 py-2 rounded-lg text-sm font-medium transition-all flex items-center gap-2 ${
                     isActive('/resources')
-                      ? 'bg-indigo-600/20 text-indigo-300 border border-indigo-500/30'
+                      ? 'bg-orange-500/15 text-orange-400 border border-orange-500/30'
                       : 'text-slate-300 hover:text-white hover:bg-slate-800/60'
                   }`}
                 >
@@ -108,14 +108,14 @@ export const Navbar: React.FC = () => {
                 title={`Switch to ${theme === 'dark' ? 'Light' : 'Dark'} Mode`}
                 className="p-2.5 rounded-xl bg-slate-800/60 hover:bg-slate-700/80 text-amber-400 hover:text-amber-300 border border-slate-700/60 transition-all flex items-center justify-center shadow-sm"
               >
-                {theme === 'dark' ? <Sun className="w-4 h-4 text-amber-400" /> : <Moon className="w-4 h-4 text-indigo-500" />}
+                {theme === 'dark' ? <Sun className="w-4 h-4 text-amber-400" /> : <Moon className="w-4 h-4 text-orange-500" />}
               </button>
 
               {user ? (
                 <div className="hidden md:flex items-center gap-3">
                   <Link
                     to="/lessons/create"
-                    className="px-3.5 py-2 rounded-lg text-sm font-semibold text-white gradient-bg-primary hover:opacity-95 shadow-md shadow-indigo-600/20 transition-all flex items-center gap-2"
+                    className="px-3.5 py-2 rounded-lg text-sm font-semibold text-white gradient-bg-primary hover:opacity-95 shadow-md shadow-orange-600/20 transition-all flex items-center gap-2"
                   >
                     <PlusCircle className="w-4 h-4" />
                     New Lesson
@@ -124,7 +124,7 @@ export const Navbar: React.FC = () => {
                   <div className="h-6 w-[1px] bg-slate-800" />
 
                   <div className="flex items-center gap-3 bg-slate-800/50 border border-slate-700/50 rounded-xl px-3 py-1.5">
-                    <div className="w-8 h-8 rounded-lg bg-indigo-500/20 text-indigo-400 flex items-center justify-center font-bold text-xs border border-indigo-500/30">
+                    <div className="w-8 h-8 rounded-lg bg-orange-500/20 text-orange-400 flex items-center justify-center font-bold text-xs border border-orange-500/30">
                       {user.name.charAt(0).toUpperCase()}
                     </div>
                     <div className="text-left">
@@ -152,7 +152,7 @@ export const Navbar: React.FC = () => {
                   </Link>
                   <Link
                     to="/register"
-                    className="px-4 py-2 rounded-lg text-sm font-semibold text-white gradient-bg-primary hover:opacity-95 shadow-md shadow-indigo-600/20 transition-all"
+                    className="px-4 py-2 rounded-lg text-sm font-semibold text-white gradient-bg-primary hover:opacity-95 shadow-md shadow-orange-600/20 transition-all"
                   >
                     Get Started
                   </Link>
@@ -213,7 +213,7 @@ export const Navbar: React.FC = () => {
           </Link>
           <div className="pt-2 border-t border-slate-800 flex items-center justify-between">
             <div className="flex items-center gap-2">
-              <UserIcon className="w-4 h-4 text-indigo-400" />
+              <UserIcon className="w-4 h-4 text-orange-400" />
               <span className="text-sm font-medium text-slate-200">{user.name}</span>
             </div>
             <button

@@ -59,16 +59,16 @@ html.light .glass-card {
 
 .glass-card:hover {
   background: rgba(30, 41, 59, 0.85);
-  border-color: rgba(99, 102, 241, 0.3);
+  border-color: rgba(249, 115, 22, 0.35);
   transform: translateY(-2px);
-  box-shadow: 0 12px 30px -10px rgba(99, 102, 241, 0.15);
+  box-shadow: 0 12px 30px -10px rgba(249, 115, 22, 0.2);
 }
 
 html.light .glass-card:hover {
   background: #ffffff;
-  border-color: rgba(99, 102, 241, 0.4);
+  border-color: rgba(249, 115, 22, 0.45);
   transform: translateY(-2px);
-  box-shadow: 0 12px 25px -5px rgba(99, 102, 241, 0.12);
+  box-shadow: 0 12px 25px -5px rgba(249, 115, 22, 0.15);
 }
 
 /* Light mode text & element color overrides */
@@ -134,20 +134,20 @@ html.light textarea::placeholder {
   color: #94a3b8 !important;
 }
 
-/* Gradient Utilities */
+/* Gradient Utilities - Orange / Red Sunset Flame Palette */
 .gradient-text {
-  background: linear-gradient(135deg, #4f46e5 0%, #7c3aed 50%, #db2777 100%);
+  background: linear-gradient(135deg, #f97316 0%, #ef4444 50%, #dc2626 100%);
   background-clip: text;
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
 }
 
 .gradient-bg-primary {
-  background: linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%);
+  background: linear-gradient(135deg, #ea580c 0%, #dc2626 100%);
 }
 
 .gradient-bg-secondary {
-  background: linear-gradient(135deg, #0ea5e9 0%, #2563eb 100%);
+  background: linear-gradient(135deg, #f97316 0%, #f43f5e 100%);
 }
 
 /* Custom Scrollbar */

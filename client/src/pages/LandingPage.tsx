@@ -42,11 +42,11 @@ export const LandingPage: React.FC = () => {
   ];
 
   return (
-    <div className="min-h-screen bg-slate-950 text-slate-100 flex flex-col selection:bg-indigo-500 selection:text-white transition-colors duration-300 overflow-x-hidden">
+    <div className="min-h-screen bg-slate-950 text-slate-100 flex flex-col selection:bg-orange-500 selection:text-white transition-colors duration-300 overflow-x-hidden">
       {/* Navigation Header */}
       <nav className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full py-5 flex items-center justify-between sticky top-0 z-40 glass-panel border-b border-slate-800/80">
         <div className="flex items-center gap-3">
-          <div className="w-10 h-10 rounded-xl gradient-bg-primary flex items-center justify-center shadow-lg shadow-indigo-500/20">
+          <div className="w-10 h-10 rounded-xl gradient-bg-primary flex items-center justify-center shadow-lg shadow-orange-500/25">
             <GraduationCap className="w-6 h-6 text-white" />
           </div>
           <span className="font-bold text-xl tracking-tight text-white">
@@ -72,7 +72,7 @@ export const LandingPage: React.FC = () => {
             {theme === 'dark' ? (
               <Sun className="w-4 h-4 text-amber-400" />
             ) : (
-              <Moon className="w-4 h-4 text-indigo-500" />
+              <Moon className="w-4 h-4 text-orange-500" />
             )}
           </button>
 
@@ -85,7 +85,7 @@ export const LandingPage: React.FC = () => {
 
           <Link
             to="/register"
-            className="px-5 py-2.5 rounded-xl text-xs font-bold text-white gradient-bg-primary hover:opacity-95 shadow-lg shadow-indigo-500/25 transition-all"
+            className="px-5 py-2.5 rounded-xl text-xs font-bold text-white gradient-bg-primary hover:opacity-95 shadow-lg shadow-orange-500/25 transition-all"
           >
             Get Started
           </Link>
@@ -95,7 +95,7 @@ export const LandingPage: React.FC = () => {
       {/* Hero Section */}
       <section className="relative pt-16 pb-16 md:pt-24 md:pb-24 overflow-hidden">
         {/* Background glow */}
-        <div className="absolute top-1/4 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-indigo-600/15 blur-[140px] rounded-full pointer-events-none" />
+        <div className="absolute top-1/4 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-orange-600/15 blur-[140px] rounded-full pointer-events-none" />
 
         <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 text-center relative z-10 space-y-8">
           <ScrollReveal animation="fade-up" delay={0}>
@@ -115,7 +115,7 @@ export const LandingPage: React.FC = () => {
             <div className="flex flex-col sm:flex-row items-center justify-center gap-4 pt-2">
               <Link
                 to="/register"
-                className="w-full sm:w-auto px-8 py-4 rounded-2xl text-sm font-bold text-white gradient-bg-primary hover:opacity-95 shadow-xl shadow-indigo-600/30 transition-all flex items-center justify-center gap-2 group"
+                className="w-full sm:w-auto px-8 py-4 rounded-2xl text-sm font-bold text-white gradient-bg-primary hover:opacity-95 shadow-xl shadow-orange-600/30 transition-all flex items-center justify-center gap-2 group"
               >
                 <span>Start Free Educator Workspace</span>
                 <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
@@ -142,18 +142,18 @@ export const LandingPage: React.FC = () => {
                     <span className="ml-2 font-mono text-[11px] text-slate-500">edunexus.hub/calendar</span>
                   </div>
                   <div className="flex items-center gap-2 font-mono text-[11px]">
-                    <span className="text-emerald-400 font-semibold flex items-center gap-1">
-                      <span className="w-2 h-2 rounded-full bg-emerald-400 animate-ping inline-block" /> Live Workspace
+                    <span className="text-orange-400 font-semibold flex items-center gap-1">
+                      <span className="w-2 h-2 rounded-full bg-orange-400 animate-ping inline-block" /> Live Workspace
                     </span>
                   </div>
                 </div>
 
                 {/* Sample Timetable Grid Preview */}
                 <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 text-left">
-                  <div className="p-3.5 rounded-2xl bg-slate-900 border border-indigo-500/30 space-y-2 transform hover:-translate-y-1 transition-transform duration-300">
+                  <div className="p-3.5 rounded-2xl bg-slate-900 border border-orange-500/30 space-y-2 transform hover:-translate-y-1 transition-transform duration-300">
                     <div className="flex items-center justify-between text-[11px]">
-                      <span className="font-bold text-indigo-400">Monday — Period 1</span>
-                      <span className="text-purple-300 font-mono font-bold text-xs">Grade 9A</span>
+                      <span className="font-bold text-orange-400">Monday — Period 1</span>
+                      <span className="text-orange-300 font-mono font-bold text-xs">Grade 9A</span>
                     </div>
                     <h4 className="text-xs font-bold text-white">Photosynthesis & Cellular Respiration</h4>
                     <div className="flex items-center justify-between text-[10px] text-slate-400 pt-1">
@@ -164,14 +164,14 @@ export const LandingPage: React.FC = () => {
                     </div>
                   </div>
 
-                  <div className="p-3.5 rounded-2xl bg-slate-900 border border-purple-500/30 space-y-2 transform hover:-translate-y-1 transition-transform duration-300">
+                  <div className="p-3.5 rounded-2xl bg-slate-900 border border-rose-500/30 space-y-2 transform hover:-translate-y-1 transition-transform duration-300">
                     <div className="flex items-center justify-between text-[11px]">
-                      <span className="font-bold text-purple-400">Tuesday — Period 2</span>
-                      <span className="text-purple-300 font-mono font-bold text-xs">Grade 10B</span>
+                      <span className="font-bold text-rose-400">Tuesday — Period 2</span>
+                      <span className="text-rose-300 font-mono font-bold text-xs">Grade 10B</span>
                     </div>
                     <h4 className="text-xs font-bold text-white">Quadratic Equations & Functions</h4>
                     <div className="flex items-center justify-between text-[10px] text-slate-400 pt-1">
-                      <span className="flex items-center gap-1 text-blue-400">
+                      <span className="flex items-center gap-1 text-amber-400">
                         <CheckCircle2 className="w-3 h-3" /> Mathematics
                       </span>
                       <span>45 mins</span>
@@ -181,7 +181,7 @@ export const LandingPage: React.FC = () => {
                   <div className="p-3.5 rounded-2xl bg-slate-900 border border-slate-800 space-y-2 transform hover:-translate-y-1 transition-transform duration-300">
                     <div className="flex items-center justify-between text-[11px]">
                       <span className="font-bold text-amber-400">Wednesday — Period 3</span>
-                      <span className="text-purple-300 font-mono font-bold text-xs">Grade 11C</span>
+                      <span className="text-amber-300 font-mono font-bold text-xs">Grade 11C</span>
                     </div>
                     <h4 className="text-xs font-bold text-white">Newtonian Mechanics & Forces</h4>
                     <div className="flex items-center justify-between text-[10px] text-slate-400 pt-1">
@@ -211,21 +211,21 @@ export const LandingPage: React.FC = () => {
 
             <ScrollReveal animation="fade-up" delay={150}>
               <div className="space-y-1">
-                <div className="text-3xl sm:text-4xl font-extrabold text-indigo-400 font-mono">12,000+</div>
+                <div className="text-3xl sm:text-4xl font-extrabold text-orange-400 font-mono">12,000+</div>
                 <div className="text-xs text-slate-400 font-medium">Teaching Resources Shared</div>
               </div>
             </ScrollReveal>
 
             <ScrollReveal animation="fade-up" delay={300}>
               <div className="space-y-1">
-                <div className="text-3xl sm:text-4xl font-extrabold text-purple-400 font-mono">98%</div>
+                <div className="text-3xl sm:text-4xl font-extrabold text-rose-400 font-mono">98%</div>
                 <div className="text-xs text-slate-400 font-medium">Teacher Satisfaction</div>
               </div>
             </ScrollReveal>
 
             <ScrollReveal animation="fade-up" delay={450}>
               <div className="space-y-1">
-                <div className="text-3xl sm:text-4xl font-extrabold text-pink-400 font-mono">45 Mins</div>
+                <div className="text-3xl sm:text-4xl font-extrabold text-amber-400 font-mono">45 Mins</div>
                 <div className="text-xs text-slate-400 font-medium">Average Time Saved Weekly</div>
               </div>
             </ScrollReveal>
@@ -249,7 +249,7 @@ export const LandingPage: React.FC = () => {
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
           <ScrollReveal animation="fade-up" delay={100}>
             <div className="glass-card rounded-3xl p-8 space-y-4 h-full">
-              <div className="w-12 h-12 rounded-2xl bg-indigo-500/10 border border-indigo-500/20 flex items-center justify-center text-indigo-400">
+              <div className="w-12 h-12 rounded-2xl bg-orange-500/10 border border-orange-500/20 flex items-center justify-center text-orange-400">
                 <Calendar className="w-6 h-6" />
               </div>
               <h3 className="text-xl font-bold text-white">Weekly Period Timetable</h3>
@@ -261,7 +261,7 @@ export const LandingPage: React.FC = () => {
 
           <ScrollReveal animation="fade-up" delay={200}>
             <div className="glass-card rounded-3xl p-8 space-y-4 h-full">
-              <div className="w-12 h-12 rounded-2xl bg-purple-500/10 border border-purple-500/20 flex items-center justify-center text-purple-400">
+              <div className="w-12 h-12 rounded-2xl bg-rose-500/10 border border-rose-500/20 flex items-center justify-center text-rose-400">
                 <Eye className="w-6 h-6" />
               </div>
               <h3 className="text-xl font-bold text-white">In-App Document Viewer</h3>
@@ -273,7 +273,7 @@ export const LandingPage: React.FC = () => {
 
           <ScrollReveal animation="fade-up" delay={300}>
             <div className="glass-card rounded-3xl p-8 space-y-4 h-full">
-              <div className="w-12 h-12 rounded-2xl bg-pink-500/10 border border-pink-500/20 flex items-center justify-center text-pink-400">
+              <div className="w-12 h-12 rounded-2xl bg-amber-500/10 border border-amber-500/20 flex items-center justify-center text-amber-400">
                 <Share2 className="w-6 h-6" />
               </div>
               <h3 className="text-xl font-bold text-white">Shared Resource Hub</h3>
@@ -297,7 +297,7 @@ export const LandingPage: React.FC = () => {
 
           <ScrollReveal animation="fade-up" delay={200}>
             <div className="glass-card rounded-3xl p-8 space-y-4 h-full">
-              <div className="w-12 h-12 rounded-2xl bg-blue-500/10 border border-blue-500/20 flex items-center justify-center text-blue-400">
+              <div className="w-12 h-12 rounded-2xl bg-red-500/10 border border-red-500/20 flex items-center justify-center text-red-400">
                 <Lock className="w-6 h-6" />
               </div>
               <h3 className="text-xl font-bold text-white">Privacy Controls</h3>
@@ -335,7 +335,7 @@ export const LandingPage: React.FC = () => {
           <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
             <ScrollReveal animation="fade-left" delay={100}>
               <div className="glass-panel p-6 rounded-3xl border border-slate-800 relative h-full">
-                <span className="text-3xl font-black text-indigo-500/40 font-mono block mb-2">01</span>
+                <span className="text-3xl font-black text-orange-500/40 font-mono block mb-2">01</span>
                 <h4 className="text-base font-bold text-white mb-2">Setup Schedule</h4>
                 <p className="text-xs text-slate-400">
                   Configure your weekly class periods (e.g. Grade 9A, Grade 10B) across Monday to Friday.
@@ -345,7 +345,7 @@ export const LandingPage: React.FC = () => {
 
             <ScrollReveal animation="fade-left" delay={200}>
               <div className="glass-panel p-6 rounded-3xl border border-slate-800 relative h-full">
-                <span className="text-3xl font-black text-purple-500/40 font-mono block mb-2">02</span>
+                <span className="text-3xl font-black text-rose-500/40 font-mono block mb-2">02</span>
                 <h4 className="text-base font-bold text-white mb-2">Draft Lesson Plans</h4>
                 <p className="text-xs text-slate-400">
                   Outline learning objectives, activities, practice tasks, homework, and teacher notes.
@@ -355,7 +355,7 @@ export const LandingPage: React.FC = () => {
 
             <ScrollReveal animation="fade-left" delay={300}>
               <div className="glass-panel p-6 rounded-3xl border border-slate-800 relative h-full">
-                <span className="text-3xl font-black text-pink-500/40 font-mono block mb-2">03</span>
+                <span className="text-3xl font-black text-amber-500/40 font-mono block mb-2">03</span>
                 <h4 className="text-base font-bold text-white mb-2">Attach Resources</h4>
                 <p className="text-xs text-slate-400">
                   Link PDF worksheets and presentations directly from the community Shared Resource Hub.
@@ -393,7 +393,7 @@ export const LandingPage: React.FC = () => {
                 &quot;EduNexus Hub saved me hours every week! Being able to see my weekly timetable with Grade 9A and Grade 10B period slots and attaching PDF worksheets directly is a game changer.&quot;
               </p>
               <div className="flex items-center gap-3 pt-2 border-t border-slate-800">
-                <div className="w-9 h-9 rounded-xl bg-indigo-500/20 text-indigo-400 font-bold flex items-center justify-center text-xs">
+                <div className="w-9 h-9 rounded-xl bg-orange-500/20 text-orange-400 font-bold flex items-center justify-center text-xs">
                   SB
                 </div>
                 <div>
@@ -410,7 +410,7 @@ export const LandingPage: React.FC = () => {
                 &quot;The inline document preview is seamless. I don&apos;t have to download files to view them anymore — I just click View and present them directly on the class projector.&quot;
               </p>
               <div className="flex items-center gap-3 pt-2 border-t border-slate-800">
-                <div className="w-9 h-9 rounded-xl bg-purple-500/20 text-purple-400 font-bold flex items-center justify-center text-xs">
+                <div className="w-9 h-9 rounded-xl bg-rose-500/20 text-rose-400 font-bold flex items-center justify-center text-xs">
                   MR
                 </div>
                 <div>
@@ -427,7 +427,7 @@ export const LandingPage: React.FC = () => {
                 &quot;Sharing resources with fellow educators while having total control over public/private settings makes collaboration effortless. Highly recommended!&quot;
               </p>
               <div className="flex items-center gap-3 pt-2 border-t border-slate-800">
-                <div className="w-9 h-9 rounded-xl bg-pink-500/20 text-pink-400 font-bold flex items-center justify-center text-xs">
+                <div className="w-9 h-9 rounded-xl bg-amber-500/20 text-amber-400 font-bold flex items-center justify-center text-xs">
                   EL
                 </div>
                 <div>
@@ -458,10 +458,10 @@ export const LandingPage: React.FC = () => {
                   <div className="glass-panel rounded-2xl border border-slate-800 overflow-hidden transition">
                     <button
                       onClick={() => setOpenFaq(isOpen ? null : idx)}
-                      className="w-full p-5 text-left flex items-center justify-between gap-4 font-bold text-sm text-white hover:text-indigo-300 transition"
+                      className="w-full p-5 text-left flex items-center justify-between gap-4 font-bold text-sm text-white hover:text-orange-300 transition"
                     >
                       <span>{faq.q}</span>
-                      {isOpen ? <ChevronUp className="w-4 h-4 text-indigo-400" /> : <ChevronDown className="w-4 h-4 text-slate-500" />}
+                      {isOpen ? <ChevronUp className="w-4 h-4 text-orange-400" /> : <ChevronDown className="w-4 h-4 text-slate-500" />}
                     </button>
                     {isOpen && (
                       <div className="px-5 pb-5 text-xs sm:text-sm text-slate-400 leading-relaxed border-t border-slate-800/50 pt-3">
@@ -479,7 +479,7 @@ export const LandingPage: React.FC = () => {
       {/* Call to Action Banner */}
       <section className="py-20 max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
         <ScrollReveal animation="zoom-in" delay={0}>
-          <div className="glass-panel rounded-3xl p-8 sm:p-12 border border-purple-500/30 relative overflow-hidden space-y-6">
+          <div className="glass-panel rounded-3xl p-8 sm:p-12 border border-orange-500/30 relative overflow-hidden space-y-6">
             <div className="space-y-3 relative z-10">
               <h2 className="text-3xl sm:text-5xl font-extrabold text-white tracking-tight">
                 Ready to Supercharge Your Teaching Workflow?
@@ -492,7 +492,7 @@ export const LandingPage: React.FC = () => {
             <div className="flex flex-col sm:flex-row items-center justify-center gap-4 relative z-10 pt-2">
               <Link
                 to="/register"
-                className="px-8 py-4 rounded-2xl text-sm font-bold text-white gradient-bg-primary hover:opacity-95 shadow-xl shadow-indigo-600/30 transition-all flex items-center gap-2"
+                className="px-8 py-4 rounded-2xl text-sm font-bold text-white gradient-bg-primary hover:opacity-95 shadow-xl shadow-orange-600/30 transition-all flex items-center gap-2"
               >
                 <span>Get Started Free</span>
                 <ArrowRight className="w-4 h-4" />
