@@ -16,8 +16,9 @@ export const getResources = async (req: AuthenticatedRequest, res: Response): Pr
     if (myResources === 'true') {
       filter.teacherId = req.user?.id;
     } else {
-      // Community Hub: Show public resources (isPublic !== false) or resources created by the current user
-      filter.$or = [{ isPublic: true }, { isPublic: { $ne: false } }, { teacherId: req.user?.id }];
+      // Community Hub: show public resources from other teachers only
+      filter.teacherId = { $ne: req.user?.id };
+      filter.$or = [{ isPublic: true }, { isPublic: { $ne: false } }];
     }
 
     if (subject) {
