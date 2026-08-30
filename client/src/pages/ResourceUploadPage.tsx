@@ -1,11 +1,16 @@
-import React, { useState } from 'react';
-import { useNavigate, Link } from 'react-router-dom';
+import React, { useEffect, useState } from 'react';
+import { useNavigate, Link, useSearchParams } from 'react-router-dom';
 import toast from 'react-hot-toast';
 import api from '../lib/api.js';
+import type { Resource } from '../types/index.js';
 import { ArrowLeft, Upload, FileUp, CheckCircle2, AlertCircle, Globe, Lock } from 'lucide-react';
 
 export const ResourceUploadPage: React.FC = () => {
   const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
+  const editId = searchParams.get('edit');
+  const isEditMode = Boolean(editId);
+
   const [file, setFile] = useState<File | null>(null);
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
@@ -16,7 +21,42 @@ export const ResourceUploadPage: React.FC = () => {
   const [tags, setTags] = useState('');
   const [isPublic, setIsPublic] = useState(true);
   const [uploading, setUploading] = useState(false);
+  const [loadingExisting, setLoadingExisting] = useState(false);
+  const [existingResource, setExistingResource] = useState<Resource | null>(null);
   const [error, setError] = useState('');
+
+  useEffect(() => {
+    const loadResource = async () => {
+      if (!editId) return;
+      try {
+        setLoadingExisting(true);
+        const res = await api.get(`/resources/${editId}`);
+        if (res.data.success && res.data.resource) {
+          const resource: Resource = res.data.resource;
+          setExistingResource(resource);
+          setTitle(resource.title || '');
+          setDescription(resource.description || '');
+          setSubject(resource.subject || 'Biology');
+          setGrade(resource.grade || 'Grade 9');
+          setTopic(resource.topic || '');
+          setType(resource.type || 'worksheet');
+          setTags(Array.isArray(resource.tags) ? resource.tags.join(', ') : '');
+          setIsPublic(resource.isPublic !== false);
+        } else {
+          toast.error('Could not load the resource for editing.');
+          navigate('/resources');
+        }
+      } catch (err) {
+        console.error('Failed to load resource for editing:', err);
+        toast.error('Could not load the resource for editing.');
+        navigate('/resources');
+      } finally {
+        setLoadingExisting(false);
+      }
+    };
+
+    loadResource();
+  }, [editId, navigate]);
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files[0]) {
@@ -33,7 +73,6 @@ export const ResourceUploadPage: React.FC = () => {
       setError('');
       setFile(selected);
       if (!title) {
-        // Auto fill title from filename without extension
         const cleanName = selected.name.replace(/\.[^/.]+$/, '').replace(/[-_]/g, ' ');
         setTitle(cleanName.charAt(0).toUpperCase() + cleanName.slice(1));
       }
@@ -44,16 +83,18 @@ export const ResourceUploadPage: React.FC = () => {
     e.preventDefault();
     setError('');
 
-    if (!file) {
+    if (!file && !isEditMode) {
       setError('Please select a PDF file to upload.');
       return;
     }
 
-    const isPdf = file.type === 'application/pdf' || file.name.toLowerCase().endsWith('.pdf');
-    if (!isPdf) {
-      setError('Only PDF documents (.pdf) can be uploaded.');
-      toast.error('Only PDF documents (.pdf) can be uploaded.');
-      return;
+    if (file) {
+      const isPdf = file.type === 'application/pdf' || file.name.toLowerCase().endsWith('.pdf');
+      if (!isPdf) {
+        setError('Only PDF documents (.pdf) can be uploaded.');
+        toast.error('Only PDF documents (.pdf) can be uploaded.');
+        return;
+      }
     }
 
     if (!title.trim() || !topic.trim()) {
@@ -64,7 +105,9 @@ export const ResourceUploadPage: React.FC = () => {
     try {
       setUploading(true);
       const formData = new FormData();
-      formData.append('file', file);
+      if (file) {
+        formData.append('file', file);
+      }
       formData.append('title', title);
       formData.append('description', description);
       formData.append('subject', subject);
@@ -74,14 +117,16 @@ export const ResourceUploadPage: React.FC = () => {
       formData.append('tags', tags);
       formData.append('isPublic', String(isPublic));
 
-      const res = await api.post('/resources', formData, {
-        headers: {
-          'Content-Type': 'multipart/form-data',
-        },
-      });
+      const res = isEditMode && editId
+        ? await api.patch(`/resources/${editId}`, formData, {
+            headers: { 'Content-Type': 'multipart/form-data' },
+          })
+        : await api.post('/resources', formData, {
+            headers: { 'Content-Type': 'multipart/form-data' },
+          });
 
       if (res.data.success) {
-        toast.success('Teaching resource uploaded successfully!');
+        toast.success(isEditMode ? 'Resource updated successfully!' : 'Teaching resource uploaded successfully!');
         navigate('/resources');
       }
     } catch (err: any) {
@@ -94,6 +139,15 @@ export const ResourceUploadPage: React.FC = () => {
     }
   };
 
+  if (loadingExisting) {
+    return (
+      <div className="max-w-3xl w-full mx-auto px-2 sm:px-6 lg:px-8 py-20 flex flex-col items-center justify-center text-slate-400">
+        <div className="w-10 h-10 border-4 border-orange-500 border-t-transparent rounded-full animate-spin mb-3" />
+        <p className="text-sm font-medium">Loading resource details...</p>
+      </div>
+    );
+  }
+
   return (
     <div className="max-w-3xl w-full mx-auto px-2 sm:px-6 lg:px-8 py-4 sm:py-8 space-y-6 overflow-x-hidden">
       <div className="flex items-center justify-between gap-4">
@@ -103,7 +157,9 @@ export const ResourceUploadPage: React.FC = () => {
         >
           <ArrowLeft className="w-4 h-4" /> Back to Resource Hub
         </Link>
-        <h1 className="text-lg sm:text-xl font-bold text-white text-right">Upload Teaching Resource</h1>
+        <h1 className="text-lg sm:text-xl font-bold text-white text-right">
+          {isEditMode ? 'Edit Teaching Resource' : 'Upload Teaching Resource'}
+        </h1>
       </div>
 
       {error && (
@@ -114,16 +170,16 @@ export const ResourceUploadPage: React.FC = () => {
       )}
 
       <form onSubmit={handleSubmit} className="glass-panel rounded-3xl p-5 sm:p-8 space-y-6 border border-slate-800">
-        {/* File Drag and Drop Zone */}
         <div>
           <label className="block text-xs font-semibold text-slate-300 mb-2">
-            Upload PDF Resource (.pdf only) <span className="text-rose-400">*</span>
+            {isEditMode ? 'Replace PDF Resource (optional)' : 'Upload PDF Resource (.pdf only)'}
+            {!isEditMode && <span className="text-rose-400"> *</span>}
           </label>
 
           <div className="relative border-2 border-dashed border-slate-700/80 hover:border-orange-500/80 bg-slate-900/60 rounded-2xl p-6 sm:p-8 text-center transition-colors cursor-pointer group">
             <input
               type="file"
-              required
+              required={!isEditMode}
               onChange={handleFileChange}
               accept=".pdf,application/pdf"
               className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
@@ -141,11 +197,16 @@ export const ResourceUploadPage: React.FC = () => {
                     {(file.size / (1024 * 1024)).toFixed(2)} MB &bull; Click to replace file
                   </p>
                 </div>
+              ) : isEditMode && existingResource ? (
+                <div>
+                  <p className="text-sm font-bold text-white">Keeping current file</p>
+                  <p className="text-xs text-slate-300 font-medium mt-1">
+                    Your existing file will remain unless you choose a new PDF.
+                  </p>
+                </div>
               ) : (
                 <div>
-                  <p className="text-sm font-bold text-white">
-                    Click or drag & drop PDF file here
-                  </p>
+                  <p className="text-sm font-bold text-white">Click or drag & drop PDF file here</p>
                   <p className="text-xs text-slate-300 font-medium mt-1">
                     Supports PDF documents up to 15MB (.pdf format only)
                   </p>
@@ -155,7 +216,6 @@ export const ResourceUploadPage: React.FC = () => {
           </div>
         </div>
 
-        {/* Metadata Inputs */}
         <div className="space-y-4 pt-4 border-t border-slate-800">
           <div>
             <label className="block text-xs font-semibold text-slate-300 mb-1">
@@ -268,7 +328,6 @@ export const ResourceUploadPage: React.FC = () => {
             </div>
           </div>
 
-          {/* Privacy & Sharing Selector */}
           <div className="pt-4 border-t border-slate-800 space-y-2">
             <label className="block text-xs font-semibold text-slate-300">
               Privacy & Access Control
@@ -288,7 +347,9 @@ export const ResourceUploadPage: React.FC = () => {
                 </div>
                 <div>
                   <div className="text-xs font-bold text-slate-200">Public (Community Hub)</div>
-                  <div className="text-[11px] text-slate-400 mt-0.5">Visible to all teachers across EduShelf to discover and download.</div>
+                  <div className="text-[11px] text-slate-400 mt-0.5">
+                    Visible to all teachers across EduShelf to discover and download.
+                  </div>
                 </div>
               </button>
 
@@ -306,14 +367,15 @@ export const ResourceUploadPage: React.FC = () => {
                 </div>
                 <div>
                   <div className="text-xs font-bold text-slate-200">Private (Only You)</div>
-                  <div className="text-[11px] text-slate-400 mt-0.5">Private resource saved strictly to your personal library.</div>
+                  <div className="text-[11px] text-slate-400 mt-0.5">
+                    Private resource saved strictly to your personal library.
+                  </div>
                 </div>
               </button>
             </div>
           </div>
         </div>
 
-        {/* Submit */}
         <div className="flex items-center justify-end gap-3 pt-4 border-t border-slate-800">
           <Link
             to="/resources"
@@ -327,7 +389,7 @@ export const ResourceUploadPage: React.FC = () => {
             className="px-6 py-2.5 rounded-xl text-xs font-semibold text-white gradient-bg-primary hover:opacity-95 shadow-lg shadow-orange-600/20 transition-all flex items-center gap-2"
           >
             <Upload className="w-4 h-4" />
-            {uploading ? 'Uploading File...' : 'Publish to Resource Hub'}
+            {uploading ? (isEditMode ? 'Saving Changes...' : 'Uploading File...') : (isEditMode ? 'Save Changes' : 'Publish to Resource Hub')}
           </button>
         </div>
       </form>

@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import toast from 'react-hot-toast';
 import { useAuth } from '../context/AuthContext.js';
 import api, { getApiFileUrl } from '../lib/api.js';
@@ -41,6 +41,7 @@ interface ProfileStats {
 }
 
 export const ProfilePage: React.FC = () => {
+  const navigate = useNavigate();
   const { user, refetchSession } = useAuth();
 
   const [activeTab, setActiveTab] = useState<'settings' | 'resources' | 'saved' | 'lessons' | 'analytics'>('settings');
@@ -176,6 +177,10 @@ export const ProfilePage: React.FC = () => {
       console.error('Failed to update visibility:', err);
       toast.error('Failed to update resource visibility');
     }
+  };
+
+  const handleEditResource = (resource: Resource) => {
+    navigate(`/resources/upload?edit=${resource._id}`);
   };
 
   const handleDownloadResource = async (resource: Resource) => {
@@ -653,6 +658,7 @@ export const ProfilePage: React.FC = () => {
                     resource={resource}
                     onPreview={(r: Resource) => setPreviewResource(r)}
                     onDelete={(id: string) => handleDeleteResource(id)}
+                    onEdit={handleEditResource}
                     onToggleVisibility={(id: string, current: boolean) => handleToggleVisibility(id, current)}
                   />
                 ))}

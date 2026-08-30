@@ -154,6 +154,83 @@ export const uploadResource = async (req: AuthenticatedRequest, res: Response): 
   }
 };
 
+// PATCH /api/resources/:id - Update resource metadata and optionally replace file
+export const updateResource = async (req: AuthenticatedRequest, res: Response): Promise<void> => {
+  try {
+    const id = req.params.id as string;
+    if (!mongoose.Types.ObjectId.isValid(id)) {
+      res.status(400).json({ success: false, message: 'Invalid resource ID' });
+      return;
+    }
+
+    const resource = await Resource.findById(id);
+    if (!resource) {
+      res.status(404).json({ success: false, message: 'Resource not found' });
+      return;
+    }
+
+    if (String(resource.teacherId) !== String(req.user?.id)) {
+      res.status(403).json({ success: false, message: 'Unauthorized: Only the creator can edit this resource.' });
+      return;
+    }
+
+    const file = req.file;
+    const { title, description, subject, grade, topic, type, tags, isPublic } = req.body;
+
+    let updatedFileUrl = resource.fileUrl;
+    let updatedPublicId = resource.publicId;
+    let updatedFileType = resource.fileType;
+    let updatedFileSize = resource.fileSize;
+
+    if (file) {
+      const uploadResult = await uploadToCloudinary(file.buffer, file.originalname);
+      updatedFileUrl = uploadResult.url;
+      updatedPublicId = uploadResult.publicId;
+      updatedFileType = file.mimetype;
+      updatedFileSize = file.size;
+
+      if (resource.publicId) {
+        await deleteFromCloudinary(resource.publicId);
+      }
+    }
+
+    if (title !== undefined) resource.title = title;
+    if (description !== undefined) resource.description = description || '';
+    if (subject !== undefined) resource.subject = subject;
+    if (grade !== undefined) resource.grade = grade;
+    if (topic !== undefined) resource.topic = topic;
+    if (type !== undefined) resource.type = type;
+    if (tags !== undefined) {
+      resource.tags =
+        typeof tags === 'string'
+          ? tags.split(',').map((t) => t.trim()).filter(Boolean)
+          : Array.isArray(tags)
+            ? tags
+            : resource.tags;
+    }
+    if (isPublic !== undefined) {
+      resource.isPublic = isPublic === 'false' || isPublic === false ? false : true;
+    }
+
+    resource.fileUrl = updatedFileUrl;
+    resource.publicId = updatedPublicId;
+    resource.fileType = updatedFileType;
+    resource.fileSize = updatedFileSize;
+
+    await resource.save();
+    const populated = await resource.populate('teacherId', 'name institution email image');
+
+    res.json({
+      success: true,
+      message: 'Resource updated successfully',
+      resource: populated,
+    });
+  } catch (error: any) {
+    console.error('[updateResource Error]:', error);
+    res.status(500).json({ success: false, message: error.message || 'Failed to update resource' });
+  }
+};
+
 // PATCH /api/resources/:id/visibility - Toggle public/private visibility (Owner only)
 export const toggleResourceVisibility = async (req: AuthenticatedRequest, res: Response): Promise<void> => {
   try {

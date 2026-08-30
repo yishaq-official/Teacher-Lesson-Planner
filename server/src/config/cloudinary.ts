@@ -2,6 +2,21 @@ import { v2 as cloudinary } from 'cloudinary';
 import fs from 'fs';
 import path from 'path';
 
+export const hasValidCloudinaryConfig = (): boolean => {
+  const cloudName = process.env.CLOUDINARY_CLOUD_NAME;
+  const apiKey = process.env.CLOUDINARY_API_KEY;
+  const apiSecret = process.env.CLOUDINARY_API_SECRET;
+
+  return Boolean(
+    cloudName &&
+      cloudName !== 'demo' &&
+      apiKey &&
+      apiKey !== '1234567890' &&
+      apiSecret &&
+      apiSecret !== 'abcdefghijklmnopqrstuvwxyz'
+  );
+};
+
 export const uploadToCloudinary = (
   fileBuffer: Buffer,
   filename: string,
@@ -41,15 +56,7 @@ export const uploadToCloudinary = (
     };
 
     // Check if real Cloudinary keys are configured
-    const hasValidCloudinary =
-      cloudName &&
-      cloudName !== 'demo' &&
-      apiKey &&
-      apiKey !== '1234567890' &&
-      apiSecret &&
-      apiSecret !== 'abcdefghijklmnopqrstuvwxyz';
-
-    if (!hasValidCloudinary) {
+    if (!hasValidCloudinaryConfig()) {
       return saveLocally();
     }
 
@@ -93,12 +100,7 @@ export const deleteFromCloudinary = async (publicId: string): Promise<void> => {
   const apiKey = process.env.CLOUDINARY_API_KEY;
   const apiSecret = process.env.CLOUDINARY_API_SECRET;
 
-  const hasValidCloudinary =
-    cloudName &&
-    cloudName !== 'demo' &&
-    apiKey &&
-    apiKey !== '1234567890' &&
-    apiSecret;
+  const hasValidCloudinary = hasValidCloudinaryConfig();
 
   if (!hasValidCloudinary || publicId.startsWith('local/')) {
     if (publicId.startsWith('local/')) {

@@ -5,6 +5,7 @@ import {
   getResources,
   getResourceById,
   uploadResource,
+  updateResource,
   deleteResource,
   downloadResource,
   toggleResourceVisibility,
@@ -17,6 +18,7 @@ router.use(requireAuth);
 router.get('/', getResources);
 router.post('/', uploadSingleFile, uploadResource);
 router.get('/:id', getResourceById);
+router.patch('/:id', uploadSingleFile, updateResource);
 router.patch('/:id/visibility', toggleResourceVisibility);
 router.delete('/:id', deleteResource);
 router.post('/:id/download', downloadResource);

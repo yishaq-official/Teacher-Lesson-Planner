@@ -3,10 +3,12 @@ dotenv.config();
 
 import express from 'express';
 import cors from 'cors';
+import fs from 'fs';
 import path from 'path';
 import { toNodeHandler } from 'better-auth/node';
 import { connectDB } from './config/db.js';
 import { auth } from './config/auth.js';
+import { hasValidCloudinaryConfig, uploadToCloudinary } from './config/cloudinary.js';
 import './models/User.js';
 import { Resource } from './models/Resource.js';
 
@@ -97,9 +99,51 @@ app.use((err: any, req: express.Request, res: express.Response, next: express.Ne
 });
 
 // Start Server & Connect Database
+const migrateLocalResourcesToCloudinary = async () => {
+  if (!hasValidCloudinaryConfig()) {
+    console.warn('[Resource Migration] Skipped because Cloudinary credentials are not configured.');
+    return;
+  }
+
+  const localResources = await Resource.find({
+    $or: [{ publicId: { $regex: /^local\// } }, { fileUrl: { $regex: /\/uploads\// } }],
+  });
+
+  if (localResources.length === 0) {
+    return;
+  }
+
+  for (const resource of localResources) {
+    const existingPath = resource.publicId?.startsWith('local/')
+      ? resource.publicId.replace('local/', '')
+      : resource.fileUrl.includes('/uploads/')
+        ? resource.fileUrl.split('/uploads/')[1]
+        : '';
+
+    if (!existingPath) continue;
+
+    const filePath = path.join(process.cwd(), 'uploads', existingPath);
+    if (!fs.existsSync(filePath)) {
+      console.warn(`[Resource Migration] Missing local file for resource ${resource._id}: ${filePath}`);
+      continue;
+    }
+
+    const fileBuffer = fs.readFileSync(filePath);
+    const filename = path.basename(filePath);
+    const uploadResult = await uploadToCloudinary(fileBuffer, filename);
+
+    resource.fileUrl = uploadResult.url;
+    resource.publicId = uploadResult.publicId;
+    await resource.save();
+
+    console.log(`[Resource Migration] Migrated ${resource._id} to Cloudinary.`);
+  }
+};
+
 const startServer = async () => {
   await connectDB();
   try {
+    await migrateLocalResourcesToCloudinary();
     // Ensure all uploaded resources are set to public so they appear on the Community Resource Hub
     await Resource.updateMany({ $or: [{ isPublic: false }, { isPublic: { $exists: false } }] }, { $set: { isPublic: true } });
   } catch (e) {

@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import api, { getApiFileUrl } from '../lib/api.js';
 import type { Resource } from '../types/index.js';
 import { ResourceCard } from '../components/ResourceCard.js';
@@ -17,6 +17,7 @@ import {
 } from 'lucide-react';
 
 export const ResourceHubPage: React.FC = () => {
+  const navigate = useNavigate();
   const [resources, setResources] = useState<Resource[]>([]);
   const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState('');
@@ -99,6 +100,10 @@ export const ResourceHubPage: React.FC = () => {
     } catch (err) {
       console.error('Delete failed:', err);
     }
+  };
+
+  const handleEditResource = (resource: Resource) => {
+    navigate(`/resources/upload?edit=${resource._id}`);
   };
 
   const handleToggleVisibility = async (id: string, currentIsPublic: boolean) => {
@@ -300,14 +305,15 @@ export const ResourceHubPage: React.FC = () => {
       ) : (
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
           {resources.map((item) => (
-            <ResourceCard
-              key={item._id}
-              resource={item}
-              onDelete={handleDeleteResource}
-              onToggleVisibility={handleToggleVisibility}
-              onPreview={(r) => setPreviewResource(r)}
-              onSelectTag={(tag) => setSelectedTag(tag)}
-            />
+              <ResourceCard
+                key={item._id}
+                resource={item}
+                onDelete={handleDeleteResource}
+                onEdit={handleEditResource}
+                onToggleVisibility={handleToggleVisibility}
+                onPreview={(r) => setPreviewResource(r)}
+                onSelectTag={(tag) => setSelectedTag(tag)}
+              />
           ))}
         </div>
       )}
