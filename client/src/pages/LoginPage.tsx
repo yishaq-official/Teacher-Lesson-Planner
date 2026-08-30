@@ -4,7 +4,7 @@ import { toast } from 'react-hot-toast';
 import { signIn } from '../lib/auth-client.js';
 import { useAuth } from '../context/AuthContext.js';
 import logoImg from '../assets/logo.png';
-import { Mail, Lock, ArrowRight, AlertCircle, Sparkles } from 'lucide-react';
+import { Mail, Lock, ArrowRight, AlertCircle } from 'lucide-react';
 
 export const LoginPage: React.FC = () => {
   const [email, setEmail] = useState('');
@@ -36,11 +36,6 @@ export const LoginPage: React.FC = () => {
     } finally {
       setLoading(false);
     }
-  };
-
-  const handleFillDemo = () => {
-    setEmail('hana.teacher@edushelf.org');
-    setPassword('TeacherPass123!');
   };
 
   return (
@@ -114,18 +109,6 @@ export const LoginPage: React.FC = () => {
               <ArrowRight className="w-4 h-4" />
             </button>
           </form>
-
-          {/* Quick Demo Fill Button */}
-          <div className="mt-5 pt-5 border-t border-slate-800/80 text-center">
-            <button
-              type="button"
-              onClick={handleFillDemo}
-              className="w-full py-2 px-3 rounded-xl bg-orange-500/10 hover:bg-orange-500/20 text-orange-300 border border-orange-500/20 text-xs font-medium flex items-center justify-center gap-1.5 transition-colors"
-            >
-              <Sparkles className="w-3.5 h-3.5 text-orange-400" />
-              Fill Demo Teacher Credentials
-            </button>
-          </div>
         </div>
 
         {/* Footer Link */}

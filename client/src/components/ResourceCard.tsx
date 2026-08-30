@@ -314,7 +314,7 @@ export const ResourceCard: React.FC<ResourceCardProps> = ({
             </button>
           )}
 
-          {onDelete && (
+          {isOwner && onDelete && (
             <button
               onClick={(e) => {
                 e.stopPropagation();

@@ -4,22 +4,13 @@ import multer from 'multer';
 const storage = multer.memoryStorage();
 
 const fileFilter = (req: any, file: Express.Multer.File, cb: multer.FileFilterCallback) => {
-  const allowedMimeTypes = [
-    'application/pdf',
-    'application/msword',
-    'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
-    'application/vnd.ms-powerpoint',
-    'application/vnd.openxmlformats-officedocument.presentationml.presentation',
-    'image/jpeg',
-    'image/png',
-    'image/webp',
-    'text/plain',
-  ];
+  const isPdfMime = file.mimetype === 'application/pdf';
+  const isPdfExt = file.originalname.toLowerCase().endsWith('.pdf');
 
-  if (allowedMimeTypes.includes(file.mimetype)) {
+  if (isPdfMime || isPdfExt) {
     cb(null, true);
   } else {
-    cb(new Error('Invalid file type. Allowed: PDF, DOC, DOCX, PPT, PPTX, JPG, PNG, WEBP, TXT'));
+    cb(new Error('Only PDF documents (.pdf) can be uploaded as teaching resources.'));
   }
 };
 
