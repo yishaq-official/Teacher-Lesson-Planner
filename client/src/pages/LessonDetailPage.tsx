@@ -152,15 +152,17 @@ export const LessonDetailPage: React.FC = () => {
 
           <button
             onClick={handlePrint}
-            className="px-3 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 text-xs font-semibold flex items-center gap-1.5 transition-colors"
+            className="px-3.5 py-2 rounded-xl gradient-bg-primary hover:opacity-95 text-white font-bold text-xs flex items-center gap-1.5 shadow-md shadow-orange-600/20 transition-all"
+            title="Export lesson plan as PDF or send directly to printer"
           >
-            <Printer className="w-3.5 h-3.5 text-slate-300" />
-            Print
+            <Printer className="w-3.5 h-3.5 text-white" />
+            <span>Export PDF / Print</span>
           </button>
 
           <button
             onClick={handleDelete}
             className="p-2 rounded-xl bg-rose-500/10 hover:bg-rose-500/20 text-rose-400 border border-rose-500/20 transition-colors"
+            title="Delete Lesson Plan"
           >
             <Trash2 className="w-4 h-4" />
           </button>
@@ -168,10 +170,25 @@ export const LessonDetailPage: React.FC = () => {
       </div>
 
       {/* Main Document Layout */}
-      <div className="glass-panel rounded-3xl p-5 sm:p-10 border border-slate-800 space-y-6 sm:space-y-8 print:bg-white print:text-black print:border-none">
+      <div className="glass-panel rounded-3xl p-5 sm:p-10 border border-slate-800 space-y-6 sm:space-y-8 print:bg-white print:text-black print:border-none print-page">
+        {/* Printable Official School Header (Only Visible When Printing / Exporting) */}
+        <div className="hidden print:block print-header border-b-2 border-orange-500 pb-4 mb-6">
+          <div className="flex items-center justify-between">
+            <div>
+              <h1 className="text-2xl font-black text-slate-900 tracking-tight">EduShelf Lesson Plan</h1>
+              <p className="text-xs text-slate-600 font-medium">Official Curriculum & Teaching Document</p>
+            </div>
+            <div className="text-right text-xs text-slate-600 space-y-0.5 font-mono">
+              <div>Subject: <strong className="text-slate-900">{lesson.subject}</strong></div>
+              <div>Grade: <strong className="text-slate-900">{lesson.grade}</strong></div>
+              <div>Duration: <strong className="text-slate-900">{lesson.duration || 45} mins</strong></div>
+            </div>
+          </div>
+        </div>
+
         {/* Document Header */}
-        <div className="border-b border-slate-800 pb-6 space-y-3">
-          <div className="flex flex-wrap items-center gap-2 text-xs">
+        <div className="border-b border-slate-800 pb-6 space-y-3 print:border-slate-300">
+          <div className="flex flex-wrap items-center gap-2 text-xs print:hidden">
             <span className="font-bold uppercase tracking-wider px-3 py-1 rounded-lg bg-orange-500/10 text-orange-400 border border-orange-500/20">
               {lesson.subject}
             </span>
@@ -184,17 +201,17 @@ export const LessonDetailPage: React.FC = () => {
             </span>
           </div>
 
-          <h1 className="text-xl sm:text-4xl font-extrabold text-white tracking-tight">
+          <h1 className="text-xl sm:text-4xl font-extrabold text-white tracking-tight print:text-2xl print:text-slate-900">
             {lesson.title}
           </h1>
 
-          <div className="flex flex-wrap items-center gap-3 text-xs text-slate-400 pt-1">
+          <div className="flex flex-wrap items-center gap-3 text-xs text-slate-400 pt-1 print:text-slate-700">
             <span className="flex items-center gap-1 font-mono">
-              <Calendar className="w-4 h-4 text-orange-400" />
+              <Calendar className="w-4 h-4 text-orange-400 print:text-slate-700" />
               Date: {new Date(lesson.date).toLocaleDateString()}
             </span>
             <span>&bull;</span>
-            <span>Topic: <strong className="text-slate-200">{lesson.topic}</strong></span>
+            <span>Topic: <strong className="text-slate-200 print:text-slate-900">{lesson.topic}</strong></span>
           </div>
         </div>
 

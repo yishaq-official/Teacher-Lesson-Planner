@@ -184,6 +184,58 @@ html.light ::-webkit-scrollbar-thumb {
   background: #475569;
 }
 
+::-webkit-scrollbar-thumb:hover {
+  background: #475569;
+}
+
 html.light ::-webkit-scrollbar-thumb:hover {
   background: #94a3b8;
+}
+
+/* Print & Export PDF Media Styles */
+@media print {
+  body, html, #root {
+    background: #ffffff !important;
+    color: #0f172a !important;
+    padding: 0 !important;
+    margin: 0 !important;
+    font-size: 12pt !important;
+  }
+
+  nav, footer, .print\:hidden, button, a.print\:hidden {
+    display: none !important;
+  }
+
+  .glass-panel, .glass-card {
+    background: #ffffff !important;
+    border: 1px solid #e2e8f0 !important;
+    box-shadow: none !important;
+    color: #0f172a !important;
+    backdrop-filter: none !important;
+  }
+
+  .print-page {
+    padding: 20px !important;
+    max-width: 100% !important;
+    width: 100% !important;
+  }
+
+  .print-header {
+    border-bottom: 2px solid #ea580c !important;
+    padding-bottom: 15px !important;
+    margin-bottom: 20px !important;
+  }
+
+  .text-white, .text-slate-100, .text-slate-200, .text-slate-300, .text-slate-400 {
+    color: #0f172a !important;
+  }
+
+  .text-orange-300, .text-orange-400 {
+    color: #c2410c !important;
+  }
+
+  .bg-slate-900, .bg-slate-800, .bg-slate-950 {
+    background-color: #f8fafc !important;
+    border: 1px solid #e2e8f0 !important;
+  }
 }
