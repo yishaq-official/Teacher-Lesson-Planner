@@ -26,7 +26,7 @@ const seed = async () => {
     // 1. Create Demo Teacher Account using Better Auth API
     const authUser = await auth.api.signUpEmail({
       body: {
-        email: 'hana.teacher@edunexus.org',
+        email: 'hana.teacher@edushelf.org',
         password: 'TeacherPass123!',
         name: 'Hana Tesfaye',
         subject: 'Biology',

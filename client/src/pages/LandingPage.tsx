@@ -50,7 +50,7 @@ export const LandingPage: React.FC = () => {
             <GraduationCap className="w-5 h-5 sm:w-6 sm:h-6 text-white" />
           </div>
           <span className="font-bold text-base sm:text-xl tracking-tight text-white">
-            EduNexus <span className="gradient-text font-extrabold">Hub</span>
+            Edu<span className="gradient-text font-extrabold">Shelf</span>
           </span>
         </div>
 
@@ -139,7 +139,7 @@ export const LandingPage: React.FC = () => {
                     <div className="w-3 h-3 rounded-full bg-rose-500/80" />
                     <div className="w-3 h-3 rounded-full bg-amber-500/80" />
                     <div className="w-3 h-3 rounded-full bg-emerald-500/80" />
-                    <span className="ml-2 font-mono text-[11px] text-slate-500">edunexus.hub/calendar</span>
+                    <span className="ml-2 font-mono text-[11px] text-slate-500">edushelf.app/calendar</span>
                   </div>
                   <div className="flex items-center gap-2 font-mono text-[11px]">
                     <span className="text-orange-400 font-semibold flex items-center gap-1">
@@ -327,7 +327,7 @@ export const LandingPage: React.FC = () => {
           <ScrollReveal animation="fade-up" delay={0}>
             <div className="text-center max-w-3xl mx-auto space-y-4 mb-16">
               <h2 className="text-3xl sm:text-4xl font-extrabold text-white">
-                How EduNexus Hub Works in 4 Steps
+                How EduShelf Works in 4 Steps
               </h2>
             </div>
           </ScrollReveal>
@@ -390,7 +390,7 @@ export const LandingPage: React.FC = () => {
           <ScrollReveal animation="fade-up" delay={100}>
             <div className="glass-card rounded-3xl p-6 space-y-4 h-full">
               <p className="text-xs sm:text-sm text-slate-300 italic leading-relaxed">
-                &quot;EduNexus Hub saved me hours every week! Being able to see my weekly timetable with Grade 9A and Grade 10B period slots and attaching PDF worksheets directly is a game changer.&quot;
+                &quot;EduShelf saved me hours every week! Being able to see my weekly timetable with Grade 9A and Grade 10B period slots and attaching PDF worksheets directly is a game changer.&quot;
               </p>
               <div className="flex items-center gap-3 pt-2 border-t border-slate-800">
                 <div className="w-9 h-9 rounded-xl bg-orange-500/20 text-orange-400 font-bold flex items-center justify-center text-xs">
@@ -446,7 +446,7 @@ export const LandingPage: React.FC = () => {
           <ScrollReveal animation="fade-up" delay={0}>
             <div className="text-center space-y-3">
               <h2 className="text-3xl font-extrabold text-white">Frequently Asked Questions</h2>
-              <p className="text-xs sm:text-sm text-slate-400">Everything you need to know about EduNexus Hub</p>
+              <p className="text-xs sm:text-sm text-slate-400">Everything you need to know about EduShelf</p>
             </div>
           </ScrollReveal>
 
@@ -516,7 +516,7 @@ export const LandingPage: React.FC = () => {
             <div className="w-8 h-8 rounded-xl gradient-bg-primary flex items-center justify-center">
               <GraduationCap className="w-4 h-4 text-white" />
             </div>
-            <span className="font-bold text-sm text-white">EduNexus Hub</span>
+            <span className="font-bold text-sm text-white">EduShelf</span>
           </div>
 
           <div className="flex items-center gap-6 text-slate-400">
@@ -527,7 +527,7 @@ export const LandingPage: React.FC = () => {
           </div>
 
           <div>
-            &copy; {new Date().getFullYear()} EduNexus Hub. Built for Educators.
+            &copy; {new Date().getFullYear()} EduShelf. Built for Educators.
           </div>
         </div>
       </footer>

@@ -37,7 +37,7 @@ export const LoginPage: React.FC = () => {
   };
 
   const handleFillDemo = () => {
-    setEmail('hana.teacher@edunexus.org');
+    setEmail('hana.teacher@edushelf.org');
     setPassword('TeacherPass123!');
   };
 

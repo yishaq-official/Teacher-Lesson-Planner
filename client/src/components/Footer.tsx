@@ -8,7 +8,7 @@ export const Footer: React.FC = () => {
         <div className="flex flex-wrap items-center justify-center sm:justify-start gap-1.5 sm:gap-2">
           <div className="flex items-center gap-1.5">
             <GraduationCap className="w-4 h-4 text-orange-400 shrink-0" />
-            <span className="font-semibold text-slate-300">EduNexus Hub</span>
+            <span className="font-semibold text-slate-300">EduShelf</span>
           </div>
           <span className="hidden sm:inline">&mdash;</span>
           <span className="text-[11px] sm:text-xs text-slate-400">

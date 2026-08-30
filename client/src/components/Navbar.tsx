@@ -42,7 +42,7 @@ export const Navbar: React.FC = () => {
             </div>
             <div className="min-w-0">
               <span className="font-bold text-base sm:text-lg text-white tracking-tight flex items-center gap-1">
-                EduNexus <span className="gradient-text font-extrabold">Hub</span>
+                Edu<span className="gradient-text font-extrabold">Shelf</span>
               </span>
               <span className="hidden sm:block text-[11px] text-slate-400 -mt-1 truncate">Lesson Planner & Resources</span>
             </div>

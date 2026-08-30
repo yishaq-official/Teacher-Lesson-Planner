@@ -267,7 +267,7 @@ export const ResourceUploadPage: React.FC = () => {
                 </div>
                 <div>
                   <div className="text-xs font-bold text-slate-200">Public (Community Hub)</div>
-                  <div className="text-[11px] text-slate-400 mt-0.5">Visible to all teachers across EduNexus to discover and download.</div>
+                  <div className="text-[11px] text-slate-400 mt-0.5">Visible to all teachers across EduShelf to discover and download.</div>
                 </div>
               </button>
 
