@@ -14,7 +14,11 @@ export const getProfile = async (req: AuthenticatedRequest, res: Response): Prom
 
     let user = await User.findById(userId);
 
-    // Fallback: If user doc missing, build default from session
+    // Fallback: If user doc missing by ID, lookup by email first to prevent duplicate key creation
+    if (!user && req.user?.email) {
+      user = await User.findOne({ email: req.user.email });
+    }
+
     if (!user) {
       user = await User.create({
         _id: userId,

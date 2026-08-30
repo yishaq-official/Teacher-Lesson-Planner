@@ -3,6 +3,7 @@ import mongoose, { Schema } from 'mongoose';
 export interface IUser {
   _id: string;
   name: string;
+  username?: string;
   email: string;
   image?: string;
   institution?: string;
@@ -21,6 +22,7 @@ const UserSchema: Schema = new Schema(
   {
     _id: { type: String, required: true },
     name: { type: String, required: true, trim: true, index: true },
+    username: { type: String, unique: true, sparse: true, trim: true, index: true },
     email: { type: String, required: true, unique: true, trim: true, index: true },
     image: { type: String },
     institution: { type: String, default: '' },
